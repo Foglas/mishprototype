@@ -16,3 +16,8 @@ services:
 
 volumes:
   mongodb_data:
+
+networks:
+  network_mode:
+    name: mish_net
+
