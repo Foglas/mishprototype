@@ -1,5 +1,6 @@
 package com.fim.prototype.mish.controllers
 
+import com.fim.prototype.mish.data.Metadata
 import com.fim.prototype.mish.services.ModelService
 import org.springframework.core.io.InputStreamResource
 import org.springframework.http.ResponseEntity
@@ -18,6 +19,10 @@ class ModelController(
         return ResponseEntity.ok("File was uploaded: $id")
     }
 
+    //TODO assign model to target
+
+    //TODO get objectId, name, .png .jpg  - select models
+
     //TODO implement endpoint which can assign metadata to model
     //fun assignMetadata()
 
@@ -27,4 +32,5 @@ class ModelController(
     fun downloadFile(@PathVariable itemId: String, @RequestBody(required = false) metadata: Metadata?): ResponseEntity<InputStreamResource> {
         return ResponseEntity.ok(InputStreamResource(modelService.getModel(itemId)?.inputStream!!))
     }
+
 }

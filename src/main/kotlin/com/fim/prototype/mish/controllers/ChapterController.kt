@@ -1,6 +1,7 @@
 package com.fim.prototype.mish.controllers
 
 import com.fim.prototype.mish.data.ChapterEntity
+import com.fim.prototype.mish.data.model.TextureMetadata
 import com.fim.prototype.mish.services.ChapterService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
