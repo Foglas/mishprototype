@@ -1,6 +1,5 @@
 package com.fim.prototype.mish.repo
 
-import com.fim.prototype.mish.data.MetadataTypes
 import org.bson.types.ObjectId
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
@@ -14,14 +13,8 @@ class GridFsRepo(
     private val gridFs: GridFsTemplate
 ) {
 
-    fun uploadFile(model: MultipartFile, metadata: MutableMap<MetadataTypes, String> = mutableMapOf()): ObjectId {
-        return gridFs.store(model.inputStream, model.originalFilename, metadata)
-    }
-
-    fun getFileByMetadata(property: MutableMap<MetadataTypes, String>): GridFsResource?{
-        //TODO implement multi property searching
-        val model = gridFs.findOne(Query(Criteria.where("metadata.${MetadataTypes.TARGET_ID}").`is`(property[MetadataTypes.TARGET_ID])))
-        return gridFs.getResource(model)
+    fun uploadFile(model: MultipartFile): ObjectId {
+        return gridFs.store(model.inputStream, model.originalFilename, model.contentType)
     }
 
     fun getFileById(objectId: String): GridFsResource? {
