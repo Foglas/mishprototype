@@ -1,4 +1,4 @@
-package com.fim.prototype.mish.data
+package com.fim.prototype.mish.data.entities
 
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document

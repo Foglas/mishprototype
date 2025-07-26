@@ -1,6 +1,6 @@
 package com.fim.prototype.mish.controllers
 
-import com.fim.prototype.mish.data.ChapterEntity
+import com.fim.prototype.mish.data.entities.ChapterEntity
 import com.fim.prototype.mish.services.ChapterService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -13,17 +13,12 @@ class ChapterController(
 ){
 
     @PostMapping("/create")
-    fun createChapter(@RequestBody chapter: ChapterEntity): ResponseEntity<ChapterEntity>  {
-      return ResponseEntity.ok(chapterService.createChapter(chapter))
+    fun createChapter(@RequestBody chapter: ChapterEntity): ChapterEntity  {
+      return chapterService.createChapter(chapter)
     }
 
     @GetMapping("/{id}")
-    fun getChapter(@PathVariable("id") chapterId: String): ResponseEntity<ChapterEntity> {
-        val chapter = chapterService.getChapter(chapterId)
-        return if (chapter != null){
-            ResponseEntity.ok(chapter)
-        } else {
-            ResponseEntity.notFound().build()
-        }
+    fun getChapter(@PathVariable("id") chapterId: String): ChapterEntity {
+       return chapterService.getChapter(chapterId)
     }
 }
