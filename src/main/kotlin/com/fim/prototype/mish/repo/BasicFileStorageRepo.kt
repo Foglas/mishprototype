@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository
 import org.springframework.web.multipart.MultipartFile
 
 @Repository
-class GridFsRepo(
+class BasicFileStorageRepo(
     private val gridFs: GridFsTemplate
 ) {
 
