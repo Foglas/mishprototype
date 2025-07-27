@@ -1,29 +1,24 @@
 package com.fim.prototype.mish.controllers
 
-import com.fim.prototype.mish.data.TextureUpload
 import com.fim.prototype.mish.data.models.entities.ModelMetadataEntity
 import com.fim.prototype.mish.services.ModelService
-import jakarta.servlet.http.HttpServletResponse
-import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestPart
+import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 
 @RestController
 @RequestMapping(value = ["/api/model"])
 class ModelController(
-    val modelService: ModelService,
-) {
+    override val modelService: ModelService,
+) : DownloadController(modelService) {
 
-    @PostMapping("/upload-model")
+    @PostMapping("/upload")
     fun uploadModel(@RequestPart model: MultipartFile, @RequestPart metadata: ModelMetadataEntity): String {
         return modelService.uploadModel(model, metadata).toHexString()
     }
 
-    @PostMapping("/upload-texture")
-    fun uploadTexture(@RequestPart model: MultipartFile, @RequestPart metadata: TextureUpload): ResponseEntity<String> {
-        val id = modelService.uploadTexture(model, metadata)
-        return ResponseEntity.ok("File was uploaded: $id")
-    }
 
     //TODO assign model to target
 
@@ -34,17 +29,4 @@ class ModelController(
 
     //TODO implement endpoint for getting all related files to some item
 
-    @PostMapping("/download/{itemId}")
-    fun downloadFile(@PathVariable itemId: String, response: HttpServletResponse) {
-        val resource = modelService.getFileById(itemId)
-
-        response.contentType = resource.contentType
-        response.setHeader("Content-Disposition", "attachment; filename=\"${resource.filename}\"")
-
-        return resource.inputStream.use { input ->
-            response.outputStream.use {
-                input.copyTo(it)
-            }
-        }
-    }
 }
