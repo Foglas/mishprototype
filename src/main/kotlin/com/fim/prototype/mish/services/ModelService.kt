@@ -40,8 +40,8 @@ class ModelService(
     }
     
 
-    fun getFileById(itemId: String): GridFsResource?{
-        return basicFileStorageRepo.getFileById(itemId)
+    fun getFileById(itemId: String): GridFsResource{
+        return basicFileStorageRepo.getFileById(itemId) ?: throw NotFoundException("File with id $itemId not found!")
     }
 
 }
