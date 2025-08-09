@@ -16,8 +16,7 @@ class TextureController(
 ) : DownloadController(modelService) {
 
     @PostMapping("/upload")
-    fun uploadTexture(@RequestPart model: MultipartFile, @RequestPart metadata: TextureUpload): ResponseEntity<String> {
-        val id = modelService.uploadTexture(model, metadata)
-        return ResponseEntity.ok("File was uploaded: $id")
+    fun uploadTexture(@RequestPart texture: MultipartFile, @RequestPart metadata: TextureUpload): String {
+       return modelService.uploadTexture(texture, metadata).toHexString()
     }
 }

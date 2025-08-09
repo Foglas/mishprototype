@@ -9,14 +9,14 @@ import java.time.Instant
 
 @Document(collection = "models")
 data class ModelMetadataEntity(
-    @Id val id: String,
+    @Id val id: String? = null,
     @Indexed(unique = true) override var targetFileId: String? = null, //modelId gridFs
     @TextIndexed override val name: String,
     override val created: Instant = Instant.now(),
     override val updated: Instant? = null,
     override val otherMetadata: String = "",
     @Indexed val creatorId: String? = null,
-    var mainTexture: TextureMetadata,
+    var mainTexture: TextureMetadata?= null,
     var otherTextures: MutableList<TextureMetadata> = mutableListOf(),
 ): BasicFileMetadata(){
 }
@@ -27,5 +27,5 @@ data class TextureMetadata(
     override val created: Instant = Instant.now(),
     override val updated: Instant? = null,
     override val otherMetadata: String = "",
-    val csvId: String? = null, //id of the csv file in gridFs
+    val csvContent: String? = null,
 ) : BasicFileMetadata()

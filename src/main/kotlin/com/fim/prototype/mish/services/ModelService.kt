@@ -1,6 +1,8 @@
 package com.fim.prototype.mish.services
 
 import com.fim.prototype.mish.data.TextureUpload
+import com.fim.prototype.mish.data.entities.FileIdWithName
+import com.fim.prototype.mish.data.entities.ModelIds
 import com.fim.prototype.mish.data.models.entities.ModelMetadataEntity
 import com.fim.prototype.mish.exceptions.NotFoundException
 import com.fim.prototype.mish.repo.BasicFileStorageRepo
@@ -17,16 +19,16 @@ class ModelService(
     private val modelMetadataRepo: ModelMetadataRepo
 ) {
 
-    fun uploadModel(model: MultipartFile, metadata: ModelMetadataEntity): ObjectId {
+    fun uploadModel(model: MultipartFile, metadata: ModelMetadataEntity): ModelIds {
         val objectId = basicFileStorageRepo.uploadFile(model)
         metadata.targetFileId = objectId.toHexString()
         modelMetadataRepo.save(metadata)
-        return objectId
+        return ModelIds(FileIdWithName(objectId.toHexString(), metadata.name))
     }
 
     @Transactional
     fun uploadTexture(texture: MultipartFile, metadata: TextureUpload): ObjectId {
-        val modelMetadata = modelMetadataRepo.getModelMetadataEntityByTargetFileId(metadata.targetFileId) ?: throw NotFoundException("Model metadata was not found!")
+        val modelMetadata = modelMetadataRepo.getModelMetadataEntityByTargetFileId(metadata.modelId) ?: throw NotFoundException("Model metadata was not found!")
 
         val objectId = basicFileStorageRepo.uploadFile(texture)
 

@@ -17,7 +17,7 @@ data class ChapterEntity(
 
 data class ModelIds(
     val model: FileIdWithName,
-    val mainTexture: FileIdWithName,
+    val mainTexture: FileIdWithName? = null,
     val otherTextures: List<FileIdWithName> = listOf(),
 )
 
