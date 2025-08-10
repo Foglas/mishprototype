@@ -1,9 +1,10 @@
 package com.fim.prototype.mish.services
 
-import com.fim.prototype.mish.data.TextureUpload
+import com.fim.prototype.mish.data.rest.TextureUpload
 import com.fim.prototype.mish.data.entities.FileIdWithName
 import com.fim.prototype.mish.data.entities.ModelIds
-import com.fim.prototype.mish.data.models.entities.ModelMetadataEntity
+import com.fim.prototype.mish.data.entities.ModelMetadataEntity
+import com.fim.prototype.mish.data.entities.TextureMetadata
 import com.fim.prototype.mish.exceptions.NotFoundException
 import com.fim.prototype.mish.repo.BasicFileStorageRepo
 import com.fim.prototype.mish.repo.ModelMetadataRepo
@@ -32,15 +33,21 @@ class ModelService(
 
         val objectId = basicFileStorageRepo.uploadFile(texture)
 
+        metadata.texture.targetFileId = objectId.toHexString()
+
         if (metadata.isPrimary) {
             modelMetadata.mainTexture = metadata.texture
         } else {
             modelMetadata.otherTextures += metadata.texture
         }
-        metadata.texture.targetFileId = objectId.toHexString()
+
 
         modelMetadataRepo.save(modelMetadata)
         return basicFileStorageRepo.uploadFile(texture)
+    }
+
+    fun listModelMetadata(includeTextureMetadata: Boolean): List<ModelIds> {
+        return modelMetadataRepo.getModelIdsByTargetFileId(includeTextureMetadata)
     }
 
     fun getFileById(itemId: String): GridFsResource{

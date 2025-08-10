@@ -1,6 +1,5 @@
-package com.fim.prototype.mish.data.models.entities
+package com.fim.prototype.mish.data.entities
 
-import com.fim.prototype.mish.data.models.BasicFileMetadata
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.data.mongodb.core.index.TextIndexed
@@ -29,3 +28,11 @@ data class TextureMetadata(
     override val otherMetadata: String = "",
     val csvContent: String? = null,
 ) : BasicFileMetadata()
+
+abstract class BasicFileMetadata {
+    abstract val name: String
+    abstract val created: Instant
+    abstract val updated: Instant?
+    abstract val targetFileId: String?
+    abstract val otherMetadata: String
+}

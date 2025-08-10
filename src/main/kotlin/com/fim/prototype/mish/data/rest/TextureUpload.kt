@@ -1,6 +1,6 @@
-package com.fim.prototype.mish.data
+package com.fim.prototype.mish.data.rest
 
-import com.fim.prototype.mish.data.models.entities.TextureMetadata
+import com.fim.prototype.mish.data.entities.TextureMetadata
 
 data class TextureUpload(
     val modelId: String,
