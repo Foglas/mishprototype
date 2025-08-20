@@ -3,6 +3,7 @@ package com.fim.prototype.mish.repo
 import com.fim.prototype.mish.data.entities.FileIdWithName
 import com.fim.prototype.mish.data.entities.ModelIds
 import com.fim.prototype.mish.data.entities.ModelMetadataEntity
+import com.fim.prototype.mish.data.rest.SimpleTextureData
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
@@ -20,8 +21,8 @@ class ModelMetadataRepo(
         return metadata.map {
             ModelIds(
                 model = FileIdWithName(it.id?:"", it.name),
-                mainTexture = FileIdWithName(it.mainTexture?.targetFileId?:"", it.mainTexture?.name?:""),
-                otherTextures = it.otherTextures.map { FileIdWithName(it.targetFileId?:"", it.name) }
+                mainTexture = SimpleTextureData(it.mainTexture?.targetFileId?:"", it.mainTexture?.name?:"", it.mainTexture?.csvContent?:""),
+                otherTextures = it.otherTextures.map { SimpleTextureData(it.targetFileId?:"", it.name, it.csvContent?:"") }
             )
         }
     }

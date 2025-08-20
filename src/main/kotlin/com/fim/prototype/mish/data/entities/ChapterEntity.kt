@@ -1,5 +1,6 @@
 package com.fim.prototype.mish.data.entities
 
+import com.fim.prototype.mish.data.rest.SimpleTextureData
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 import java.time.Instant
@@ -17,8 +18,8 @@ data class ChapterEntity(
 
 data class ModelIds(
     val model: FileIdWithName,
-    val mainTexture: FileIdWithName? = null,
-    val otherTextures: List<FileIdWithName> = listOf(),
+    val mainTexture: SimpleTextureData? = null,
+    val otherTextures: List<SimpleTextureData> = listOf(),
 )
 
 data class FileIdWithName(
