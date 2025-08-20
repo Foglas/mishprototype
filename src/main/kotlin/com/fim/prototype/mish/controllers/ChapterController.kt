@@ -20,4 +20,9 @@ class ChapterController(
     fun getChapter(@PathVariable("id") chapterId: String): ChapterEntity {
        return chapterService.getChapter(chapterId)
     }
+
+    @GetMapping("/search-fulltext")
+    fun searchByFulltext(@RequestParam("keyword") keyword: String): List<ChapterEntity> {
+        return chapterService.searchFullText(keyword)
+    }
 }

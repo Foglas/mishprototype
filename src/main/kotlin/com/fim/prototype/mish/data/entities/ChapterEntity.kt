@@ -2,15 +2,16 @@ package com.fim.prototype.mish.data.entities
 
 import com.fim.prototype.mish.data.rest.SimpleTextureData
 import org.springframework.data.annotation.Id
+import org.springframework.data.mongodb.core.index.TextIndexed
 import org.springframework.data.mongodb.core.mapping.Document
 import java.time.Instant
 
 @Document(collection = "chapters")
 data class ChapterEntity(
     @Id val id: String? = null,
-    val name: String,
+    @TextIndexed val name: String,
     val creatorId: String? = null,
-    val content: String,  //editor.js
+    @TextIndexed val content: String,  //editor.js
     val models: List<ModelIds>,
     val created: Instant = Instant.now(),
     val updated: Instant? = null,
