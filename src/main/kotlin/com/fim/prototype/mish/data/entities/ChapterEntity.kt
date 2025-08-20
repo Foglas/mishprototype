@@ -1,12 +1,13 @@
 package com.fim.prototype.mish.data.entities
 
 import com.fim.prototype.mish.data.rest.SimpleTextureData
+import com.fim.prototype.mish.services.FullTextSearchingService
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.index.TextIndexed
 import org.springframework.data.mongodb.core.mapping.Document
 import java.time.Instant
 
-@Document(collection = "chapters")
+@Document(collection = FullTextSearchingService.chapter)
 data class ChapterEntity(
     @Id val id: String? = null,
     @TextIndexed val name: String,

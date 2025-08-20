@@ -1,6 +1,7 @@
 package com.fim.prototype.mish.controllers
 
 import com.fim.prototype.mish.data.entities.ChapterEntity
+import com.fim.prototype.mish.data.rest.FullTextResult
 import com.fim.prototype.mish.services.ChapterService
 import org.springframework.web.bind.annotation.*
 
@@ -22,7 +23,7 @@ class ChapterController(
     }
 
     @GetMapping("/search-fulltext")
-    fun searchByFulltext(@RequestParam("keyword") keyword: String): List<ChapterEntity> {
+    fun searchByFulltext(@RequestParam("keyword") keyword: String): FullTextResult {
         return chapterService.searchFullText(keyword)
     }
 }
