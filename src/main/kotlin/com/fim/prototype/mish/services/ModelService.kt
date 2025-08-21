@@ -3,6 +3,7 @@ package com.fim.prototype.mish.services
 import com.fim.prototype.mish.data.entities.FileIdWithName
 import com.fim.prototype.mish.data.entities.ModelIds
 import com.fim.prototype.mish.data.entities.ModelMetadataEntity
+import com.fim.prototype.mish.data.rest.SimpleTextureData
 import com.fim.prototype.mish.data.rest.TextureUpload
 import com.fim.prototype.mish.exceptions.NotFoundException
 import com.fim.prototype.mish.repo.BasicFileStorageRepo
@@ -31,7 +32,7 @@ class ModelService(
     }
 
     @Transactional
-    fun uploadTexture(texture: MultipartFile, metadata: TextureUpload): ObjectId {
+    fun uploadTexture(texture: MultipartFile, metadata: TextureUpload): SimpleTextureData {
         val modelMetadata = modelMetadataRepo.getModelMetadataEntityByTargetFileId(metadata.modelId) ?: throw NotFoundException("Model metadata was not found!")
 
         val objectId = basicFileStorageRepo.uploadFile(texture)
@@ -46,7 +47,7 @@ class ModelService(
 
 
         modelMetadataRepo.save(modelMetadata)
-        return basicFileStorageRepo.uploadFile(texture)
+        return SimpleTextureData(objectId.toHexString(), metadata.texture.name, metadata.texture.csvContent)
     }
 
     fun listModelMetadata(includeTextureMetadata: Boolean): List<ModelIds> {

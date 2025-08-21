@@ -26,7 +26,7 @@ data class TextureMetadata(
     override val created: Instant = Instant.now(),
     override val updated: Instant? = null,
     override val otherMetadata: String = "",
-    val csvContent: String? = null,
+    val csvContent: String = "",
 ) : BasicFileMetadata()
 
 abstract class BasicFileMetadata {

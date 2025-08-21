@@ -1,5 +1,6 @@
 package com.fim.prototype.mish.controllers
 
+import com.fim.prototype.mish.data.rest.SimpleTextureData
 import com.fim.prototype.mish.data.rest.TextureUpload
 import com.fim.prototype.mish.services.ModelService
 import org.springframework.web.bind.annotation.PostMapping
@@ -15,8 +16,8 @@ class TextureController(
 ) : DownloadController(modelService) {
 
     @PostMapping("/upload")
-    fun uploadTexture(@RequestPart texture: MultipartFile, @RequestPart metadata: TextureUpload): String {
-       return modelService.uploadTexture(texture, metadata).toHexString()
+    fun uploadTexture(@RequestPart texture: MultipartFile, @RequestPart metadata: TextureUpload): SimpleTextureData {
+       return modelService.uploadTexture(texture, metadata)
     }
 
 }
