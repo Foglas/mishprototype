@@ -19,15 +19,16 @@ class ModelMetadataRepo(
 
     fun getAllModelMetadata(pageRequestData: PageRequestData): PageResult<ModelIds> {
         val query = Query().with(pageRequestData.createPageRequest())
-        query.fields().include("name").include("otherTextures").include("mainTexture")
+        query.fields().include("name").include("targetFileId").include("otherTextures").include("mainTexture")
         val metadata = mongoTemplate.find(query, ModelMetadataEntity::class.java)
         val total = mongoTemplate.count(Query(), ModelMetadataEntity::class.java)
 
         val elements = metadata.map {
             ModelIds(
-                model = FileIdWithName(it.id?:"", it.name),
-                mainTexture = SimpleTextureData(it.mainTexture?.targetFileId?:"", it.mainTexture?.name?:"", it.mainTexture?.csvContent?:""),
-                otherTextures = it.otherTextures.map { SimpleTextureData(it.targetFileId?:"", it.name, it.csvContent?:"") }
+                metadataId = it.id?:"",
+                model = FileIdWithName(it.targetFileId?:"", it.name),
+                mainTexture = it.mainTexture?.let { SimpleTextureData(it.targetFileId?:"", it.name, it.csvContent) },
+                otherTextures = it.otherTextures.map { SimpleTextureData(it.targetFileId?:"", it.name, it.csvContent) }
             )
         }
 

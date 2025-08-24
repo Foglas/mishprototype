@@ -23,14 +23,13 @@ import org.springframework.web.multipart.MultipartFile
 class ModelService(
     private val basicFileStorageRepo: BasicFileStorageRepo,
     private val modelMetadataRepo: ModelMetadataRepo,
-    private val mongoTemplate: MongoTemplate,
 ) {
 
     fun uploadModel(model: MultipartFile, metadata: ModelMetadataEntity): ModelIds {
         val objectId = basicFileStorageRepo.uploadFile(model)
         metadata.targetFileId = objectId.toHexString()
-        modelMetadataRepo.save(metadata)
-        return ModelIds(FileIdWithName(objectId.toHexString(), metadata.name))
+        val metadataId = modelMetadataRepo.save(metadata).id
+        return ModelIds(metadataId?:"", FileIdWithName(objectId.toHexString(), metadata.name))
     }
 
     @Transactional
@@ -60,5 +59,4 @@ class ModelService(
     fun getFileById(itemId: String): GridFsResource{
         return basicFileStorageRepo.getFileById(itemId) ?: throw NotFoundException("File with id $itemId not found!")
     }
-
 }
