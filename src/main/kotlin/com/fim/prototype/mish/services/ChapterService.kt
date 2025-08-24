@@ -10,7 +10,7 @@ import com.fim.prototype.mish.repo.ChapterRepo
 import com.fim.prototype.mish.utils.PageRequestData
 import com.fim.prototype.mish.utils.PageResult
 import com.fim.prototype.mish.utils.createPageRequest
-import com.fim.prototype.mish.utils.toPage
+import com.fim.prototype.mish.utils.toPageResult
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
@@ -42,7 +42,7 @@ class ChapterService(
     }
 
     fun getAllChapters(page: PageRequestData): PageResult<ChapterEntity> {
-        return chapterRepo.findAll(page.createPageRequest()).toPage()
+        return chapterRepo.findAll(page.createPageRequest()).toPageResult()
     }
 
     fun searchFullText(keyword: String): FullTextResult {

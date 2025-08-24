@@ -34,7 +34,7 @@ data class PageResult<T>(
     val page: Int
 )
 
-fun <T> Page<T>.toPage(): PageResult<T>{
+fun <T> Page<T>.toPageResult(): PageResult<T>{
     return PageResult(
         elements = this.content,
         total = this.totalElements,
