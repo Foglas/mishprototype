@@ -3,6 +3,9 @@ package com.fim.prototype.mish.controllers
 import com.fim.prototype.mish.data.entities.ModelIds
 import com.fim.prototype.mish.data.entities.ModelMetadataEntity
 import com.fim.prototype.mish.services.ModelService
+import com.fim.prototype.mish.utils.PageRequestData
+import com.fim.prototype.mish.utils.PageResult
+import org.springframework.data.domain.Sort
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 
@@ -19,9 +22,12 @@ class ModelController(
 
     @GetMapping("/list-by")
     fun listModelsMetadata(
-        @RequestParam includeOtherTextures: Boolean = false,
-    ): List<ModelIds>{
-        return modelService.listModelMetadata(includeOtherTextures)
+        @RequestParam page: Int,
+        @RequestParam limit: Int = 20,
+        @RequestParam orderBy: String?=null,
+        @RequestParam sortDirection: Sort.Direction = Sort.Direction.DESC,
+    ): PageResult<ModelIds>{
+        return modelService.listModelMetadata(PageRequestData(page, limit, orderBy, sortDirection))
     }
 
     //TODO assign model to target

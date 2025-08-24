@@ -8,6 +8,8 @@ import com.fim.prototype.mish.data.rest.TextureUpload
 import com.fim.prototype.mish.exceptions.NotFoundException
 import com.fim.prototype.mish.repo.BasicFileStorageRepo
 import com.fim.prototype.mish.repo.ModelMetadataRepo
+import com.fim.prototype.mish.utils.PageRequestData
+import com.fim.prototype.mish.utils.PageResult
 import org.bson.types.ObjectId
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.aggregation.ArithmeticOperators.Mod
@@ -50,8 +52,8 @@ class ModelService(
         return SimpleTextureData(objectId.toHexString(), metadata.texture.name, metadata.texture.csvContent)
     }
 
-    fun listModelMetadata(includeTextureMetadata: Boolean): List<ModelIds> {
-        return modelMetadataRepo.getAllModelMetadata(includeTextureMetadata)
+    fun listModelMetadata(pageRequestData: PageRequestData): PageResult<ModelIds> {
+        return modelMetadataRepo.getAllModelMetadata(pageRequestData)
 
     }
 
