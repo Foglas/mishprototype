@@ -2,6 +2,7 @@ package com.fim.prototype.mish.controllers
 
 import com.fim.prototype.mish.data.entities.ModelIds
 import com.fim.prototype.mish.data.entities.ModelMetadataEntity
+import com.fim.prototype.mish.properties.PageProperties
 import com.fim.prototype.mish.services.ModelService
 import com.fim.prototype.mish.utils.PageRequestData
 import com.fim.prototype.mish.utils.PageResult
@@ -13,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile
 @RequestMapping(value = ["/api/model"])
 class ModelController(
     override val modelService: ModelService,
+    private val pageProperties: PageProperties,
 ) : DownloadController(modelService) {
 
     @PostMapping("/upload")
@@ -23,9 +25,9 @@ class ModelController(
     @GetMapping("/list-by")
     fun listModelsMetadata(
         @RequestParam page: Int,
-        @RequestParam limit: Int = 20,
+        @RequestParam limit: Int = pageProperties.limit,
         @RequestParam orderBy: String?=null,
-        @RequestParam sortDirection: Sort.Direction = Sort.Direction.DESC,
+        @RequestParam sortDirection: Sort.Direction = pageProperties.sortDirection,
     ): PageResult<ModelIds>{
         return modelService.listModelMetadata(PageRequestData(page, limit, orderBy, sortDirection))
     }

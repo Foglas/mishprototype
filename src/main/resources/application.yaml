@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: mish
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 5000MB
+      max-request-size: 5200MB
+
+  data:
+    mongodb:
+      auto-index-creation: true
+      uri: mongodb://root:example@localhost:27017/mish-db?authSource=admin
+
+app:
+  page:
+    limit: 20
+    sort-direction: ASC

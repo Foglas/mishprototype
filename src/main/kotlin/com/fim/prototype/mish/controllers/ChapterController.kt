@@ -2,6 +2,7 @@ package com.fim.prototype.mish.controllers
 
 import com.fim.prototype.mish.data.entities.ChapterEntity
 import com.fim.prototype.mish.data.rest.FullTextResult
+import com.fim.prototype.mish.properties.PageProperties
 import com.fim.prototype.mish.services.ChapterService
 import com.fim.prototype.mish.utils.PageRequestData
 import com.fim.prototype.mish.utils.PageResult
@@ -12,25 +13,26 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/api/chapter")
 class ChapterController(
-    val chapterService: ChapterService
-){
+    private val chapterService: ChapterService,
+    private val pageProperties: PageProperties,
+) {
 
     @PostMapping("/create")
-    fun createChapter(@RequestBody chapter: ChapterEntity): ChapterEntity  {
-      return chapterService.createChapter(chapter)
+    fun createChapter(@RequestBody chapter: ChapterEntity): ChapterEntity {
+        return chapterService.createChapter(chapter)
     }
 
     @GetMapping("/{id}")
     fun getChapter(@PathVariable("id") chapterId: String): ChapterEntity {
-       return chapterService.getChapterById(chapterId)
+        return chapterService.getChapterById(chapterId)
     }
 
     @GetMapping("/list")
     fun listChapters(
         @RequestParam page: Int,
-        @RequestParam limit: Int = 20,
-        @RequestParam orderBy: String?=null,
-        @RequestParam sortDirection: Sort.Direction = Sort.Direction.DESC,
+        @RequestParam limit: Int = pageProperties.limit,
+        @RequestParam orderBy: String? = null,
+        @RequestParam sortDirection: Sort.Direction = pageProperties.sortDirection,
     ): PageResult<ChapterEntity> {
         return chapterService.getAllChapters(PageRequestData(page, limit, orderBy, sortDirection))
     }

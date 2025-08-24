@@ -49,7 +49,6 @@ class ChapterService(
     return fullTextSearchingService.search(keyword, FullTextCollectionType.CHAPTER)
     }
 
-
     private fun validateChapter(chapter: ChapterEntity): ChapterEntity {
         if (chapter.name.isBlank()) throw ValidationException("Chapter name should be set!", chapter)
         if (chapter.content.isBlank()) throw ValidationException("Chapter content should be set!", chapter)
