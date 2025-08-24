@@ -7,10 +7,10 @@ import com.fim.prototype.mish.exceptions.ForbiddenActionException
 import com.fim.prototype.mish.exceptions.NotFoundException
 import com.fim.prototype.mish.exceptions.ValidationException
 import com.fim.prototype.mish.repo.ChapterRepo
-import com.fim.prototype.mish.utils.PageCreator
 import com.fim.prototype.mish.utils.PageRequestData
+import com.fim.prototype.mish.utils.PageResult
 import com.fim.prototype.mish.utils.createPageRequest
-import org.springframework.data.domain.Page
+import com.fim.prototype.mish.utils.toPage
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
@@ -41,8 +41,8 @@ class ChapterService(
         return chapterRepo.findByIdOrNull(id) ?: throw NotFoundException("Chapter with id $id not found")
     }
 
-    fun getAllChapters(page: PageRequestData): Page<ChapterEntity> {
-        return chapterRepo.findAll(page.createPageRequest())
+    fun getAllChapters(page: PageRequestData): PageResult<ChapterEntity> {
+        return chapterRepo.findAll(page.createPageRequest()).toPage()
     }
 
     fun searchFullText(keyword: String): FullTextResult {

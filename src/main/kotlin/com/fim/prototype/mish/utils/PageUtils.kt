@@ -3,6 +3,7 @@ package com.fim.prototype.mish.utils
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
+import org.springframework.data.domain.Page
 
 class PageCreator {
     companion object {
@@ -26,3 +27,17 @@ data class PageRequestData(
     val oderBy: String?=null,
     val sortDirection: Sort.Direction = Sort.Direction.DESC
 )
+
+data class PageResult<T>(
+    val elements: List<T>,
+    val total: Long,
+    val page: Int
+)
+
+fun <T> Page<T>.toPage(): PageResult<T>{
+    return PageResult(
+        elements = this.content,
+        total = this.totalElements,
+        page = this.number
+    )
+}

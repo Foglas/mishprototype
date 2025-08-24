@@ -4,7 +4,7 @@ import com.fim.prototype.mish.data.entities.ChapterEntity
 import com.fim.prototype.mish.data.rest.FullTextResult
 import com.fim.prototype.mish.services.ChapterService
 import com.fim.prototype.mish.utils.PageRequestData
-import org.springframework.data.domain.Page
+import com.fim.prototype.mish.utils.PageResult
 import org.springframework.data.domain.Sort
 import org.springframework.web.bind.annotation.*
 
@@ -31,7 +31,7 @@ class ChapterController(
         @RequestParam limit: Int = 20,
         @RequestParam orderBy: String?=null,
         @RequestParam sortDirection: Sort.Direction = Sort.Direction.DESC,
-    ): Page<ChapterEntity> {
+    ): PageResult<ChapterEntity> {
         return chapterService.getAllChapters(PageRequestData(page, limit, orderBy, sortDirection))
     }
 
