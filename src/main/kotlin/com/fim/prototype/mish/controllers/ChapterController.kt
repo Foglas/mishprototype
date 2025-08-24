@@ -3,6 +3,9 @@ package com.fim.prototype.mish.controllers
 import com.fim.prototype.mish.data.entities.ChapterEntity
 import com.fim.prototype.mish.data.rest.FullTextResult
 import com.fim.prototype.mish.services.ChapterService
+import com.fim.prototype.mish.utils.PageRequestData
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Sort
 import org.springframework.web.bind.annotation.*
 
 
@@ -19,11 +22,27 @@ class ChapterController(
 
     @GetMapping("/{id}")
     fun getChapter(@PathVariable("id") chapterId: String): ChapterEntity {
-       return chapterService.getChapter(chapterId)
+       return chapterService.getChapterById(chapterId)
+    }
+
+    @GetMapping("/list")
+    fun listChapters(
+        @RequestParam page: Int,
+        @RequestParam limit: Int = 20,
+        @RequestParam orderBy: String?=null,
+        @RequestParam sortDirection: Sort.Direction = Sort.Direction.DESC,
+    ): Page<ChapterEntity> {
+        return chapterService.getAllChapters(PageRequestData(page, limit, orderBy, sortDirection))
     }
 
     @GetMapping("/search-fulltext")
     fun searchByFulltext(@RequestParam("keyword") keyword: String): FullTextResult {
         return chapterService.searchFullText(keyword)
     }
+
+    @PutMapping("/update")
+    fun updateChapter(@RequestBody chapter: ChapterEntity): ChapterEntity {
+        return chapterService.updateChapter(chapter)
+    }
+
 }

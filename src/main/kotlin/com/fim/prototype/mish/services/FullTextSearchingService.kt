@@ -29,12 +29,18 @@ class FullTextSearchingService(
         if (texts.isEmpty()) return
         val combinedText = texts.joinToString(separator = " ")
 
-        val fullText = FullTextEntity(
+        fullTextRepo.save(FullTextEntity(
             externalId = externalId,
             type = type,
             text = combinedText
-        )
-        fullTextRepo.save(fullText)
+        ))
+    }
+
+    fun updateFullTextEntity(externalId: String, vararg texts: String){
+        if (texts.isEmpty()) return
+        val combinedText = texts.joinToString(separator = " ")
+
+        fullTextRepo.update(externalId, combinedText)
     }
 
     fun search(keyword: String, type: FullTextCollectionType): FullTextResult {

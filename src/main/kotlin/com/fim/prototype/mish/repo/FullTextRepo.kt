@@ -4,11 +4,14 @@ import com.fim.prototype.mish.data.entities.ChapterEntity
 import com.fim.prototype.mish.data.entities.FullTextCollectionType
 import com.fim.prototype.mish.data.entities.FullTextEntity
 import com.fim.prototype.mish.data.rest.FullTextResult
+import org.springframework.data.mongodb.core.FindAndModifyOptions
 import org.springframework.data.mongodb.core.MongoTemplate
+import org.springframework.data.mongodb.core.findAndModify
 import org.springframework.data.mongodb.core.index.TextIndexDefinition
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.data.mongodb.core.query.TextCriteria
+import org.springframework.data.mongodb.core.query.Update
 import org.springframework.stereotype.Repository
 
 @Repository
@@ -19,7 +22,7 @@ class FullTextRepo(
     fun initIndex(){
         val textIndex = TextIndexDefinition.builder()
             .onField("text")
-            .withDefaultLanguage("none") // disables stop words
+            .withDefaultLanguage("none")
             .build()
 
         mongoTemplate.indexOps(FullTextEntity::class.java)
@@ -28,6 +31,13 @@ class FullTextRepo(
 
     fun save(fulltext: FullTextEntity): FullTextEntity {
         return mongoTemplate.save(fulltext)
+    }
+
+    fun update(externalId: String, text: String): FullTextEntity? {
+        val query = Query(Criteria.where("externalId").`is`(externalId))
+        val updateQuery = Update().set("text", text)
+
+        return mongoTemplate.findAndModify(query, updateQuery, FullTextEntity::class.java)
     }
 
     fun search(keyword: String, type: FullTextCollectionType): FullTextResult {
