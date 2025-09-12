@@ -13,11 +13,13 @@ services:
       MONGO_INITDB_DATABASE: mish-db
     volumes:
       - mongodb_data:/data/db
+    networks:
+      - mish_net
 
 volumes:
   mongodb_data:
 
 networks:
-  network_mode:
-    name: mish_net
+    mish_net:
+      external: true
 
