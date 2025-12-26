@@ -1,3 +1,6 @@
+server:
+  port: 8050
+
 spring:
   application:
     name: mish
@@ -13,7 +16,40 @@ spring:
       auto-index-creation: true
       uri: mongodb://root:example@localhost:27017/mish-db?authSource=admin
 
+  security:
+    oauth2:
+      client:
+        registration:
+          dev-client:
+            client-id: dev-client
+            client-secret: secret
+            scope: openid,profile,email
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            authorization-grant-type: authorization_code
+        provider:
+          dev-client:
+            issuer-uri: http://localhost:8080/realms/mock-realm
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/mock-realm
+
+auth:
+  provider: oidc
+
+ldap:
+  base: "dc=example,dc=com"
+  url: "ldap://localhost:389"
+  user-dn-pattern: "uid={0},ou=users"
+
 app:
   page:
     limit: 20
     sort-direction: ASC
+
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+        oauth2: DEBUG
