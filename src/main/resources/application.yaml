@@ -39,6 +39,10 @@ ldap:
   url: "ldap://localhost:389"
   user-dn-pattern: "uid={0},ou=users"
 
+
+origin:
+  url: http://localhost:8030
+
 app:
   page:
     limit: 20
