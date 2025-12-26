@@ -33,8 +33,6 @@ spring:
         jwt:
           issuer-uri: http://localhost:8080/realms/mock-realm
 
-auth:
-  provider: oidc
 
 ldap:
   base: "dc=example,dc=com"
