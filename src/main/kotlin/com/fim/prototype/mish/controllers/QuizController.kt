@@ -19,18 +19,17 @@ class QuizController(
         quizService.deleteQuiz(quizId)
     }
 
-    @GetMapping("/quiz/{id}/questions")
-    fun getQuestionsByQuizId(@PathVariable("id") quizId: String){
-
+    @GetMapping("/quiz/{id}/all")
+    fun getQuizById(@PathVariable("id") quizId: String): QuizEntity {
+        return quizService.getQuizById(quizId)
     }
 
-    @GetMapping("/quiz/{id}/all")
-    fun getQuizById(@PathVariable("id") quizId: String){
-
+    @GetMapping("/quiz/{id}/questions")
+    fun getQuestionsByQuizId(@PathVariable("id") quizId: String){
     }
 
     @GetMapping("/quiz/{id}/validate")
     fun validateAnswers(@PathVariable("id") quizId: String){
-
     }
+
 }

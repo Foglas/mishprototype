@@ -6,7 +6,7 @@ import com.fim.prototype.mish.model.rest.FullTextResult
 import com.fim.prototype.mish.exceptions.ForbiddenActionException
 import com.fim.prototype.mish.exceptions.NotFoundException
 import com.fim.prototype.mish.exceptions.ValidationException
-import com.fim.prototype.mish.repo.ChapterRepo
+import com.fim.prototype.mish.repo.interfaces.IChapterRepo
 import com.fim.prototype.mish.utils.PageRequestData
 import com.fim.prototype.mish.utils.PageResult
 import com.fim.prototype.mish.utils.createPageRequest
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class ChapterService(
-    private val chapterRepo: ChapterRepo,
+    private val chapterRepo: IChapterRepo,
     private val fullTextSearchingService: FullTextSearchingService,
 ) {
     fun createChapter(chapter: ChapterEntity): ChapterEntity {
