@@ -2,7 +2,6 @@ version: "3.9"
 
 services:
 
-  # --- Mock LDAP ---
   ldap:
     image: osixia/openldap:1.5.0
     container_name: mock-ldap
@@ -32,7 +31,6 @@ services:
       - keycloak-db-data:/var/lib/postgresql/data
 
 
-  # --- Mock OIDC (Keycloak) ---
   mock-oidc:
     image: quay.io/keycloak/keycloak:21.1.1
     container_name: mock-oidc
