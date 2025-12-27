@@ -3,8 +3,7 @@ package com.fim.prototype.mish.model.entities.quiz.questions
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fim.prototype.mish.model.entities.quiz.QuestionType
-import com.fim.prototype.mish.model.entities.quiz.submission.OpenTextSubmissionData
-import java.util.UUID
+import java.util.*
 
 @JsonTypeInfo(
     use = JsonTypeInfo.Id.NAME,
@@ -14,7 +13,7 @@ import java.util.UUID
 @JsonSubTypes(
     JsonSubTypes.Type(MultipleChoiceQuestionData::class, name = "MultipleChoiceQuestionData"),
     JsonSubTypes.Type(SingleChoiceQuestionData::class, name = "SingleChoiceQuestionData"),
-    JsonSubTypes.Type(OpenTextSubmissionData::class, name = "OpenTextSubmissionData"),
+    JsonSubTypes.Type(OpenTextQuestionData::class, name = "OpenTextQuestionData"),
     JsonSubTypes.Type(MatchingQuestionData::class, name = "MatchingQuestionData"),
     JsonSubTypes.Type(OrderingQuestionData::class, name = "OrderingQuestionData"),
     JsonSubTypes.Type(TextureClickQuestionData::class, name = "TextureClickQuestionData")
