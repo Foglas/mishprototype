@@ -1,12 +1,10 @@
 package com.fim.prototype.mish.repo
 
-import com.fim.prototype.mish.data.entities.ChapterEntity
-import com.fim.prototype.mish.data.entities.FullTextCollectionType
-import com.fim.prototype.mish.data.entities.FullTextEntity
-import com.fim.prototype.mish.data.rest.FullTextResult
-import org.springframework.data.mongodb.core.FindAndModifyOptions
+import com.fim.prototype.mish.model.entities.ChapterEntity
+import com.fim.prototype.mish.model.entities.FullTextCollectionType
+import com.fim.prototype.mish.model.entities.FullTextEntity
+import com.fim.prototype.mish.model.rest.FullTextResult
 import org.springframework.data.mongodb.core.MongoTemplate
-import org.springframework.data.mongodb.core.findAndModify
 import org.springframework.data.mongodb.core.index.TextIndexDefinition
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query

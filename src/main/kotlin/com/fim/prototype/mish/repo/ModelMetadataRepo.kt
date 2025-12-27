@@ -1,9 +1,9 @@
 package com.fim.prototype.mish.repo
 
-import com.fim.prototype.mish.data.entities.FileIdWithName
-import com.fim.prototype.mish.data.entities.ModelIds
-import com.fim.prototype.mish.data.entities.ModelMetadataEntity
-import com.fim.prototype.mish.data.rest.SimpleTextureData
+import com.fim.prototype.mish.model.entities.FileIdWithName
+import com.fim.prototype.mish.model.entities.ModelIds
+import com.fim.prototype.mish.model.entities.ModelMetadataEntity
+import com.fim.prototype.mish.model.rest.SimpleTextureData
 import com.fim.prototype.mish.utils.PageRequestData
 import com.fim.prototype.mish.utils.PageResult
 import com.fim.prototype.mish.utils.createPageRequest

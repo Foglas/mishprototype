@@ -1,6 +1,6 @@
 package com.fim.prototype.mish.RestInterface
 
-import com.fim.prototype.mish.data.entities.ChapterEntity
+import com.fim.prototype.mish.model.entities.ChapterEntity
 
 class BasicRequestProviderSupport : RestRequestProvider() {
 

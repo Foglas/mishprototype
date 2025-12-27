@@ -1,4 +1,4 @@
-package com.fim.prototype.mish.data.entities
+package com.fim.prototype.mish.model.entities
 
 import com.fim.prototype.mish.services.FullTextSearchingService
 import org.springframework.data.mongodb.core.mapping.Document

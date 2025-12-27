@@ -1,4 +1,4 @@
-package com.fim.prototype.mish.data.rest
+package com.fim.prototype.mish.model.rest
 
 data class SimpleTextureData(
     val textureFileId: String,

@@ -1,19 +1,15 @@
 package com.fim.prototype.mish.services
 
-import com.fim.prototype.mish.data.entities.FileIdWithName
-import com.fim.prototype.mish.data.entities.ModelIds
-import com.fim.prototype.mish.data.entities.ModelMetadataEntity
-import com.fim.prototype.mish.data.rest.SimpleTextureData
-import com.fim.prototype.mish.data.rest.TextureUpload
+import com.fim.prototype.mish.model.entities.FileIdWithName
+import com.fim.prototype.mish.model.entities.ModelIds
+import com.fim.prototype.mish.model.entities.ModelMetadataEntity
+import com.fim.prototype.mish.model.rest.SimpleTextureData
+import com.fim.prototype.mish.model.rest.TextureUpload
 import com.fim.prototype.mish.exceptions.NotFoundException
 import com.fim.prototype.mish.repo.BasicFileStorageRepo
 import com.fim.prototype.mish.repo.ModelMetadataRepo
 import com.fim.prototype.mish.utils.PageRequestData
 import com.fim.prototype.mish.utils.PageResult
-import org.bson.types.ObjectId
-import org.springframework.data.mongodb.core.MongoTemplate
-import org.springframework.data.mongodb.core.aggregation.ArithmeticOperators.Mod
-import org.springframework.data.mongodb.core.query.Query
 import org.springframework.data.mongodb.gridfs.GridFsResource
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional

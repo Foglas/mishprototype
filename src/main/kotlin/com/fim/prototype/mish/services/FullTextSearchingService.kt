@@ -1,11 +1,10 @@
 package com.fim.prototype.mish.services
 
-import com.fim.prototype.mish.data.entities.FullTextCollectionType
-import com.fim.prototype.mish.data.entities.FullTextEntity
-import com.fim.prototype.mish.data.rest.FullTextResult
+import com.fim.prototype.mish.model.entities.FullTextCollectionType
+import com.fim.prototype.mish.model.entities.FullTextEntity
+import com.fim.prototype.mish.model.rest.FullTextResult
 import com.fim.prototype.mish.repo.FullTextRepo
 import jakarta.annotation.PostConstruct
-import org.springframework.data.mongodb.core.index.TextIndexDefinition
 import org.springframework.stereotype.Service
 
 @Service

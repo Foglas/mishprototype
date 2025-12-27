@@ -1,7 +1,7 @@
 package com.fim.prototype.mish.controllers
 
 import com.fim.prototype.mish.RestInterface.BasicRequestProviderSupport
-import com.fim.prototype.mish.data.entities.ChapterEntity
+import com.fim.prototype.mish.model.entities.ChapterEntity
 import org.junit.jupiter.api.Test
 
 

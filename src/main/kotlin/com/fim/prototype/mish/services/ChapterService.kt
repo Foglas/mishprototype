@@ -1,8 +1,8 @@
 package com.fim.prototype.mish.services
 
-import com.fim.prototype.mish.data.entities.ChapterEntity
-import com.fim.prototype.mish.data.entities.FullTextCollectionType
-import com.fim.prototype.mish.data.rest.FullTextResult
+import com.fim.prototype.mish.model.entities.ChapterEntity
+import com.fim.prototype.mish.model.entities.FullTextCollectionType
+import com.fim.prototype.mish.model.rest.FullTextResult
 import com.fim.prototype.mish.exceptions.ForbiddenActionException
 import com.fim.prototype.mish.exceptions.NotFoundException
 import com.fim.prototype.mish.exceptions.ValidationException
