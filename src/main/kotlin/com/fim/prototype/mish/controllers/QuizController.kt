@@ -21,11 +21,12 @@ class QuizController(
 
     @GetMapping("/quiz/{id}/all")
     fun getQuizById(@PathVariable("id") quizId: String): QuizEntity {
-        return quizService.getQuizById(quizId)
+        return quizService.getQuizById(quizId, true)
     }
 
     @GetMapping("/quiz/{id}/questions")
-    fun getQuestionsByQuizId(@PathVariable("id") quizId: String){
+    fun getQuestionsByQuizId(@PathVariable("id") quizId: String): QuizEntity {
+        return quizService.getQuizById(quizId)
     }
 
     @GetMapping("/quiz/{id}/validate")
