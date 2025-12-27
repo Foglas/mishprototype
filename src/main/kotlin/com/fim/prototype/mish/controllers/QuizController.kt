@@ -1,17 +1,20 @@
 package com.fim.prototype.mish.controllers
 
 import com.fim.prototype.mish.model.entities.quiz.QuizEntity
+import com.fim.prototype.mish.model.entities.quiz.QuizSubmissionRequest
+import com.fim.prototype.mish.model.entities.quiz.QuizValidationResult
 import com.fim.prototype.mish.services.QuizService
 import org.springframework.web.bind.annotation.*
 
-@RestController("/api/quiz")
+@RestController
+@RequestMapping("/api/quiz")
 class QuizController(
     private val quizService: QuizService
 ) {
 
     @PostMapping("/create")
-    fun createQuiz(quiz: QuizEntity) {
-       quizService.createQuiz(quiz)
+    fun createQuiz(@RequestBody quiz: QuizEntity): QuizEntity {
+       return quizService.createQuiz(quiz)
     }
 
     @DeleteMapping("/delete/{id}")
@@ -19,18 +22,19 @@ class QuizController(
         quizService.deleteQuiz(quizId)
     }
 
-    @GetMapping("/quiz/{id}/all")
+    @GetMapping("/{id}/all")
     fun getQuizById(@PathVariable("id") quizId: String): QuizEntity {
         return quizService.getQuizById(quizId, true)
     }
 
-    @GetMapping("/quiz/{id}/questions")
+    @GetMapping("/{id}/questions")
     fun getQuestionsByQuizId(@PathVariable("id") quizId: String): QuizEntity {
         return quizService.getQuizById(quizId)
     }
 
-    @GetMapping("/quiz/{id}/validate")
-    fun validateAnswers(@PathVariable("id") quizId: String){
+    @GetMapping("/{id}/validate")
+    fun validateAnswers(@PathVariable("id") quizId: String, @RequestBody answers: QuizSubmissionRequest): QuizValidationResult {
+        return quizService.validateAnswers(quizId, answers)
     }
 
 }

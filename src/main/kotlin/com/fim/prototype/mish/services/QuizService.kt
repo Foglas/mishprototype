@@ -2,6 +2,8 @@ package com.fim.prototype.mish.services
 
 import com.fim.prototype.mish.exceptions.NotFoundException
 import com.fim.prototype.mish.model.entities.quiz.QuizEntity
+import com.fim.prototype.mish.model.entities.quiz.QuizSubmissionRequest
+import com.fim.prototype.mish.model.entities.quiz.QuizValidationResult
 import com.fim.prototype.mish.repo.QuizRepo
 import org.springframework.stereotype.Service
 
@@ -22,7 +24,14 @@ class QuizService(
         return quizRepo.getQuizById(quizId, showAnswers) ?: throw NotFoundException("Quiz with id $quizId not found!")
     }
 
-    fun validateAnswers() {
+    fun validateAnswers(quizId: String, submission: QuizSubmissionRequest): QuizValidationResult {
+        val quizAnswers = getQuizById(quizId, true).answers.associateBy { it.questionId }
 
+        submission.answers.forEach {
+            val correctAnswer = quizAnswers[it.questionId]
+
+        }
+
+        return QuizValidationResult()
     }
 }
