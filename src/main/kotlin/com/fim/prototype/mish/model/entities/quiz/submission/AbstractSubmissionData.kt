@@ -17,7 +17,7 @@ import com.fim.prototype.mish.model.entities.quiz.QuestionType
     JsonSubTypes.Type(OrderingSubmissionData::class, name = "OrderingSubmissionData"),
     JsonSubTypes.Type(TextureClickSubmissionData::class, name = "TextureClickSubmissionData")
 )
-abstract class AbstractSubmissionData {
+sealed class AbstractSubmissionData {
     var questionId: String? = null
     var type: QuestionType? = null
 }

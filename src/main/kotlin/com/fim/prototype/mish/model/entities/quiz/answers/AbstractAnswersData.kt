@@ -17,7 +17,7 @@ import com.fim.prototype.mish.model.entities.quiz.QuestionType
     JsonSubTypes.Type(MultipleChoiceAnswerData::class, name = "MultipleChoiceAnswerData"),
     JsonSubTypes.Type(TextureClickAnswerData::class, name = "TextureClickAnswerData")
 )
-abstract class AbstractAnswerData {
+sealed class AbstractAnswerData {
     var questionId: String? = null
     var type: QuestionType? = null
 }

@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service
 @Service
 class QuizService(
     private val quizRepo: QuizRepo,
+    private val quizValidatorService: QuizValidatorService,
 ) {
+
 
     fun createQuiz(quiz: QuizEntity): QuizEntity {
         return quizRepo.save(quiz)
@@ -25,13 +27,6 @@ class QuizService(
     }
 
     fun validateAnswers(quizId: String, submission: QuizSubmissionRequest): QuizValidationResult {
-        val quizAnswers = getQuizById(quizId, true).answers.associateBy { it.questionId }
-
-        submission.answers.forEach {
-            val correctAnswer = quizAnswers[it.questionId]
-
-        }
-
-        return QuizValidationResult()
+        return quizValidatorService.validateAnswers(quizId, submission)
     }
 }
