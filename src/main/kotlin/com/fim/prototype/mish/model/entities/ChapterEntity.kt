@@ -11,7 +11,7 @@ import java.time.Instant
 data class ChapterEntity(
     @Id val id: String? = null,
     @TextIndexed val name: String,
-    val creatorId: String? = null,
+    var creatorId: String? = null,
     @TextIndexed val content: String,  //editor.js
     val models: List<ModelIds>,
     val created: Instant = Instant.now(),

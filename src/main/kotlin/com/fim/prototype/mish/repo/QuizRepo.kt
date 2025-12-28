@@ -1,7 +1,7 @@
 package com.fim.prototype.mish.repo
 
 import com.fim.prototype.mish.model.common.FilterBase
-import com.fim.prototype.mish.model.entities.ModelMetadataEntity
+import com.fim.prototype.mish.model.entities.quiz.QuickQuizEntity
 import com.fim.prototype.mish.model.entities.quiz.QuizEntity
 import com.fim.prototype.mish.repo.interfaces.IQuizRepo
 import com.fim.prototype.mish.utils.PageRequestData
@@ -34,6 +34,22 @@ class QuizRepo(
         }
 
         return mongoTemplate.findOne(query, QuizEntity::class.java)
+    }
+
+    fun getQuickQuizById(quizId: String): QuickQuizEntity? {
+        val query = Query(Criteria.where("_id").`is`(quizId))
+
+        query.fields()
+            .include("chapterId")
+            .include("timeLimit")
+            .include("id")
+            .include("name")
+            .include("creatorId")
+            .include("description")
+            .include("created")
+            .include("updated")
+
+        return mongoTemplate.findOne(query, QuickQuizEntity::class.java, "quiz")
     }
 
     fun listQuizzes(pageRequest: PageRequestData, filter: FilterBase): PageResult<QuizEntity> {

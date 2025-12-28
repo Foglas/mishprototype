@@ -1,6 +1,7 @@
 package com.fim.prototype.mish.controllers
 
 import com.fim.prototype.mish.model.common.FilterBase
+import com.fim.prototype.mish.model.entities.quiz.QuickQuizEntity
 import com.fim.prototype.mish.model.entities.quiz.QuizEntity
 import com.fim.prototype.mish.model.entities.quiz.QuizSubmissionRequest
 import com.fim.prototype.mish.model.entities.quiz.QuizValidationResult
@@ -37,6 +38,11 @@ class QuizController(
     @GetMapping("/{id}/all")
     fun getQuizById(@PathVariable("id") quizId: String): QuizEntity {
         return quizService.getQuizById(quizId, true)
+    }
+
+    @GetMapping("/{id}/quick")
+    fun getQuickQuizById(@PathVariable("id") quizId: String): QuickQuizEntity {
+        return quizService.getQuickQuizById(quizId)
     }
 
     @GetMapping("/{id}/questions")

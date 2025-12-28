@@ -1,14 +1,17 @@
 package com.fim.prototype.mish.services.quiz
 
+import com.fim.prototype.mish.exceptions.ForbiddenActionException
 import com.fim.prototype.mish.exceptions.NotFoundException
 import com.fim.prototype.mish.exceptions.ValidationException
 import com.fim.prototype.mish.model.common.FilterBase
+import com.fim.prototype.mish.model.entities.quiz.QuickQuizEntity
 import com.fim.prototype.mish.model.entities.quiz.QuizEntity
 import com.fim.prototype.mish.model.entities.quiz.QuizSubmissionRequest
 import com.fim.prototype.mish.model.entities.quiz.QuizValidationResult
 import com.fim.prototype.mish.model.entities.quiz.answers.AbstractAnswerData
 import com.fim.prototype.mish.model.entities.quiz.questions.AbstractQuestionData
 import com.fim.prototype.mish.repo.QuizRepo
+import com.fim.prototype.mish.security.service.CurrentUserService
 import com.fim.prototype.mish.services.chapters.ChapterService
 import com.fim.prototype.mish.services.quiz.validators.CreateQuizValidator
 import com.fim.prototype.mish.utils.PageRequestData
@@ -20,6 +23,7 @@ class QuizService(
     private val quizRepo: QuizRepo,
     private val quizAnswersResultService: QuizAnswersResultService,
     private val chapterService: ChapterService,
+    private val currentUserService: CurrentUserService,
     questionValidator: List<CreateQuizValidator>,
 ) {
 
@@ -49,6 +53,10 @@ class QuizService(
         return quizRepo.getQuizById(quizId, showAnswers) ?: throw NotFoundException("Quiz with id $quizId not found!")
     }
 
+    fun getQuickQuizById(quizId: String): QuickQuizEntity {
+        return quizRepo.getQuickQuizById(quizId) ?: throw NotFoundException("Quiz with id $quizId not found!")
+    }
+
     fun listQuizzes(pageRequest: PageRequestData, filter: FilterBase): PageResult<QuizEntity> {
         return quizRepo.listQuizzes(pageRequest, filter)
     }
@@ -63,6 +71,8 @@ class QuizService(
         validateQuestionAndAnswers(quiz.questions, quiz.answers)
 
         //TODO get user and validate if exists and if has permissions to create quiz
+        //TODO create UnauthorizedException and throw it here
+        quiz.creatorId = currentUserService.getCurrentUser()?.userId ?: throw ForbiddenActionException("User not logged in!")
         return quiz
     }
 
