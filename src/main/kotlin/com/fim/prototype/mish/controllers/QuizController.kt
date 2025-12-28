@@ -37,9 +37,9 @@ class QuizController(
         return quizService.getQuizById(quizId)
     }
 
-    @GetMapping("/{id}/validate")
-    fun validateAnswers(@PathVariable("id") quizId: String, @RequestBody answers: QuizSubmissionRequest): QuizValidationResult {
-        return quizService.validateAnswers(quizId, answers)
+    @GetMapping("/{id}/get-result")
+    fun getAnswersResult(@PathVariable("id") quizId: String, @RequestBody answers: QuizSubmissionRequest): QuizValidationResult {
+        return quizService.getAnswersResult(quizId, answers)
     }
 
 }

@@ -9,12 +9,13 @@ import com.fim.prototype.mish.model.entities.quiz.answers.AbstractAnswerData
 import com.fim.prototype.mish.model.entities.quiz.questions.AbstractQuestionData
 import com.fim.prototype.mish.repo.QuizRepo
 import com.fim.prototype.mish.services.chapters.ChapterService
+import com.fim.prototype.mish.services.quiz.validators.CreateQuizValidator
 import org.springframework.stereotype.Service
 
 @Service
 class QuizService(
     private val quizRepo: QuizRepo,
-    private val quizValidatorService: QuizValidatorService,
+    private val quizAnswersResultService: QuizAnswersResultService,
     private val chapterService: ChapterService,
     questionValidator: List<CreateQuizValidator>,
 ) {
@@ -45,8 +46,8 @@ class QuizService(
         return quizRepo.getQuizById(quizId, showAnswers) ?: throw NotFoundException("Quiz with id $quizId not found!")
     }
 
-    fun validateAnswers(quizId: String, submission: QuizSubmissionRequest): QuizValidationResult {
-        return quizValidatorService.validateAnswers(quizId, submission)
+    fun getAnswersResult(quizId: String, submission: QuizSubmissionRequest): QuizValidationResult {
+        return quizAnswersResultService.getAnswersResult(quizId, submission)
     }
 
     private fun validateQuiz(quiz: QuizEntity): QuizEntity {

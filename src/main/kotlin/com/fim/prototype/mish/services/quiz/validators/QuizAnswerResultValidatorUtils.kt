@@ -1,4 +1,4 @@
-package com.fim.prototype.mish.services.quiz
+package com.fim.prototype.mish.services.quiz.validators
 
 import com.fim.prototype.mish.model.entities.quiz.answers.*
 import com.fim.prototype.mish.model.entities.quiz.submission.*
@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service
 import kotlin.reflect.KClass
 
 @Service
-class MultipleChoiceAnswerValidator : QuizValidator {
+class MultipleChoiceAnswerValidator : QuizResultValidator {
     override val type: KClass<*>
         get() = MultipleChoiceAnswerData::class
 
@@ -19,7 +19,7 @@ class MultipleChoiceAnswerValidator : QuizValidator {
 }
 
 @Service
-class MatchingAnswerValidator : QuizValidator {
+class MatchingAnswerValidator : QuizResultValidator {
     override val type: KClass<*>
         get() = MatchingAnswerData::class
 
@@ -33,7 +33,7 @@ class MatchingAnswerValidator : QuizValidator {
 
 
 @Service
-class OpenTextAnswerValidator : QuizValidator {
+class OpenTextAnswerValidator : QuizResultValidator {
     override val type: KClass<*>
         get() = OpenTextAnswerData::class
 
@@ -49,7 +49,7 @@ class OpenTextAnswerValidator : QuizValidator {
 
 
 @Service
-class OrderingAnswerValidator : QuizValidator {
+class OrderingAnswerValidator : QuizResultValidator {
     override val type: KClass<*>
         get() = OrderingAnswerData::class
 
@@ -62,7 +62,7 @@ class OrderingAnswerValidator : QuizValidator {
 }
 
 @Service
-class SingleChoiceAnswerValidator : QuizValidator {
+class SingleChoiceAnswerValidator : QuizResultValidator {
     override val type: KClass<*>
         get() = SingleChoiceAnswerData::class
 
@@ -75,7 +75,7 @@ class SingleChoiceAnswerValidator : QuizValidator {
 }
 
 @Service
-class TextureClickAnswerValidator : QuizValidator {
+class TextureClickAnswerValidator : QuizResultValidator {
     override val type: KClass<*>
         get() = TextureClickAnswerData::class
 

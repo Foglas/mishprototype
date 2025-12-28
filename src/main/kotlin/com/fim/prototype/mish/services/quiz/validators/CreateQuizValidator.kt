@@ -1,4 +1,4 @@
-package com.fim.prototype.mish.services.quiz
+package com.fim.prototype.mish.services.quiz.validators
 
 import com.fim.prototype.mish.model.entities.quiz.answers.AbstractAnswerData
 import com.fim.prototype.mish.model.entities.quiz.questions.AbstractQuestionData

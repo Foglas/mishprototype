@@ -7,18 +7,19 @@ import com.fim.prototype.mish.model.entities.quiz.QuizSubmissionRequest
 import com.fim.prototype.mish.model.entities.quiz.QuizValidationResult
 import com.fim.prototype.mish.repo.QuizRepo
 import com.fim.prototype.mish.services.StatsService
+import com.fim.prototype.mish.services.quiz.validators.QuizResultValidator
 import org.springframework.stereotype.Service
 
 @Service
-class QuizValidatorService(
+class QuizAnswersResultService(
     private val quizRepo: QuizRepo,
     private val statsService: StatsService,
-    quizValidators: Set<QuizValidator>
+    quizResultValidators: Set<QuizResultValidator>
 ) {
 
-    val validatorsMap = quizValidators.associateBy { it.type }
+    val validatorsMap = quizResultValidators.associateBy { it.type }
 
-    fun validateAnswers(quizId: String, submission: QuizSubmissionRequest): QuizValidationResult {
+    fun getAnswersResult(quizId: String, submission: QuizSubmissionRequest): QuizValidationResult {
         val quiz = quizRepo.getQuizById(quizId, true)
             ?: throw NotFoundException("Quiz with id $quizId not found!")
 

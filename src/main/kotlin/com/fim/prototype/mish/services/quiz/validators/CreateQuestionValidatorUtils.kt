@@ -1,11 +1,10 @@
-package com.fim.prototype.mish.services.quiz.questions
+package com.fim.prototype.mish.services.quiz.validators
 
 import com.fim.prototype.mish.exceptions.NotFoundException
 import com.fim.prototype.mish.exceptions.ValidationException
 import com.fim.prototype.mish.model.entities.quiz.answers.*
 import com.fim.prototype.mish.model.entities.quiz.questions.*
 import com.fim.prototype.mish.services.chapters.ModelService
-import com.fim.prototype.mish.services.quiz.CreateQuizValidator
 import org.springframework.stereotype.Service
 import java.util.*
 import kotlin.reflect.KClass
