@@ -23,28 +23,40 @@ class QuizAnswersResultService(
         val quiz = quizRepo.getQuizById(quizId, true)
             ?: throw NotFoundException("Quiz with id $quizId not found!")
 
-        //TODO handle validation of missing, duplicate or extra answers in submission
+        //TODO TEST: handle validation of missing, duplicate or extra answers in submission
+        val quizAnswers = quiz.answers.distinctBy { it.questionId }.associateBy { it.questionId }
+        val quizQuestions =quiz.questions.distinctBy { it.questionId }.associateBy { it.questionId }
 
-        val quizAnswers = quiz.answers.associateBy { it.questionId }
-        val quizQuestions = quiz.questions.associateBy { it.questionId }
+        val answersResult = submission.answers.mapNotNull { submitted ->
+            val quizQuestion = quizQuestions[submitted.questionId]
+                ?: return@mapNotNull null
 
-        val answersResult = submission.answers.map { submitted ->
             val correctAnswer = quizAnswers[submitted.questionId]
                 ?: throw NotFoundException("Submitted answer was not found in quiz answers!")
-
-            val quizQuestion = quizQuestions[submitted.questionId]
-                ?: throw NotFoundException("Question for submitted answer was not found in quiz questions!")
 
             val validationResult = validatorsMap[correctAnswer::class]?.validate(correctAnswer, submitted)
                 ?: throw InternalServerError("Validator for answer type ${correctAnswer::class} was not found!")
 
-
             QuestionPartValidation(
+                quizQuestion.questionId,
                 validationResult,
                 quizQuestion.points,
                 quizQuestion.questionText
             )
         }
+
+        answersResult.toMutableList().addAll(
+            quizQuestions.values.filter { question ->
+                answersResult.none { it.questionId == question.questionId }
+            }.map { question ->
+                QuestionPartValidation(
+                    questionId = question.questionId,
+                    isCorrect = false,
+                    points = 0,
+                    text = question.questionText
+                )
+            }
+        )
 
         val totalScore = answersResult.filter { it.isCorrect }.sumOf { it.points }
 
