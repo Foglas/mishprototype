@@ -52,6 +52,10 @@ class ModelService(
 
     }
 
+    fun isFileExists(itemId: String): Boolean {
+        return basicFileStorageRepo.isFileExists(itemId)
+    }
+
     fun getFileById(itemId: String): GridFsResource{
         return basicFileStorageRepo.getFileById(itemId) ?: throw NotFoundException("File with id $itemId not found!")
     }

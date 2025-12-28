@@ -22,4 +22,9 @@ class BasicFileStorageRepo(
         return gridFs.getResource(file)
     }
 
+    fun isFileExists(objectId: String): Boolean {
+        val query = Query(Criteria.where("_id").`is`(ObjectId(objectId))).limit(1)
+        return gridFs.find(query).any()
+    }
+
 }

@@ -3,7 +3,7 @@ package com.fim.prototype.mish.controllers
 import com.fim.prototype.mish.model.entities.quiz.QuizEntity
 import com.fim.prototype.mish.model.entities.quiz.QuizSubmissionRequest
 import com.fim.prototype.mish.model.entities.quiz.QuizValidationResult
-import com.fim.prototype.mish.services.QuizService
+import com.fim.prototype.mish.services.quiz.QuizService
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -15,6 +15,11 @@ class QuizController(
     @PostMapping("/create")
     fun createQuiz(@RequestBody quiz: QuizEntity): QuizEntity {
        return quizService.createQuiz(quiz)
+    }
+
+    @PostMapping("/update")
+    fun updateQuiz(@RequestBody quiz: QuizEntity): QuizEntity {
+        return quizService.updateQuiz(quiz)
     }
 
     @DeleteMapping("/delete/{id}")

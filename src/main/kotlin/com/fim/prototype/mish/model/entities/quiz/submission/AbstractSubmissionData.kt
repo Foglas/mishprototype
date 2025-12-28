@@ -21,3 +21,46 @@ sealed class AbstractSubmissionData {
     var questionId: String? = null
     var type: QuestionType? = null
 }
+
+
+fun AbstractSubmissionData.asMatchingSubmissionData(): MatchingSubmissionData {
+    if (this !is MatchingSubmissionData) {
+        throw IllegalStateException("Submission data is not of type MatchingSubmissionData")
+    }
+    return this
+}
+
+fun AbstractSubmissionData.asOrderingSubmissionData(): OrderingSubmissionData {
+    if (this !is OrderingSubmissionData) {
+        throw IllegalStateException("Submission data is not of type OrderingSubmissionData")
+    }
+    return this
+}
+
+fun AbstractSubmissionData.asTextureClickSubmissionData(): TextureClickSubmissionData {
+    if (this !is TextureClickSubmissionData) {
+        throw IllegalStateException("Submission data is not of type TextureClickSubmissionData")
+    }
+    return this
+}
+
+fun AbstractSubmissionData.asMultipleChoiceSubmissionData(): MultipleChoiceSubmissionData {
+    if (this !is MultipleChoiceSubmissionData) {
+        throw IllegalStateException("Submission data is not of type MultipleChoiceSubmissionData")
+    }
+    return this
+}
+
+fun AbstractSubmissionData.asSingleChoiceSubmissionData(): SingleChoiceSubmissionData {
+    if (this !is SingleChoiceSubmissionData) {
+        throw IllegalStateException("Submission data is not of type SingleChoiceSubmissionData")
+    }
+    return this
+}
+
+fun AbstractSubmissionData.asOpenTextSubmissionData(): OpenTextSubmissionData {
+    if (this !is OpenTextSubmissionData) {
+        throw IllegalStateException("Submission data is not of type OpenTextSubmissionData")
+    }
+    return this
+}

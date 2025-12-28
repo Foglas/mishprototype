@@ -21,3 +21,45 @@ sealed class AbstractAnswerData {
     var questionId: String? = null
     var type: QuestionType? = null
 }
+
+fun AbstractAnswerData.asMatchingAnswerData(): MatchingAnswerData {
+    if (this !is MatchingAnswerData) {
+        throw IllegalStateException("Answer data is not of type MatchingAnswerData")
+    }
+    return this
+}
+
+fun AbstractAnswerData.asOrderingAnswerData(): OrderingAnswerData {
+    if (this !is OrderingAnswerData) {
+        throw IllegalStateException("Answer data is not of type OrderingAnswerData")
+    }
+    return this
+}
+
+fun AbstractAnswerData.asSingleChoiceAnswerData(): SingleChoiceAnswerData {
+    if (this !is SingleChoiceAnswerData) {
+        throw IllegalStateException("Answer data is not of type SingleChoiceAnswerData")
+    }
+    return this
+}
+
+fun AbstractAnswerData.asOpenTextAnswerData(): OpenTextAnswerData {
+    if (this !is OpenTextAnswerData) {
+        throw IllegalStateException("Answer data is not of type OpenTextAnswerData")
+    }
+    return this
+}
+
+fun AbstractAnswerData.asMultipleChoiceAnswerData(): MultipleChoiceAnswerData {
+    if (this !is MultipleChoiceAnswerData) {
+        throw IllegalStateException("Answer data is not of type MultipleChoiceAnswerData")
+    }
+    return this
+}
+
+fun AbstractAnswerData.asTextureClickAnswerData(): TextureClickAnswerData {
+    if (this !is TextureClickAnswerData) {
+        throw IllegalStateException("Answer data is not of type TextureClickAnswerData")
+    }
+    return this
+}
