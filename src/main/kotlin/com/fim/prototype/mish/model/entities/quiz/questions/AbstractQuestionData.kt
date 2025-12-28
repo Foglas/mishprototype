@@ -20,7 +20,7 @@ import java.util.*
 )
 abstract class AbstractQuestionData {
     var questionId: String = UUID.randomUUID().toString()
-    var questionText: String? = null
+    var questionText: String = ""
     var type: QuestionType? = null
-    var points: Int? = null
+    var points: Int = 0
 }

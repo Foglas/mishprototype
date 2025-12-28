@@ -12,7 +12,9 @@ data class QuizEntity(
     override var id: String?,
     var questions: List<AbstractQuestionData> = listOf(),
     var answers: List<AbstractAnswerData> = listOf(),
-   ) : QuickQuizEntity()
+   ) : QuickQuizEntity() {
+       var maxScore = questions.sumOf { it.points }
+   }
 
 open class QuickQuizEntity : AbstractEntity() {
     open var chapterId: String? = null
