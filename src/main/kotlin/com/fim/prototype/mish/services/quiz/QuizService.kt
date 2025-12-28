@@ -5,10 +5,10 @@ import com.fim.prototype.mish.exceptions.ValidationException
 import com.fim.prototype.mish.model.entities.quiz.QuizEntity
 import com.fim.prototype.mish.model.entities.quiz.QuizSubmissionRequest
 import com.fim.prototype.mish.model.entities.quiz.QuizValidationResult
+import com.fim.prototype.mish.model.entities.quiz.answers.AbstractAnswerData
 import com.fim.prototype.mish.model.entities.quiz.questions.AbstractQuestionData
 import com.fim.prototype.mish.repo.QuizRepo
 import com.fim.prototype.mish.services.chapters.ChapterService
-import com.fim.prototype.mish.services.quiz.questions.QuestionValidator
 import org.springframework.stereotype.Service
 
 @Service
@@ -16,7 +16,7 @@ class QuizService(
     private val quizRepo: QuizRepo,
     private val quizValidatorService: QuizValidatorService,
     private val chapterService: ChapterService,
-    questionValidator: List<QuestionValidator>,
+    questionValidator: List<CreateQuizValidator>,
 ) {
 
     val questionValidators = questionValidator.associateBy { it.type }
@@ -51,19 +51,27 @@ class QuizService(
 
     private fun validateQuiz(quiz: QuizEntity): QuizEntity {
         if (quiz.name == null) throw ValidationException("Quiz name is not set!")
-        if (quiz.questions.isEmpty()) throw ValidationException("Quiz must have at least one question!")
-        if (quiz.answers.isEmpty()) throw ValidationException("Quiz must have at least one answer!")
-        if (quiz.questions.size != quiz.answers.size) throw ValidationException("Number of questions and answers must be the same!")
-
         quiz.chapterId?.let { chapterService.getChapterById(it) }
+        validateQuestionAndAnswers(quiz.questions, quiz.answers)
 
-        quiz.questions.forEach { validateQuestion(it) }
         //TODO get user and validate if exists and if has permissions to create quiz
         return quiz
     }
 
-    private fun validateQuestion(question: AbstractQuestionData) {
-        questionValidators[question::class]?.validate(question)
-            ?: throw ValidationException("No validator found for question type ${question::class}!")
+    private fun validateQuestionAndAnswers(questions: List<AbstractQuestionData>, answers: List<AbstractAnswerData>) {
+        if (questions.isEmpty()) throw ValidationException("Quiz must have at least one question!")
+        if (answers.isEmpty()) throw ValidationException("Quiz must have at least one answer!")
+        if (questions.size != answers.size) throw ValidationException("Number of questions and answers must be the same!")
+
+
+        questions.forEachIndexed{ index, question ->
+            val answer = answers[index]
+
+            if (question.type != answer.type) throw ValidationException("Question type ${question.type} does not match answer type ${answer::type}!")
+
+            questionValidators[question::class]?.validate(question, answer)
+                ?: throw ValidationException("No validator found for question type ${question::class}!")
+        }
+
     }
 }
