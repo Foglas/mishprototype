@@ -46,8 +46,8 @@ class QuizController(
     }
 
     @GetMapping("/{id}/questions")
-    fun getQuestionsByQuizId(@PathVariable("id") quizId: String): QuizEntity {
-        return quizService.getQuizById(quizId)
+    fun getQuestionsByQuizId(@PathVariable("id") quizId: String, @RequestParam startQuiz: Boolean = false): QuizEntity {
+        return quizService.getQuizById(quizId, false, startQuiz)
     }
 
     @GetMapping("/list")

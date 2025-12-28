@@ -1,9 +1,11 @@
 package com.fim.prototype.mish.services.quiz
 
+import com.fim.prototype.mish.cache.InMemoryCache
 import com.fim.prototype.mish.exceptions.ForbiddenActionException
 import com.fim.prototype.mish.exceptions.NotFoundException
 import com.fim.prototype.mish.exceptions.ValidationException
 import com.fim.prototype.mish.model.common.FilterBase
+import com.fim.prototype.mish.model.common.UserTimeAction
 import com.fim.prototype.mish.model.entities.quiz.QuickQuizEntity
 import com.fim.prototype.mish.model.entities.quiz.QuizEntity
 import com.fim.prototype.mish.model.entities.quiz.QuizSubmissionRequest
@@ -17,6 +19,8 @@ import com.fim.prototype.mish.services.quiz.validators.CreateQuizValidator
 import com.fim.prototype.mish.utils.PageRequestData
 import com.fim.prototype.mish.utils.PageResult
 import org.springframework.stereotype.Service
+import java.time.Instant
+import java.time.temporal.ChronoUnit
 
 @Service
 class QuizService(
@@ -24,6 +28,7 @@ class QuizService(
     private val quizAnswersResultService: QuizAnswersResultService,
     private val chapterService: ChapterService,
     private val currentUserService: CurrentUserService,
+    private val inMemoryCache: InMemoryCache<String, UserTimeAction<Instant>>,
     questionValidator: List<CreateQuizValidator>,
 ) {
 
@@ -47,10 +52,16 @@ class QuizService(
         quizRepo.deleteById(quizId)
     }
 
-    fun getQuizById(quizId: String, showAnswers: Boolean = false): QuizEntity {
+    fun getQuizById(quizId: String, showAnswers: Boolean = false, startQuiz: Boolean = false): QuizEntity {
         //TODO if showAnswers is true, check if the user has permissions to see the answers (if user is teacher)
 
-        return quizRepo.getQuizById(quizId, showAnswers) ?: throw NotFoundException("Quiz with id $quizId not found!")
+        val userId = currentUserService.getCurrentUser().userId
+        val startTime = Instant.now()
+
+        val quiz = quizRepo.getQuizById(quizId, showAnswers) ?: throw NotFoundException("Quiz with id $quizId not found!")
+        if (startQuiz) inMemoryCache.put(userId, UserTimeAction(userId,startTime, startTime.plus(quiz.timeLimit.toLong(), ChronoUnit.SECONDS)))
+
+        return quiz
     }
 
     fun getQuickQuizById(quizId: String): QuickQuizEntity {
@@ -62,6 +73,11 @@ class QuizService(
     }
 
     fun getAnswersResult(quizId: String, submission: QuizSubmissionRequest): QuizValidationResult {
+        val quizEnd = inMemoryCache.delete(currentUserService.getCurrentUser().userId)?.data ?: throw ValidationException("Quiz was not started properly!")
+
+        //TODO maybe time per question? To accept question filled before quizEnd but received after quizEnd
+        if (quizEnd.isBefore(Instant.now())) throw ValidationException("Quiz time limit has expired!")
+
         return quizAnswersResultService.getAnswersResult(quizId, submission)
     }
 

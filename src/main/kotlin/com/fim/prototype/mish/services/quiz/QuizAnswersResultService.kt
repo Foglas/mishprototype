@@ -40,7 +40,7 @@ class QuizAnswersResultService(
             QuestionPartValidation(
                 quizQuestion.questionId,
                 validationResult,
-                quizQuestion.points,
+                if (validationResult) quizQuestion.points else 0,
                 quizQuestion.questionText
             )
         }

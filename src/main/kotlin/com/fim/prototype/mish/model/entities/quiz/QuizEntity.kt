@@ -18,5 +18,5 @@ data class QuizEntity(
 
 open class QuickQuizEntity : AbstractEntity() {
     open var chapterId: String? = null
-    open var timeLimit: Int? = null
+    open var timeLimit: Int = 0
 }

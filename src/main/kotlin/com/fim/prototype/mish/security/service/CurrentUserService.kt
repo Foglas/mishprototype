@@ -11,9 +11,11 @@ class CurrentUserService(
     private val oidcUserMapper: OidcUserMapper
 ) {
 
-    fun getCurrentUser(): CurrentUser? {
+    fun getCurrentUser(): CurrentUser {
         val principal = SecurityContextHolder.getContext().authentication?.principal
-       return if (principal is Jwt) oidcUserMapper.map(principal) else throw IllegalStateException("Unsupported principal type: ${principal?.javaClass}")
+            ?: throw IllegalStateException("No authenticated principal found")
+
+        return if (principal is Jwt) oidcUserMapper.map(principal) else throw IllegalStateException("Unsupported principal type: ${principal.javaClass}")
 
     }
 }
