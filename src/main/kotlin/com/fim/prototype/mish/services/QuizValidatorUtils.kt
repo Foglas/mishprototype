@@ -11,7 +11,10 @@ class MultipleChoiceValidator : QuizValidator{
         get() = MultipleChoiceAnswerData::class
 
     override fun validate(expected: AbstractAnswerData, actual: AbstractSubmissionData): Boolean {
-    return false
+        val expectedTyped = expected as MultipleChoiceAnswerData
+        val actualTyped = actual as MultipleChoiceSubmissionData
+
+        return expectedTyped.correctItems == actualTyped.selectedItems
     }
 }
 
@@ -23,8 +26,8 @@ class MatchingAnswerValidator : QuizValidator{
     override fun validate(expected: AbstractAnswerData, actual: AbstractSubmissionData): Boolean {
         val expectedTyped = expected as MatchingAnswerData
         val actualTyped = actual as MatchingSubmissionData
-        expectedTyped.correctMatches
-        return false
+
+        return  expectedTyped.correctMatches == actualTyped.matches
     }
 }
 
@@ -37,7 +40,10 @@ class OpenTextAnswerValidator : QuizValidator {
     override fun validate(expected: AbstractAnswerData, actual: AbstractSubmissionData): Boolean {
         val expectedTyped = expected as OpenTextAnswerData
         val actualTyped = actual as OpenTextSubmissionData
-        return false
+
+        //TODO exact matching?
+
+        return expectedTyped.acceptableAnswers.contains(actualTyped.text.lowercase())
     }
 }
 
@@ -50,7 +56,8 @@ class OrderingAnswerValidator : QuizValidator {
     override fun validate(expected: AbstractAnswerData, actual: AbstractSubmissionData): Boolean {
         val expectedTyped = expected as OrderingAnswerData
         val actualTyped = actual as OrderingSubmissionData
-        return false
+
+        return expectedTyped.correctOrder == actualTyped.order
     }
 }
 
@@ -62,7 +69,8 @@ class SingleChoiceAnswerValidator : QuizValidator {
     override fun validate(expected: AbstractAnswerData, actual: AbstractSubmissionData): Boolean {
         val expectedTyped = expected as SingleChoiceAnswerData
         val actualTyped = actual as SingleChoiceSubmissionData
-        return false
+
+        return expectedTyped.correctIndex == actualTyped.selectedIndex
     }
 }
 
@@ -74,7 +82,8 @@ class TextureClickAnswerValidator : QuizValidator {
     override fun validate(expected: AbstractAnswerData, actual: AbstractSubmissionData): Boolean {
         val expectedTyped = expected as TextureClickAnswerData
         val actualTyped = actual as TextureClickSubmissionData
-        return false
+
+        return expectedTyped.hexColor == actualTyped.hexColor
     }
 }
 

@@ -42,7 +42,7 @@ class QuizValidatorService(
             )
         }
 
-        val totalScore = answersResult.sumOf { it.points }
+        val totalScore = answersResult.filter { it.isCorrect }.sumOf { it.points }
 
         return QuizValidationResult(
             totalScore = totalScore,
