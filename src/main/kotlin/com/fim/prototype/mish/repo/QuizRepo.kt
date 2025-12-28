@@ -1,7 +1,12 @@
 package com.fim.prototype.mish.repo
 
+import com.fim.prototype.mish.model.common.FilterBase
+import com.fim.prototype.mish.model.entities.ModelMetadataEntity
 import com.fim.prototype.mish.model.entities.quiz.QuizEntity
 import com.fim.prototype.mish.repo.interfaces.IQuizRepo
+import com.fim.prototype.mish.utils.PageRequestData
+import com.fim.prototype.mish.utils.PageResult
+import com.fim.prototype.mish.utils.createPageRequest
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
@@ -29,5 +34,22 @@ class QuizRepo(
         }
 
         return mongoTemplate.findOne(query, QuizEntity::class.java)
+    }
+
+    fun listQuizzes(pageRequest: PageRequestData, filter: FilterBase): PageResult<QuizEntity> {
+        val query = Query().with(pageRequest.createPageRequest())
+
+        if (filter.creatorId != null) query.addCriteria(Criteria.where("creatorId").`is`(filter.creatorId))
+        if (filter.name != null) query.addCriteria(Criteria.where("name").`is`(filter.name))
+        if (filter.createdFrom != null) query.addCriteria(Criteria.where("created").gte(filter.createdFrom!!))
+        if (filter.createdTo != null) query.addCriteria(Criteria.where("created").lte(filter.createdTo!!))
+
+        val total = mongoTemplate.count(query, QuizEntity::class.java)
+
+        return PageResult(
+            elements = mongoTemplate.find(query, QuizEntity::class.java),
+            total = total,
+            page = pageRequest.page
+        )
     }
 }

@@ -2,6 +2,7 @@ package com.fim.prototype.mish.services.quiz
 
 import com.fim.prototype.mish.exceptions.NotFoundException
 import com.fim.prototype.mish.exceptions.ValidationException
+import com.fim.prototype.mish.model.common.FilterBase
 import com.fim.prototype.mish.model.entities.quiz.QuizEntity
 import com.fim.prototype.mish.model.entities.quiz.QuizSubmissionRequest
 import com.fim.prototype.mish.model.entities.quiz.QuizValidationResult
@@ -10,6 +11,8 @@ import com.fim.prototype.mish.model.entities.quiz.questions.AbstractQuestionData
 import com.fim.prototype.mish.repo.QuizRepo
 import com.fim.prototype.mish.services.chapters.ChapterService
 import com.fim.prototype.mish.services.quiz.validators.CreateQuizValidator
+import com.fim.prototype.mish.utils.PageRequestData
+import com.fim.prototype.mish.utils.PageResult
 import org.springframework.stereotype.Service
 
 @Service
@@ -44,6 +47,10 @@ class QuizService(
         //TODO if showAnswers is true, check if the user has permissions to see the answers (if user is teacher)
 
         return quizRepo.getQuizById(quizId, showAnswers) ?: throw NotFoundException("Quiz with id $quizId not found!")
+    }
+
+    fun listQuizzes(pageRequest: PageRequestData, filter: FilterBase): PageResult<QuizEntity> {
+        return quizRepo.listQuizzes(pageRequest, filter)
     }
 
     fun getAnswersResult(quizId: String, submission: QuizSubmissionRequest): QuizValidationResult {
