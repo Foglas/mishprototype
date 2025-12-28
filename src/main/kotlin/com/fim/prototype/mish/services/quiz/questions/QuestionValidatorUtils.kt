@@ -25,6 +25,12 @@ class MultipleChoiceQuestionValidator(
 
             val typedAnswer = a.asMultipleChoiceAnswerData()
 
+            if (typedAnswer.correctItems.size > typedQuestion.options.size) throw ValidationException("Correct options are more than total options!")
+
+            typedAnswer.correctItems.forEach {
+                if (it < 0 || it >= typedQuestion.options.size) throw ValidationException("Correct item index is out of bounds of options!")
+            }
+
             q to a
         }
     }
@@ -45,6 +51,16 @@ class MatchingQuestionValidator(
             if (typedQuestion.rightItems.size <= 2) throw ValidationException("Right items in question must have at least two right item!")
 
             val typedAnswer = a.asMatchingAnswerData()
+
+            if (typedAnswer.correctMatches.size > minOf(typedQuestion.leftItems.size, typedQuestion.rightItems.size)) throw ValidationException("Correct matches are more than minimum of left and right items!")
+
+            typedAnswer.correctMatches.keys.forEach {
+                if (it < 0 || it >= typedQuestion.leftItems.size) throw ValidationException("Correct index is out of bounds of left items!")
+            }
+
+            typedAnswer.correctMatches.values.forEach {
+                if (it < 0 || it >= typedQuestion.rightItems.size) throw ValidationException("Correct index is out of bounds of right items!")
+            }
 
             q to a
         }
@@ -78,6 +94,12 @@ class OrderingQuestionValidator(
 
             val typedAnswer = a.asOrderingAnswerData()
 
+            if (typedAnswer.correctOrder.size > typedQuestion.items.size) throw ValidationException("Correct order has more items than question items!")
+
+            typedAnswer.correctOrder.forEach {
+                if (it < 0 || it >= typedQuestion.items.size) throw ValidationException("Correct order is out of bounds of items!")
+            }
+
             q to a
         }
     }
@@ -97,6 +119,8 @@ class SingleChoiceQuestionValidator(
             if (typedQuestion.options.size <= 2) throw ValidationException("Single choice question must have at least two options!")
 
             val typedAnswer = a.asSingleChoiceAnswerData()
+
+            if (typedAnswer.correctIndex < 0 || typedAnswer.correctIndex >= typedQuestion.options.size) throw ValidationException("Correct index is out of bounds of options!")
 
             q to a
         }
@@ -123,6 +147,9 @@ class TextureClickQuestionValidator(
 
             val typedAnswer = answer.asTextureClickAnswerData()
 
+            if (typedAnswer.hexColor == null) throw ValidationException("Hex color in answer must be set!")
+            if (typedAnswer.hexColor!!.isEmpty()) throw ValidationException("Hex color in answer must be fill!")
+
             q to a
         }
     }
@@ -136,7 +163,10 @@ class QuestionValidatorUtils {
         answer: AbstractAnswerData,
         validate: (AbstractQuestionData, AbstractAnswerData) -> Pair<AbstractQuestionData, AbstractAnswerData> = { q, a -> q to a }
     ): Pair<AbstractQuestionData, AbstractAnswerData> {
-        question.questionId = UUID.randomUUID().toString()
+        val questionId = UUID.randomUUID().toString()
+        question.questionId = questionId
+        answer.questionId = questionId
+
         if (question.points <= 0) throw ValidationException("Question points must be greater than 0!")
         if (question.questionText.isEmpty()) throw ValidationException("Question text must not be empty!")
         if (question.type?.supportedClazz?.contains(question::class) == false) throw ValidationException("Question type is not supported by class type!")

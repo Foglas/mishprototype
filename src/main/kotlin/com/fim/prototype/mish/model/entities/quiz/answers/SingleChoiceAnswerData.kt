@@ -2,5 +2,5 @@ package com.fim.prototype.mish.model.entities.quiz.answers
 
 
 data class SingleChoiceAnswerData(
-    var correctIndex: Int? = null
+    var correctIndex: Int = -1
 ) : AbstractAnswerData()
