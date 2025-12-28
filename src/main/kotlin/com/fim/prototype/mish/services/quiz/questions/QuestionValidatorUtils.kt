@@ -2,7 +2,6 @@ package com.fim.prototype.mish.services.quiz.questions
 
 import com.fim.prototype.mish.exceptions.NotFoundException
 import com.fim.prototype.mish.exceptions.ValidationException
-import com.fim.prototype.mish.model.entities.quiz.QuestionType
 import com.fim.prototype.mish.model.entities.quiz.questions.*
 import com.fim.prototype.mish.services.chapters.ModelService
 import org.springframework.stereotype.Service
@@ -20,7 +19,7 @@ class MultipleChoiceQuestionValidator(
         return questionValidatorUtils.validate(question) {
             val typedQuestion = it.asMultipleChoiceQuestionData()
 
-            if (typedQuestion.options.size >= 2) throw ValidationException("Multiple choice question must have at least two options!")
+            if (typedQuestion.options.size <= 2) throw ValidationException("Multiple choice question must have at least two options!")
             it
         }
     }
@@ -37,8 +36,8 @@ class MatchingQuestionValidator(
         return questionValidatorUtils.validate(question) {
             val typedQuestion = it.asMatchingQuestionData()
 
-            if (typedQuestion.leftItems.size >= 2) throw ValidationException("Left items in question must have at least two left item!")
-            if (typedQuestion.rightItems.size >= 2) throw ValidationException("Right items in question must have at least two right item!")
+            if (typedQuestion.leftItems.size <= 2) throw ValidationException("Left items in question must have at least two left item!")
+            if (typedQuestion.rightItems.size <= 2) throw ValidationException("Right items in question must have at least two right item!")
 
             it
         }
@@ -68,7 +67,7 @@ class OrderingQuestionValidator(
         return questionValidatorUtils.validate(question) {
             val typedQuestion = it.asOrderingQuestionData()
 
-            if (typedQuestion.items.size >= 2) throw ValidationException("Ordering items in question must have at least two item!")
+            if (typedQuestion.items.size <= 2) throw ValidationException("Ordering items in question must have at least two item!")
 
             it
         }
@@ -86,7 +85,7 @@ class SingleChoiceQuestionValidator(
         return questionValidatorUtils.validate(question) {
             val typedQuestion = it.asSingleChoiceQuestionData()
 
-            if (typedQuestion.options.size >= 2) throw ValidationException("Single choice question must have at least two options!")
+            if (typedQuestion.options.size <= 2) throw ValidationException("Single choice question must have at least two options!")
             it
         }
     }
@@ -125,7 +124,7 @@ class QuestionValidatorUtils {
         question.questionId = UUID.randomUUID().toString()
         if (question.points <= 0) throw ValidationException("Question points must be greater than 0!")
         if (question.questionText.isEmpty()) throw ValidationException("Question text must not be empty!")
-        if (question.type?.supportedClazz?.contains(QuestionType::class) == false) throw ValidationException("Question type is not supported by class type!")
+        if (question.type?.supportedClazz?.contains(question::class) == false) throw ValidationException("Question type is not supported by class type!")
 
         return validate(question)
     }
