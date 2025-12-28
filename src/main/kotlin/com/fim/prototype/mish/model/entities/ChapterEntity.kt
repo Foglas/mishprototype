@@ -1,7 +1,7 @@
 package com.fim.prototype.mish.model.entities
 
 import com.fim.prototype.mish.model.rest.SimpleTextureData
-import com.fim.prototype.mish.services.FullTextSearchingService
+import com.fim.prototype.mish.services.fulltext.FullTextSearchingService
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.index.TextIndexed
 import org.springframework.data.mongodb.core.mapping.Document

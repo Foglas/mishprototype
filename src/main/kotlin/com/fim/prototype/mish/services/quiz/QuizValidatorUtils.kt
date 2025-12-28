@@ -1,4 +1,4 @@
-package com.fim.prototype.mish.services
+package com.fim.prototype.mish.services.quiz
 
 import com.fim.prototype.mish.model.entities.quiz.answers.*
 import com.fim.prototype.mish.model.entities.quiz.submission.*
@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service
 import kotlin.reflect.KClass
 
 @Service
-class MultipleChoiceValidator : QuizValidator{
+class MultipleChoiceAnswerValidator : QuizValidator {
     override val type: KClass<*>
         get() = MultipleChoiceAnswerData::class
 
@@ -19,7 +19,7 @@ class MultipleChoiceValidator : QuizValidator{
 }
 
 @Service
-class MatchingAnswerValidator : QuizValidator{
+class MatchingAnswerValidator : QuizValidator {
     override val type: KClass<*>
         get() = MatchingAnswerData::class
 

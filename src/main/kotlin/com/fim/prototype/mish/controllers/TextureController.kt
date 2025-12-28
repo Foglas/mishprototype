@@ -2,7 +2,7 @@ package com.fim.prototype.mish.controllers
 
 import com.fim.prototype.mish.model.rest.SimpleTextureData
 import com.fim.prototype.mish.model.rest.TextureUpload
-import com.fim.prototype.mish.services.ModelService
+import com.fim.prototype.mish.services.chapters.ModelService
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestPart

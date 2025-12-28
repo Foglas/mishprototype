@@ -3,7 +3,6 @@ package com.fim.prototype.mish.model.entities.quiz.questions
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fim.prototype.mish.model.entities.quiz.QuestionType
-import java.util.*
 
 @JsonTypeInfo(
     use = JsonTypeInfo.Id.NAME,
@@ -19,7 +18,7 @@ import java.util.*
     JsonSubTypes.Type(TextureClickQuestionData::class, name = "TextureClickQuestionData")
 )
 abstract class AbstractQuestionData {
-    var questionId: String = UUID.randomUUID().toString()
+    var questionId: String? = null
     var questionText: String = ""
     var type: QuestionType? = null
     var points: Int = 0

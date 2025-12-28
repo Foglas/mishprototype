@@ -1,4 +1,4 @@
-package com.fim.prototype.mish.services
+package com.fim.prototype.mish.services.quiz
 
 import com.fim.prototype.mish.exceptions.InternalServerError
 import com.fim.prototype.mish.exceptions.NotFoundException
@@ -6,6 +6,7 @@ import com.fim.prototype.mish.model.common.QuestionPartValidation
 import com.fim.prototype.mish.model.entities.quiz.QuizSubmissionRequest
 import com.fim.prototype.mish.model.entities.quiz.QuizValidationResult
 import com.fim.prototype.mish.repo.QuizRepo
+import com.fim.prototype.mish.services.StatsService
 import org.springframework.stereotype.Service
 
 @Service
@@ -20,6 +21,8 @@ class QuizValidatorService(
     fun validateAnswers(quizId: String, submission: QuizSubmissionRequest): QuizValidationResult {
         val quiz = quizRepo.getQuizById(quizId, true)
             ?: throw NotFoundException("Quiz with id $quizId not found!")
+
+        //TODO handle validation of missing, duplicate or extra answers in submission
 
         val quizAnswers = quiz.answers.associateBy { it.questionId }
         val quizQuestions = quiz.questions.associateBy { it.questionId }

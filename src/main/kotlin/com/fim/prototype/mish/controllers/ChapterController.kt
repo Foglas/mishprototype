@@ -3,7 +3,7 @@ package com.fim.prototype.mish.controllers
 import com.fim.prototype.mish.model.entities.ChapterEntity
 import com.fim.prototype.mish.model.rest.FullTextResult
 import com.fim.prototype.mish.properties.PageProperties
-import com.fim.prototype.mish.services.ChapterService
+import com.fim.prototype.mish.services.chapters.ChapterService
 import com.fim.prototype.mish.utils.PageRequestData
 import com.fim.prototype.mish.utils.PageResult
 import org.springframework.data.domain.Sort

@@ -1,4 +1,4 @@
-package com.fim.prototype.mish.services
+package com.fim.prototype.mish.services.chapters
 
 import com.fim.prototype.mish.model.entities.FileIdWithName
 import com.fim.prototype.mish.model.entities.ModelIds

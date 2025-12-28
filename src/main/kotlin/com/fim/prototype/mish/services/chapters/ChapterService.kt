@@ -1,4 +1,4 @@
-package com.fim.prototype.mish.services
+package com.fim.prototype.mish.services.chapters
 
 import com.fim.prototype.mish.model.entities.ChapterEntity
 import com.fim.prototype.mish.model.entities.FullTextCollectionType
@@ -7,6 +7,7 @@ import com.fim.prototype.mish.exceptions.ForbiddenActionException
 import com.fim.prototype.mish.exceptions.NotFoundException
 import com.fim.prototype.mish.exceptions.ValidationException
 import com.fim.prototype.mish.repo.interfaces.IChapterRepo
+import com.fim.prototype.mish.services.fulltext.FullTextSearchingService
 import com.fim.prototype.mish.utils.PageRequestData
 import com.fim.prototype.mish.utils.PageResult
 import com.fim.prototype.mish.utils.createPageRequest

@@ -1,6 +1,6 @@
 package com.fim.prototype.mish.controllers
 
-import com.fim.prototype.mish.services.ModelService
+import com.fim.prototype.mish.services.chapters.ModelService
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping

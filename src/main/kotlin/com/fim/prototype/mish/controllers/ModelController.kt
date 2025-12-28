@@ -3,7 +3,7 @@ package com.fim.prototype.mish.controllers
 import com.fim.prototype.mish.model.entities.ModelIds
 import com.fim.prototype.mish.model.entities.ModelMetadataEntity
 import com.fim.prototype.mish.properties.PageProperties
-import com.fim.prototype.mish.services.ModelService
+import com.fim.prototype.mish.services.chapters.ModelService
 import com.fim.prototype.mish.utils.PageRequestData
 import com.fim.prototype.mish.utils.PageResult
 import org.springframework.data.domain.Sort
