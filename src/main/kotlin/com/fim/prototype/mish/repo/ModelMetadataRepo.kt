@@ -39,14 +39,32 @@ class ModelMetadataRepo(
         )
     }
 
+    fun deleteMetadataByTargetFileId(targetFileId: String){
+        val query = Query(Criteria.where("targetFileId").`is`(targetFileId))
+        mongoTemplate.remove(query, ModelMetadataEntity::class.java, MongoCollection.MODEL_ENTITY)
+    }
 
     fun getModelMetadataEntityByTargetFileId(targetFileId: String): ModelMetadataEntity? {
-        val query = Query(Criteria.where("targetFileId").`is`(targetFileId))
-        return mongoTemplate.findOne(query, ModelMetadataEntity::class.java, "models")
+        return getModelMetadataBy("targetFileId", targetFileId)
+    }
+
+    fun getModelMetadataEntityByTextureFileId(targetFileId: String): ModelMetadataEntity? {
+        val query = Query(
+            Criteria().orOperator(
+                Criteria.where("mainTexture.targetFileId").`is`(targetFileId),
+                Criteria.where("otherTextures.targetFileId").`is`(targetFileId)
+            )
+        )
+        return mongoTemplate.findOne(query, ModelMetadataEntity::class.java, MongoCollection.MODEL_ENTITY)
+    }
+
+    fun getModelMetadataBy(property: String, value: String): ModelMetadataEntity?{
+        val query = Query(Criteria.where(property).`is`(value))
+        return mongoTemplate.findOne(query, ModelMetadataEntity::class.java, MongoCollection.MODEL_ENTITY)
     }
 
     fun save(modelMetadataEntity: ModelMetadataEntity): ModelMetadataEntity {
-        return mongoTemplate.save(modelMetadataEntity, "models")
+        return mongoTemplate.save(modelMetadataEntity, MongoCollection.MODEL_ENTITY)
     }
 
 }

@@ -18,8 +18,7 @@ data class ModelMetadataEntity(
     @Indexed val creatorId: String? = null,
     var mainTexture: TextureMetadata?= null,
     var otherTextures: MutableList<TextureMetadata> = mutableListOf(),
-): BasicFileMetadata(){
-}
+): BasicFileMetadata()
 
 data class TextureMetadata(
     override var targetFileId: String?= null, //textureId gridFs

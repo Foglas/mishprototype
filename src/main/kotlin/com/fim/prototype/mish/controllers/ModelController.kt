@@ -22,6 +22,11 @@ class ModelController(
         return modelService.uploadModel(model, metadata)
     }
 
+    @DeleteMapping("/{id}/delete")
+    fun deleteModel(@PathVariable("id") modelId: String){
+        modelService.deleteModel(modelId)
+    }
+
     @GetMapping("/list-by")
     fun listModelsMetadata(
         @RequestParam page: Int,

@@ -23,6 +23,17 @@ class BasicFileStorageRepo(
         return gridFs.getResource(file)
     }
 
+    fun deleteFile(objectId: String) {
+        val id = try {
+            ObjectId(objectId)
+        } catch (e: IllegalArgumentException) {
+            throw NotFoundException("File with id $objectId was not found")
+        }
+
+        val query = Query(Criteria.where("_id").`is`(id))
+        gridFs.delete(query)
+    }
+
     fun isFileExists(objectId: String): Boolean {
         try {
             val query = Query(Criteria.where("_id").`is`(ObjectId(objectId))).limit(1)
