@@ -26,15 +26,15 @@ class ChapterService(
     fun createChapter(chapter: ChapterEntity): ChapterEntity {
         validateChapter(chapter)
         val createdChapter = chapterRepo.save(chapter)
-        fullTextSearchingService.saveFullTextEntity(createdChapter.id!!, FullTextCollectionType.CHAPTER, createdChapter.name, createdChapter.content)
+        createdChapter.name?.let { fullTextSearchingService.saveFullTextEntity(createdChapter.id!!, FullTextCollectionType.CHAPTER, it, createdChapter.content) }
         return createdChapter
     }
 
     fun updateChapter(chapter: ChapterEntity): ChapterEntity {
         val existedChapter = chapter.id?.let { getChapterById(it) } ?: throw ValidationException("Chapter id is not set!", chapter)
         if (existedChapter.creatorId == chapter.creatorId) throw ForbiddenActionException("Chapter creator id can't be changed!", chapter)
-        if ((existedChapter.content != chapter.content && chapter.content.isNotBlank()) || (existedChapter.name != chapter.name && chapter.name.isNotBlank())){
-            fullTextSearchingService.updateFullTextEntity(existedChapter.id!!, existedChapter.name, existedChapter.content)
+        if (chapter.name != null && existedChapter.name != null && ((existedChapter.content != chapter.content && chapter.content.isNotBlank()) || (existedChapter.name != chapter.name && chapter.name!!.isNotBlank()))){
+            fullTextSearchingService.updateFullTextEntity(existedChapter.id!!, existedChapter.name!!, existedChapter.content)
         }
 
         return chapterRepo.save(existedChapter)
@@ -55,7 +55,7 @@ class ChapterService(
     private fun validateChapter(chapter: ChapterEntity): ChapterEntity {
         chapter.creatorId = currentUserService.getCurrentUser().userId
 
-        if (chapter.name.isBlank()) throw ValidationException("Chapter name should be set!", chapter)
+        if (chapter.name == null || chapter.name!!.isBlank()) throw ValidationException("Chapter name should be set!", chapter)
         if (chapter.content.isBlank()) throw ValidationException("Chapter content should be set!", chapter)
 
         return chapter

@@ -1,5 +1,6 @@
 package com.fim.prototype.mish.model.entities
 
+import com.fim.prototype.mish.model.entities.abstracts.AbstractEntity
 import com.fim.prototype.mish.model.rest.SimpleTextureData
 import com.fim.prototype.mish.services.fulltext.FullTextSearchingService
 import org.springframework.data.annotation.Id
@@ -9,14 +10,9 @@ import java.time.Instant
 
 @Document(collection = FullTextSearchingService.chapter)
 data class ChapterEntity(
-    @Id val id: String? = null,
-    @TextIndexed val name: String,
-    var creatorId: String? = null,
     @TextIndexed val content: String,  //editor.js
     val models: List<ModelIds>,
-    val created: Instant = Instant.now(),
-    val updated: Instant? = null,
-)
+): AbstractEntity()
 
 data class ModelIds(
     val metadataId: String,
