@@ -11,8 +11,6 @@ open class DownloadController(
     open val modelService: ModelService
 ) {
 
-    //TODO should be removed after global security will be implemented..
-    @CrossOrigin(origins = ["http://localhost:8081"])
     @GetMapping("/download/{itemId}")
     fun downloadFile(@PathVariable itemId: String, response: HttpServletResponse) {
         val resource = modelService.getFileById(itemId)
