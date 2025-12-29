@@ -3,7 +3,7 @@ package com.fim.prototype.mish.services.quiz
 import com.fim.prototype.mish.cache.InMemoryCache
 import com.fim.prototype.mish.exceptions.NotFoundException
 import com.fim.prototype.mish.exceptions.ValidationException
-import com.fim.prototype.mish.model.common.FilterBase
+import com.fim.prototype.mish.model.common.filters.FilterBase
 import com.fim.prototype.mish.model.common.UserTimeAction
 import com.fim.prototype.mish.model.entities.quiz.QuickQuizEntity
 import com.fim.prototype.mish.model.entities.quiz.QuizEntity

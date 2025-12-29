@@ -1,6 +1,6 @@
 package com.fim.prototype.mish.repo
 
-import com.fim.prototype.mish.model.common.FilterBase
+import com.fim.prototype.mish.model.common.filters.FilterBase
 import com.fim.prototype.mish.model.entities.quiz.QuickQuizEntity
 import com.fim.prototype.mish.model.entities.quiz.QuizEntity
 import com.fim.prototype.mish.repo.interfaces.IQuizRepo

@@ -3,8 +3,8 @@ package com.fim.prototype.mish.services.quiz
 import com.fim.prototype.mish.cache.InMemoryCache
 import com.fim.prototype.mish.exceptions.NotFoundException
 import com.fim.prototype.mish.exceptions.ValidationException
-import com.fim.prototype.mish.model.common.FilterBase
 import com.fim.prototype.mish.model.common.UserTimeAction
+import com.fim.prototype.mish.model.common.filters.QuizResultFilter
 import com.fim.prototype.mish.model.entities.quiz.*
 import com.fim.prototype.mish.repo.QuizResultRepo
 import com.fim.prototype.mish.security.service.CurrentUserService
@@ -33,8 +33,8 @@ class QuizResultService(
         return quizResultRepo.getQuickResultById(quizId) ?: throw NotFoundException("Quiz result for id $quizId was not found!")
     }
 
-    fun listQuizResults(pageRequestData: PageRequestData, filter: FilterBase): PageResult<QuickQuizResult> {
-        return PageResult(emptyList(), 0,0)
+    fun listQuizResults(pageRequestData: PageRequestData, filter: QuizResultFilter): PageResult<QuickQuizResult> {
+        return quizResultRepo.list(pageRequestData, filter)
     }
 
     fun getAnswersResult(quizId: String, submission: QuizSubmissionRequest): QuizValidationResult {

@@ -1,6 +1,6 @@
 package com.fim.prototype.mish.model.entities.quiz
 
-import com.fim.prototype.mish.model.common.FilterBase
+import com.fim.prototype.mish.model.common.filters.FilterBase
 import java.time.Instant
 
 

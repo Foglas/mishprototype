@@ -1,4 +1,4 @@
-package com.fim.prototype.mish.model.common
+package com.fim.prototype.mish.model.common.filters
 
 import java.time.Instant
 
