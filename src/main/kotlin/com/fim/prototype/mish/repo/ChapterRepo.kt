@@ -5,7 +5,6 @@ import com.fim.prototype.mish.model.entities.ChapterEntity
 import com.fim.prototype.mish.repo.interfaces.IChapterRepo
 import com.fim.prototype.mish.utils.PageRequestData
 import com.fim.prototype.mish.utils.PageResult
-import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
@@ -21,6 +20,10 @@ class ChapterRepo(
 
     fun getById(chapterId: String): ChapterEntity? {
         return chapterRepo.findByIdOrNull(chapterId)
+    }
+
+    fun delete(chapterId: String){
+        return chapterRepo.deleteById(chapterId)
     }
 
     fun listChapters(pageRequest: PageRequestData, filter: FilterBase): PageResult<ChapterEntity>{

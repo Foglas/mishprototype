@@ -29,6 +29,11 @@ class ChapterController(
         return chapterService.getChapterById(chapterId)
     }
 
+    @DeleteMapping("/{id}/delete")
+    fun deleteChapter(@PathVariable("id") chapterId: String) {
+        chapterService.delete(chapterId)
+    }
+
     @GetMapping("/list")
     fun listChapters(
         @RequestParam page: Int,
