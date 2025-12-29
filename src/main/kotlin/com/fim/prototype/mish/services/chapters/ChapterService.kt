@@ -1,29 +1,27 @@
 package com.fim.prototype.mish.services.chapters
 
-import com.fim.prototype.mish.model.entities.ChapterEntity
-import com.fim.prototype.mish.model.entities.FullTextCollectionType
-import com.fim.prototype.mish.model.rest.FullTextResult
 import com.fim.prototype.mish.exceptions.ForbiddenActionException
 import com.fim.prototype.mish.exceptions.NotFoundException
 import com.fim.prototype.mish.exceptions.ValidationException
+import com.fim.prototype.mish.model.common.filters.FilterBase
+import com.fim.prototype.mish.model.entities.ChapterEntity
+import com.fim.prototype.mish.model.entities.FullTextCollectionType
+import com.fim.prototype.mish.model.rest.FullTextResult
 import com.fim.prototype.mish.repo.BasicFileStorageRepo
-import com.fim.prototype.mish.repo.interfaces.IChapterRepo
+import com.fim.prototype.mish.repo.ChapterRepo
 import com.fim.prototype.mish.security.service.CurrentUserService
 import com.fim.prototype.mish.services.fulltext.FullTextSearchingService
 import com.fim.prototype.mish.utils.PageRequestData
 import com.fim.prototype.mish.utils.PageResult
-import com.fim.prototype.mish.utils.createPageRequest
-import com.fim.prototype.mish.utils.toPageResult
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
 
 @Service
 class ChapterService(
-    private val chapterRepo: IChapterRepo,
     private val fullTextSearchingService: FullTextSearchingService,
     private val currentUserService: CurrentUserService,
-    private val basicFileStorageRepo: BasicFileStorageRepo
+    private val basicFileStorageRepo: BasicFileStorageRepo,
+    private val chapterRepo: ChapterRepo
 ) {
     fun createChapter(chapter: ChapterEntity): ChapterEntity {
         validateChapter(chapter)
@@ -43,11 +41,11 @@ class ChapterService(
     }
 
     fun getChapterById(id: String): ChapterEntity {
-        return chapterRepo.findByIdOrNull(id) ?: throw NotFoundException("Chapter with id $id not found")
+        return chapterRepo.getById(id) ?: throw NotFoundException("Chapter with id $id not found")
     }
 
-    fun getAllChapters(page: PageRequestData): PageResult<ChapterEntity> {
-        return chapterRepo.findAll(page.createPageRequest()).toPageResult()
+    fun getAllChapters(page: PageRequestData, filter: FilterBase): PageResult<ChapterEntity> {
+        return chapterRepo.listChapters(page, filter)
     }
 
     fun searchFullText(keyword: String): FullTextResult {

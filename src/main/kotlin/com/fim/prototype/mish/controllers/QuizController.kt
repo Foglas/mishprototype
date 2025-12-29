@@ -58,7 +58,7 @@ class QuizController(
         @RequestParam creatorId: String? = null,
         @RequestParam createdFrom: Instant? = null,
         @RequestParam createdTo: Instant? = null,
-        ): PageResult<QuizEntity> {
+        ): PageResult<QuickQuizEntity> {
         return quizService.listQuizzes(PageRequestData(page, limit, orderBy, sortDirection), FilterBase(name, creatorId, createdFrom, createdTo))
     }
 }
