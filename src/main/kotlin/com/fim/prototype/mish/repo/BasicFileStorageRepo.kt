@@ -1,5 +1,6 @@
 package com.fim.prototype.mish.repo
 
+import com.fim.prototype.mish.exceptions.NotFoundException
 import org.bson.types.ObjectId
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
@@ -23,8 +24,12 @@ class BasicFileStorageRepo(
     }
 
     fun isFileExists(objectId: String): Boolean {
-        val query = Query(Criteria.where("_id").`is`(ObjectId(objectId))).limit(1)
-        return gridFs.find(query).any()
+        try {
+            val query = Query(Criteria.where("_id").`is`(ObjectId(objectId))).limit(1)
+            return gridFs.find(query).any()
+        } catch (ex: Exception){
+            throw NotFoundException("File with id $objectId was not found")
+        }
     }
 
 }

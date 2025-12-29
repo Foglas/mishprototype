@@ -6,6 +6,7 @@ import com.fim.prototype.mish.model.rest.FullTextResult
 import com.fim.prototype.mish.exceptions.ForbiddenActionException
 import com.fim.prototype.mish.exceptions.NotFoundException
 import com.fim.prototype.mish.exceptions.ValidationException
+import com.fim.prototype.mish.repo.BasicFileStorageRepo
 import com.fim.prototype.mish.repo.interfaces.IChapterRepo
 import com.fim.prototype.mish.security.service.CurrentUserService
 import com.fim.prototype.mish.services.fulltext.FullTextSearchingService
@@ -21,7 +22,8 @@ import org.springframework.stereotype.Service
 class ChapterService(
     private val chapterRepo: IChapterRepo,
     private val fullTextSearchingService: FullTextSearchingService,
-    private val currentUserService: CurrentUserService
+    private val currentUserService: CurrentUserService,
+    private val basicFileStorageRepo: BasicFileStorageRepo
 ) {
     fun createChapter(chapter: ChapterEntity): ChapterEntity {
         validateChapter(chapter)
@@ -58,7 +60,25 @@ class ChapterService(
         if (chapter.name == null || chapter.name!!.isBlank()) throw ValidationException("Chapter name should be set!", chapter)
         if (chapter.content.isBlank()) throw ValidationException("Chapter content should be set!", chapter)
 
+        chapter.models.forEach { model ->
+            requireFileExists(model.model.id)
+            requireFileExists(model.metadataId)
+
+            model.mainTexture?.let {
+                requireFileExists(it.textureFileId)
+            }
+
+            model.otherTextures.forEach { texture ->
+                requireFileExists(texture.textureFileId)
+            }
+        }
         return chapter
+    }
+
+    private fun requireFileExists(fileId: String) {
+        if (!basicFileStorageRepo.isFileExists(fileId)) {
+            throw NotFoundException("File with id: $fileId was not found!")
+        }
     }
 }
 
