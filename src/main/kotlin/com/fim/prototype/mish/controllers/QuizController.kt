@@ -3,8 +3,6 @@ package com.fim.prototype.mish.controllers
 import com.fim.prototype.mish.model.common.FilterBase
 import com.fim.prototype.mish.model.entities.quiz.QuickQuizEntity
 import com.fim.prototype.mish.model.entities.quiz.QuizEntity
-import com.fim.prototype.mish.model.entities.quiz.QuizSubmissionRequest
-import com.fim.prototype.mish.model.entities.quiz.QuizValidationResult
 import com.fim.prototype.mish.properties.PageProperties
 import com.fim.prototype.mish.services.quiz.QuizService
 import com.fim.prototype.mish.utils.PageRequestData
@@ -63,10 +61,4 @@ class QuizController(
         ): PageResult<QuizEntity> {
         return quizService.listQuizzes(PageRequestData(page, limit, orderBy, sortDirection), FilterBase(name, creatorId, createdFrom, createdTo))
     }
-
-    @GetMapping("/{id}/get-result")
-    fun getAnswersResult(@PathVariable("id") quizId: String, @RequestBody answers: QuizSubmissionRequest): QuizValidationResult {
-        return quizService.getAnswersResult(quizId, answers)
-    }
-
 }

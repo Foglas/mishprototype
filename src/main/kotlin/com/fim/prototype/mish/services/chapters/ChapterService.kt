@@ -53,7 +53,7 @@ class ChapterService(
     }
 
     private fun validateChapter(chapter: ChapterEntity): ChapterEntity {
-        chapter.creatorId = currentUserService.getCurrentUser()?.userId ?: throw ForbiddenActionException("User not logged in", chapter)
+        chapter.creatorId = currentUserService.getCurrentUser().userId
 
         if (chapter.name.isBlank()) throw ValidationException("Chapter name should be set!", chapter)
         if (chapter.content.isBlank()) throw ValidationException("Chapter content should be set!", chapter)

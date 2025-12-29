@@ -1,15 +1,12 @@
 package com.fim.prototype.mish.services.quiz
 
 import com.fim.prototype.mish.cache.InMemoryCache
-import com.fim.prototype.mish.exceptions.ForbiddenActionException
 import com.fim.prototype.mish.exceptions.NotFoundException
 import com.fim.prototype.mish.exceptions.ValidationException
 import com.fim.prototype.mish.model.common.FilterBase
 import com.fim.prototype.mish.model.common.UserTimeAction
 import com.fim.prototype.mish.model.entities.quiz.QuickQuizEntity
 import com.fim.prototype.mish.model.entities.quiz.QuizEntity
-import com.fim.prototype.mish.model.entities.quiz.QuizSubmissionRequest
-import com.fim.prototype.mish.model.entities.quiz.QuizValidationResult
 import com.fim.prototype.mish.model.entities.quiz.answers.AbstractAnswerData
 import com.fim.prototype.mish.model.entities.quiz.questions.AbstractQuestionData
 import com.fim.prototype.mish.repo.QuizRepo
@@ -25,7 +22,6 @@ import java.time.temporal.ChronoUnit
 @Service
 class QuizService(
     private val quizRepo: QuizRepo,
-    private val quizAnswersResultService: QuizAnswersResultService,
     private val chapterService: ChapterService,
     private val currentUserService: CurrentUserService,
     private val inMemoryCache: InMemoryCache<String, UserTimeAction<Instant>>,
@@ -72,15 +68,6 @@ class QuizService(
         return quizRepo.listQuizzes(pageRequest, filter)
     }
 
-    fun getAnswersResult(quizId: String, submission: QuizSubmissionRequest): QuizValidationResult {
-        val quizEnd = inMemoryCache.delete(currentUserService.getCurrentUser().userId)?.data ?: throw ValidationException("Quiz was not started properly!")
-
-        //TODO maybe time per question? To accept question filled before quizEnd but received after quizEnd
-        if (quizEnd.isBefore(Instant.now())) throw ValidationException("Quiz time limit has expired!")
-
-        return quizAnswersResultService.getAnswersResult(quizId, submission)
-    }
-
     private fun validateQuiz(quiz: QuizEntity): QuizEntity {
         if (quiz.name == null) throw ValidationException("Quiz name is not set!")
         quiz.chapterId?.let { chapterService.getChapterById(it) }
@@ -88,7 +75,7 @@ class QuizService(
 
         //TODO get user and validate if exists and if has permissions to create quiz
         //TODO create UnauthorizedException and throw it here
-        quiz.creatorId = currentUserService.getCurrentUser()?.userId ?: throw ForbiddenActionException("User not logged in!")
+        quiz.creatorId = currentUserService.getCurrentUser().userId
         return quiz
     }
 

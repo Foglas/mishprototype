@@ -61,6 +61,8 @@ class QuizAnswersResultService(
         val totalScore = answersResult.filter { it.isCorrect }.sumOf { it.points }
 
         return QuizValidationResult(
+            quizId = quizId,
+            name = quiz.name?:"",
             totalScore = totalScore,
             maxScore = quiz.maxScore,
             percentage = statsService.calculatePercentage(totalScore, quiz.maxScore),
