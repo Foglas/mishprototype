@@ -28,10 +28,10 @@ spring:
             authorization-grant-type: authorization_code
         provider:
           dev-client:
-            issuer-uri: http://localhost:8080/realms/mock-realm
+            issuer-uri: http://localhost:8080/realms/${KEYCLOAK_REALM:mock-realm}
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8080/realms/mock-realm
+          issuer-uri: http://localhost:8080/realms/${KEYCLOAK_REALM:mock-realm}
 
 
 ldap:
@@ -41,7 +41,7 @@ ldap:
 
 
 origin:
-  url: http://localhost:8030
+  url: http://localhost:8081
 
 app:
   page:

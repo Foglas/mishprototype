@@ -1,23 +1,6 @@
 version: "3.9"
 
 services:
-
-  ldap:
-    image: osixia/openldap:1.5.0
-    container_name: mock-ldap
-    environment:
-      LDAP_ORGANISATION: "Example"
-      LDAP_DOMAIN: "example.com"
-      LDAP_ADMIN_PASSWORD: "admin"
-      LDAP_TLS: "false"
-    ports:
-      - "389:389"
-    volumes:
-      - ./ldap/bootstrap/run/startup.sh:/container/run/startup.sh:ro
-      - ./ldap/bootstrap/ldif-to-copy:/tmp/ldif-to-copy:ro
-    command: /container/run/startup.sh
-
-
   keycloak-db:
     image: postgres:15
     container_name: keycloak-db
@@ -29,6 +12,8 @@ services:
       - "5432:5432"
     volumes:
       - keycloak-db-data:/var/lib/postgresql/data
+    networks:
+      - mish_net
 
 
   mock-oidc:
@@ -41,12 +26,18 @@ services:
       KC_DB_PASSWORD: keycloak
       KC_DB_URL_HOST: keycloak-db
       KC_DB: postgres
-    command: start-dev --hostname=localhost --import-realm
+    command: start-dev --import-realm
     volumes:
       - ./oidc/realms:/opt/keycloak/data/import
     ports:
       - "8080:8080"
+    networks:
+      - mish_net
 
 volumes:
   ldap-custom:
   keycloak-db-data:
+
+networks:
+  mish_net:
+    external: true
