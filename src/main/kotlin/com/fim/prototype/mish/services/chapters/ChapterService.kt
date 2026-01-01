@@ -82,7 +82,6 @@ class ChapterService(
 
         chapter.models.forEach { model ->
             requireFileExists(model.model.id)
-            requireFileExists(model.metadataId)
 
             model.mainTexture?.let {
                 requireFileExists(it.textureFileId)
