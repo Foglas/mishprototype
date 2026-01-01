@@ -45,7 +45,7 @@ class QuizResultController(
         return quizResultService.listQuizResults(PageRequestData(page, limit, orderBy, sortDirection), QuizResultFilter(chapterId, quizId, name, creatorId, createdFrom, createdTo))
     }
 
-    @GetMapping("/{id}/validate-result")
+    @PostMapping("/{id}/validate-result")
     fun getAnswersResult(@PathVariable("id") quizId: String, @RequestBody answers: QuizSubmissionRequest): QuizValidationResult {
         return quizResultService.getAnswersResult(quizId, answers)
     }

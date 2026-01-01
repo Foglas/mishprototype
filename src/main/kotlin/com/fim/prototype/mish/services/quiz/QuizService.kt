@@ -3,6 +3,7 @@ package com.fim.prototype.mish.services.quiz
 import com.fim.prototype.mish.cache.InMemoryCache
 import com.fim.prototype.mish.exceptions.NotFoundException
 import com.fim.prototype.mish.exceptions.ValidationException
+import com.fim.prototype.mish.model.common.StartQuizAction
 import com.fim.prototype.mish.model.common.UserTimeAction
 import com.fim.prototype.mish.model.common.filters.FilterBase
 import com.fim.prototype.mish.model.entities.quiz.QuickQuizEntity
@@ -24,7 +25,7 @@ class QuizService(
     private val quizRepo: QuizRepo,
     private val chapterService: ChapterService,
     private val currentUserService: CurrentUserService,
-    private val inMemoryCache: InMemoryCache<String, UserTimeAction<Instant>>,
+    private val inMemoryCache: InMemoryCache<String, UserTimeAction<StartQuizAction>>,
     questionValidator: List<CreateQuizValidator>,
 ) {
 
@@ -55,7 +56,7 @@ class QuizService(
         val startTime = Instant.now()
 
         val quiz = quizRepo.getQuizById(quizId, showAnswers) ?: throw NotFoundException("Quiz with id $quizId not found!")
-        if (startQuiz) inMemoryCache.put(userId, UserTimeAction(userId,startTime, startTime.plus(quiz.timeLimit.toLong(), ChronoUnit.SECONDS)))
+        if (startQuiz) inMemoryCache.put(userId, UserTimeAction(userId,startTime, StartQuizAction(quiz.timeLimit > 0, startTime.plus(quiz.timeLimit.toLong(), ChronoUnit.SECONDS))))
 
         return quiz
     }

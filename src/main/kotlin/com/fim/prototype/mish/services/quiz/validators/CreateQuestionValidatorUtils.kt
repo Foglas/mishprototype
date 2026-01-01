@@ -20,7 +20,7 @@ class MultipleChoiceQuestionValidator(
         return questionValidatorUtils.validate(question, answer) { q, a ->
             val typedQuestion = q.asMultipleChoiceQuestionData()
 
-            if (typedQuestion.options.size <= 2) throw ValidationException("Multiple choice question must have at least two options!")
+            if (typedQuestion.options.size < 2) throw ValidationException("Multiple choice question must have at least two options!")
 
             val typedAnswer = a.asMultipleChoiceAnswerData()
 
@@ -46,8 +46,8 @@ class MatchingQuestionValidator(
         return questionValidatorUtils.validate(question, answer) { q, a ->
             val typedQuestion = q.asMatchingQuestionData()
 
-            if (typedQuestion.leftItems.size <= 2) throw ValidationException("Left items in question must have at least two left item!")
-            if (typedQuestion.rightItems.size <= 2) throw ValidationException("Right items in question must have at least two right item!")
+            if (typedQuestion.leftItems.size < 2) throw ValidationException("Left items in question must have at least two left item!")
+            if (typedQuestion.rightItems.size < 2) throw ValidationException("Right items in question must have at least two right item!")
 
             val typedAnswer = a.asMatchingAnswerData()
 
@@ -89,7 +89,7 @@ class OrderingQuestionValidator(
         return questionValidatorUtils.validate(question, answer) { q, a ->
             val typedQuestion = q.asOrderingQuestionData()
 
-            if (typedQuestion.items.size <= 2) throw ValidationException("Ordering items in question must have at least two item!")
+            if (typedQuestion.items.size < 2) throw ValidationException("Ordering items in question must have at least two item!")
 
             val typedAnswer = a.asOrderingAnswerData()
 
@@ -115,7 +115,7 @@ class SingleChoiceQuestionValidator(
         return questionValidatorUtils.validate(question, answer) { q, a ->
             val typedQuestion = q.asSingleChoiceQuestionData()
 
-            if (typedQuestion.options.size <= 2) throw ValidationException("Single choice question must have at least two options!")
+            if (typedQuestion.options.size < 2) throw ValidationException("Single choice question must have at least two options!")
 
             val typedAnswer = a.asSingleChoiceAnswerData()
 
