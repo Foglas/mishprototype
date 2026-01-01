@@ -1,0 +1,170 @@
+version: "3.8"
+
+services:
+  certs-gen:
+    image: ubuntu:22.04
+    container_name: certs-gen
+    volumes:
+      - mongo-certs:/etc/ssl/mongo
+      - ./scripts:/scripts:ro
+    entrypoint: ["/bin/bash", "/scripts/generate-certs.sh"]
+    environment:
+      - MONGO_CN=mongo-cluster.local
+    # one-shot generator: runs, writes certs+keyfile into the mongo-certs volume, then exits
+
+  cfg1:
+    image: mongo:6
+    container_name: cfg1
+    volumes:
+      - mongo-certs:/etc/ssl/mongo:rw
+      - cfg1-data:/data/db
+      - ./config/configs/mongod-configsvr.conf:/etc/mongo/mongod.conf:ro
+    networks:
+      - mongonet
+    command: >
+      bash -c "until [ -f /etc/ssl/mongo/mongo.pem ] && [ -f /etc/ssl/mongo/ca.pem ] && [ -f /etc/ssl/mongo/keyfile ]; do echo 'waiting for certs...'; sleep 1; done;
+               chmod 400 /etc/ssl/mongo/keyfile || true;
+               chmod 400 /etc/ssl/mongo/mongo.pem || true;
+               mongod --config /etc/mongo/mongod.conf"
+    ports:
+      - "27019:27019"
+
+  cfg2:
+    image: mongo:6
+    container_name: cfg2
+    volumes:
+      - mongo-certs:/etc/ssl/mongo:rw
+      - cfg2-data:/data/db
+      - ./config/configs/mongod-configsvr.conf:/etc/mongo/mongod.conf:ro
+    networks:
+      - mongonet
+    command: >
+      bash -c "until [ -f /etc/ssl/mongo/mongo.pem ] && [ -f /etc/ssl/mongo/ca.pem ] && [ -f /etc/ssl/mongo/keyfile ]; do echo 'waiting for certs...'; sleep 1; done;
+               chmod 400 /etc/ssl/mongo/keyfile || true;
+               chmod 400 /etc/ssl/mongo/mongo.pem || true;
+               mongod --config /etc/mongo/mongod.conf"
+    ports:
+      - "27020:27019"
+
+  cfg3:
+    image: mongo:6
+    container_name: cfg3
+    volumes:
+      - mongo-certs:/etc/ssl/mongo:rw
+      - cfg3-data:/data/db
+      - ./config/configs/mongod-configsvr.conf:/etc/mongo/mongod.conf:ro
+    networks:
+      - mongonet
+    command: >
+      bash -c "until [ -f /etc/ssl/mongo/mongo.pem ] && [ -f /etc/ssl/mongo/ca.pem ] && [ -f /etc/ssl/mongo/keyfile ]; do echo 'waiting for certs...'; sleep 1; done;
+               chmod 400 /etc/ssl/mongo/keyfile || true;
+               chmod 400 /etc/ssl/mongo/mongo.pem || true;
+               mongod --config /etc/mongo/mongod.conf"
+    ports:
+      - "27021:27019"
+
+  shard1:
+    image: mongo:6
+    container_name: shard1
+    volumes:
+      - mongo-certs:/etc/ssl/mongo:rw
+      - shard1-data:/data/db
+      - ./config/shards/mongod-shard.conf:/etc/mongo/mongod.conf:ro
+    networks:
+      - mongonet
+    command: >
+      bash -c "until [ -f /etc/ssl/mongo/mongo.pem ] && [ -f /etc/ssl/mongo/ca.pem ] && [ -f /etc/ssl/mongo/keyfile ]; do echo 'waiting for certs...'; sleep 1; done;
+               chmod 400 /etc/ssl/mongo/keyfile || true;
+               chmod 400 /etc/ssl/mongo/mongo.pem || true;
+               mongod --config /etc/mongo/mongod.conf"
+    ports:
+      - "27022:27018"
+
+  shard2:
+    image: mongo:6
+    container_name: shard2
+    volumes:
+      - mongo-certs:/etc/ssl/mongo:rw
+      - shard2-data:/data/db
+      - ./config/shards/mongod-shard.conf:/etc/mongo/mongod.conf:ro
+    networks:
+      - mongonet
+    command: >
+      bash -c "until [ -f /etc/ssl/mongo/mongo.pem ] && [ -f /etc/ssl/mongo/ca.pem ] && [ -f /etc/ssl/mongo/keyfile ]; do echo 'waiting for certs...'; sleep 1; done;
+               chmod 400 /etc/ssl/mongo/keyfile || true;
+               chmod 400 /etc/ssl/mongo/mongo.pem || true;
+               mongod --config /etc/mongo/mongod.conf"
+    ports:
+      - "27023:27019"
+
+  shard3:
+    image: mongo:6
+    container_name: shard3
+    volumes:
+      - mongo-certs:/etc/ssl/mongo:rw
+      - shard3-data:/data/db
+      - ./config/shards/mongod-shard.conf:/etc/mongo/mongod.conf:ro
+    networks:
+      - mongonet
+    command: >
+      bash -c "until [ -f /etc/ssl/mongo/mongo.pem ] && [ -f /etc/ssl/mongo/ca.pem ] && [ -f /etc/ssl/mongo/keyfile ]; do echo 'waiting for certs...'; sleep 1; done;
+               chmod 400 /etc/ssl/mongo/keyfile || true;
+               chmod 400 /etc/ssl/mongo/mongo.pem || true;
+               mongod --config /etc/mongo/mongod.conf"
+    ports:
+      - "27024:27019"
+
+  mongos:
+    image: mongo:6
+    container_name: mongos
+    depends_on:
+      - cfg1
+      - cfg2
+      - cfg3
+      - shard1
+      - shard2
+      - shard3
+      - certs-gen
+    volumes:
+      - mongo-certs:/etc/ssl/mongo:rw
+      - ./config/mongos/mongos.conf:/etc/mongo/mongos.conf:ro
+    networks:
+      - mongonet
+    command: >
+      bash -c "until [ -f /etc/ssl/mongo/mongo.pem ] && [ -f /etc/ssl/mongo/ca.pem ] && [ -f /etc/ssl/mongo/keyfile ]; do echo 'waiting for certs...'; sleep 1; done;
+               chmod 400 /etc/ssl/mongo/keyfile;
+               chmod 400 /etc/ssl/mongo/mongo.pem;
+               /usr/bin/mongos --config /etc/mongo/mongos.conf --bind_ip_all"
+    ports:
+      - "27017:27017"
+
+  init:
+    image: mongo:6
+    container_name: mongo-init
+    depends_on:
+      - mongos
+      - cfg1
+      - shard1
+      - certs-gen
+    volumes:
+      - mongo-certs:/etc/ssl/mongo:rw
+      - ./scripts:/scripts:ro
+    entrypoint: ["/bin/bash", "/scripts/init-cluster.sh"]
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+    networks:
+      - mongonet
+
+networks:
+  mongonet:
+    driver: bridge
+
+volumes:
+  mongo-certs:
+  cfg1-data:
+  cfg2-data:
+  cfg3-data:
+  shard1-data:
+  shard2-data:
+  shard3-data:
