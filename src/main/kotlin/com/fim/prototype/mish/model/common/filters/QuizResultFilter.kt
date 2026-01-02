@@ -3,7 +3,6 @@ package com.fim.prototype.mish.model.common.filters
 import java.time.Instant
 
 data class QuizResultFilter(
-    val chapterId: String? = null,
     val quizId: String? = null,
     override var name: String? = null,
     override var creatorId: String? = null,

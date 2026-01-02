@@ -39,10 +39,9 @@ class QuizResultController(
         @RequestParam creatorId: String? = null,
         @RequestParam createdFrom: Instant? = null,
         @RequestParam createdTo: Instant? = null,
-        @RequestParam chapterId: String? = null,
         @RequestParam quizId: String? = null
     ): PageResult<QuickQuizResult> {
-        return quizResultService.listQuizResults(PageRequestData(page, limit, orderBy, sortDirection), QuizResultFilter(chapterId, quizId, name, creatorId, createdFrom, createdTo))
+        return quizResultService.listQuizResults(PageRequestData(page, limit, orderBy, sortDirection), QuizResultFilter(quizId, name, creatorId, createdFrom, createdTo))
     }
 
     @PostMapping("/{id}/validate-result")

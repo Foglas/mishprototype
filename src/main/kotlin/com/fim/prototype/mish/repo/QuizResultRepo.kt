@@ -36,6 +36,8 @@ class QuizResultRepo(
             .exclude("questionResults")
             .exclude("questionScores")
 
+        filter.quizId?.let { query.addCriteria(Criteria.where("quizId").`is`(filter.quizId)) }
+
         return mongoBaseRepoUtils.listPagedData(query, pageRequest, QuickQuizResult::class, MongoCollection.QUIZ_RESULT_ENTITY)
     }
 
