@@ -27,7 +27,7 @@ class ChapterRepo(
     }
 
     fun listChapters(pageRequest: PageRequestData, filter: FilterBase): PageResult<ChapterEntity>{
-       return mongoBaseRepoUtils.listPagedData(mongoBaseRepoUtils.createBaseFilterCriteriaAndReturnQuery(filter, pageRequest), pageRequest.page, ChapterEntity::class)
+       return mongoBaseRepoUtils.listPagedData(mongoBaseRepoUtils.createBaseFilterCriteriaAndReturnQuery(filter), pageRequest, ChapterEntity::class)
     }
 
 

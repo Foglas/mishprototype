@@ -15,12 +15,8 @@ class MongoBaseRepoUtils(
     private val mongoTemplate: MongoTemplate
 ) {
 
-    fun createBaseFilterCriteriaAndReturnQuery(filter: FilterBase, pagedRequest: PageRequestData? =null): Query {
-       val query = if (pagedRequest != null){
-           Query().with(pagedRequest.createPageRequest())
-       } else {
-           Query()
-       }
+    fun createBaseFilterCriteriaAndReturnQuery(filter: FilterBase): Query {
+       val query = Query()
 
         if (filter.creatorId != null) query.addCriteria(Criteria.where("creatorId").`is`(filter.creatorId))
         if (filter.name != null) query.addCriteria(Criteria.where("name").`is`(filter.name))
@@ -30,13 +26,15 @@ class MongoBaseRepoUtils(
         return query
     }
 
-    fun <T: Any> listPagedData(query: Query, page: Int, clazz: KClass<T>, collectionName: String?=null): PageResult<T>{
-        val total = mongoTemplate.count(query, clazz.java)
+    fun <T: Any> listPagedData(query: Query, pagedRequest: PageRequestData, clazz: KClass<T>, collectionName: String?=null): PageResult<T>{
+        val total = collectionName?.let { mongoTemplate.count(query, clazz.java, it) }?: mongoTemplate.count(query, clazz.java)
+
+        val pageQuery = query.with(pagedRequest.createPageRequest())
 
         return PageResult(
-            elements = collectionName?.let { mongoTemplate.find(query, clazz.java, it) }?: mongoTemplate.find(query, clazz.java),
+            elements = collectionName?.let { mongoTemplate.find(pageQuery, clazz.java, it) }?: mongoTemplate.find(pageQuery, clazz.java),
             total = total,
-            page = page
+            page = pagedRequest.page
         )
     }
 }

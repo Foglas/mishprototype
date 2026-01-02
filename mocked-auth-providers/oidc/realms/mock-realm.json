@@ -425,6 +425,7 @@
     {
       "username": "alice",
       "enabled": true,
+      "email": "alice@example.com",
       "emailVerified": true,
       "credentials": [
         {
@@ -437,6 +438,7 @@
     },
     {
       "username": "bart",
+      "email": "bart@example.com",
       "enabled": true,
       "emailVerified": true,
       "credentials": [

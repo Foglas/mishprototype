@@ -54,12 +54,12 @@ class QuizRepo(
     }
 
     fun listQuizzes(pageRequest: PageRequestData, filter: FilterBase): PageResult<QuickQuizEntity> {
-        val query = mongoBaseRepoUtils.createBaseFilterCriteriaAndReturnQuery(filter, pageRequest)
+        val query = mongoBaseRepoUtils.createBaseFilterCriteriaAndReturnQuery(filter)
         query.fields()
             .exclude("questions")
             .exclude("answers")
 
-        return mongoBaseRepoUtils.listPagedData(query, pageRequest.page, QuickQuizEntity::class, MongoCollection.QUIZ_ENTITY)
+        return mongoBaseRepoUtils.listPagedData(query, pageRequest, QuickQuizEntity::class, MongoCollection.QUIZ_ENTITY)
 
     }
 }

@@ -31,12 +31,12 @@ class QuizResultRepo(
     }
 
     fun list(pageRequest: PageRequestData, filter: QuizResultFilter): PageResult<QuickQuizResult> {
-        val query = mongoBaseRepoUtils.createBaseFilterCriteriaAndReturnQuery(filter, pageRequest)
+        val query = mongoBaseRepoUtils.createBaseFilterCriteriaAndReturnQuery(filter)
         query.fields()
             .exclude("questionResults")
             .exclude("questionScores")
 
-        return mongoBaseRepoUtils.listPagedData(query, pageRequest.page, QuickQuizResult::class, MongoCollection.QUIZ_RESULT_ENTITY)
+        return mongoBaseRepoUtils.listPagedData(query, pageRequest, QuickQuizResult::class, MongoCollection.QUIZ_RESULT_ENTITY)
     }
 
     fun getQuickResultById(quizId: String): QuickQuizResult?{
