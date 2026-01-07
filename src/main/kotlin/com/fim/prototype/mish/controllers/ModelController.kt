@@ -2,6 +2,7 @@ package com.fim.prototype.mish.controllers
 
 import com.fim.prototype.mish.model.entities.ModelIds
 import com.fim.prototype.mish.model.entities.ModelMetadataEntity
+import com.fim.prototype.mish.model.entities.QuickCommonFileEntity
 import com.fim.prototype.mish.properties.PageProperties
 import com.fim.prototype.mish.services.chapters.ModelService
 import com.fim.prototype.mish.utils.PageRequestData
@@ -20,7 +21,11 @@ class ModelController(
 
     @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).CREATE_CHAPTER)")
     @PostMapping("/upload")
-    fun uploadModel(@RequestPart model: MultipartFile, @RequestPart metadata: ModelMetadataEntity): ModelIds {
+    fun uploadModel(
+        @RequestPart model: MultipartFile,
+        @RequestPart modelName: String?,
+        @RequestPart relatedFiles: List<MultipartFile>,
+        @RequestPart relatedFilesMetadata: List<QuickCommonFileEntity>): ModelIds {
         return modelService.uploadModel(model, metadata)
     }
 
