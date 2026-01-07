@@ -1,5 +1,6 @@
 package com.fim.prototype.mish.model.entities
 
+import com.fim.prototype.mish.model.entities.abstracts.AbstractEntity
 import com.fim.prototype.mish.repo.MongoCollection
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.index.Indexed
@@ -20,6 +21,31 @@ data class ModelMetadataEntity(
     var otherTextures: MutableList<TextureMetadata> = mutableListOf(),
 ): BasicFileMetadata()
 
+
+data class QuickModelEntity(
+    val model: QuickCommonFileEntity,
+    val mainTexture: QuickCommonFileEntity,
+    val otherTextures: List<QuickCommonFileEntity>,
+    val isAdvanced: Boolean,
+): QuickCommonFileEntity()
+
+
+open class QuickCommonFileEntity: AbstractFileEntity(){
+    open val fileSenseType: FileSenseType? = null
+    open val backendEndpoint: String? = null
+    open val relatedFiles: List<QuickCommonFileEntity> = listOf()
+}
+
+
+abstract class AbstractFileEntity: AbstractEntity(){
+    @Indexed(unique = true)
+    open val targetFileId: String?= null
+    open val contentType: String?= null
+    open val size: Long = -1
+}
+
+
+
 data class TextureMetadata(
     override var targetFileId: String?= null, //textureId gridFs
     override val name: String,
@@ -35,4 +61,8 @@ abstract class BasicFileMetadata {
     abstract val updated: Instant?
     abstract val targetFileId: String?
     abstract val otherMetadata: String
+}
+
+enum class FileSenseType{
+    MAIN_TEXTURE, OTHER_TEXTURE, CSV_FILE
 }
