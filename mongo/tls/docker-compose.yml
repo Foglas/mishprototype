@@ -1,0 +1,23 @@
+services:
+  mongo-tls:
+    image: mongo:6
+    container_name: mongo-tls
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: adminpassword
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./certs:/etc/ssl/mongo:ro
+      - ./mongod.conf:/etc/mongo/mongod.conf:ro
+    command: ["mongod", "--config", "/etc/mongo/mongod.conf"]
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "mongosh --username admin --password adminpassword --authenticationDatabase admin --tls --tlsCertificateKeyFile /etc/ssl/mongo/mongo.pem --tlsCAFile /etc/ssl/mongo/ca.pem --eval 'db.adminCommand(\"ping\")' || exit 1"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
