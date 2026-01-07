@@ -1,5 +1,6 @@
 package com.fim.prototype.mish.controllers
 
+import com.fim.prototype.mish.exceptions.ValidationException
 import com.fim.prototype.mish.model.common.filters.QuizResultFilter
 import com.fim.prototype.mish.model.entities.quiz.QuickQuizResult
 import com.fim.prototype.mish.model.entities.quiz.QuizSubmissionRequest
@@ -44,9 +45,9 @@ class QuizResultController(
         return quizResultService.listQuizResults(PageRequestData(page, limit, orderBy, sortDirection), QuizResultFilter(quizId, name, creatorId, createdFrom, createdTo))
     }
 
-    @PostMapping("/{id}/validate-result")
-    fun getAnswersResult(@PathVariable("id") quizId: String, @RequestBody answers: QuizSubmissionRequest): QuizValidationResult {
-        return quizResultService.getAnswersResult(quizId, answers)
+    @PostMapping("/validate-result")
+    fun getAnswersResult(@RequestBody answers: QuizSubmissionRequest): QuizValidationResult {
+        return quizResultService.getAnswersResult(answers.quizId?: throw ValidationException("QuizId is not set!"), answers)
     }
 
 }
