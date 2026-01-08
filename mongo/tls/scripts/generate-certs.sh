@@ -14,16 +14,25 @@ if ! command -v openssl >/dev/null 2>&1; then
   exit 1
 fi
 
-CN=${MONGO_CN:-mongo-cluster.local}
-SAN="DNS:localhost,IP:127.0.0.1,DNS:mongo-cluster.local"
+# -------------------------------
+# Common names and SANs
+# -------------------------------
+CA_CN=${MONGO_CA_CN:-mongo-cluster.local CA}    # CA certificate CN
+SERVER_CN=${MONGO_SERVER_CN:-mongo-tls}        # Server certificate CN
+SAN="DNS:localhost,DNS:${SERVER_CN},IP:127.0.0.1"
 
-echo "Generating CA and server certs in ${OUTDIR} (CN=${CN})"
+echo "Generating CA (CN=${CA_CN}) and server cert (CN=${SERVER_CN}) in ${OUTDIR}"
 
-# CA
+# -------------------------------
+# Generate CA
+# -------------------------------
 openssl genrsa -out ca.key 4096
-openssl req -x509 -new -nodes -key ca.key -sha256 -days 3650 -subj "/CN=${CN} CA" -out ca.pem
+openssl req -x509 -new -nodes -key ca.key -sha256 -days 3650 \
+  -subj "/CN=${CA_CN}" -out ca.pem
 
-# Server key + CSR
+# -------------------------------
+# Generate server key + CSR
+# -------------------------------
 openssl genrsa -out server.key 4096
 
 cat > server.cnf <<EOF
@@ -33,7 +42,7 @@ req_extensions = v3_req
 prompt = no
 
 [req_distinguished_name]
-CN = ${CN}
+CN = ${SERVER_CN}
 
 [v3_req]
 subjectAltName = ${SAN}
@@ -41,27 +50,41 @@ EOF
 
 openssl req -new -key server.key -out server.csr -config server.cnf
 
+# -------------------------------
+# Sign server cert with CA
+# -------------------------------
 cat > v3ext.cnf <<EOF
 subjectAltName = ${SAN}
 extendedKeyUsage = serverAuth, clientAuth
 EOF
 
-openssl x509 -req -in server.csr -CA ca.pem -CAkey ca.key -CAcreateserial -out server.crt -days 3650 -sha256 -extfile v3ext.cnf
+openssl x509 -req -in server.csr -CA ca.pem -CAkey ca.key -CAcreateserial \
+  -out server.crt -days 3650 -sha256 -extfile v3ext.cnf
 
-# Combine key + cert for mongod (PEM with private key first)
+# -------------------------------
+# Combine key + cert for mongod
+# -------------------------------
 cat server.key server.crt > mongo.pem
-chmod 400 mongo.pem || true
-chmod 444 ca.pem || true
+chmod 400 mongo.pem
+chmod 444 ca.pem
 
-# Optional keyfile for internal auth (permissions 400)
+# -------------------------------
+# Optional keyfile for internal cluster auth
+# -------------------------------
 openssl rand -base64 756 > keyfile
-chmod 400 keyfile || true
+chmod 400 keyfile
 
+# -------------------------------
 # Cleanup
-rm -f server.csr server.crt server.key server.cnf v3ext.cnf ca.srl || true
+# -------------------------------
+rm -f server.csr server.key server.cnf v3ext.cnf ca.srl || true
 
 echo "Generated certs in ${OUTDIR}:"
 ls -la "${OUTDIR}"
 
-echo "Done. To use them with docker-compose: run this script, then from project root: docker compose -f mongo/tls/docker-compose.yml up -d"
-
+echo
+echo "Next steps:"
+echo "1) Mount 'mongo.pem' and 'ca.pem' into your MongoDB container"
+echo "2) Use 'mongo.pem' as 'tlsCertificateKeyFile' and 'ca.pem' as 'tlsCAFile'"
+echo "3) Ensure 'tls.mode' is 'requireTLS' in mongod.conf"
+echo "4) For Java clients, import 'ca.pem' into a trust store or SSLContext to validate the server certificate"
