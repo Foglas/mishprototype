@@ -58,11 +58,6 @@ cat server.key server.crt > mongo.pem
 chmod 400 mongo.pem
 chmod 444 ca.pem
 
-
-# Optional keyfile for internal cluster auth
-openssl rand -base64 756 > keyfile
-chmod 400 keyfile
-
 # Cleanup
 rm -f server.csr server.key server.cnf v3ext.cnf ca.srl || true
 
