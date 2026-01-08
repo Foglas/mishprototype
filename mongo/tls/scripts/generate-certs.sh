@@ -1,8 +1,22 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -eo pipefail
+
+# Check if first argument exists
+if [ $# -lt 1 ] || [ -z "$1" ]; then
+  echo "Usage: $0 <truststore-password>"
+  exit 1
+fi
+
+# Assign first argument to variable
+TRUST_STORE_PASS="$1"
+MONGO_SERVER_CN=$2
+MONGO_CA_CN=$3
+OUTPUT_DIR=$4
+
+echo "Using truststore password: $TRUST_STORE_PASS"
 
 SCRIPTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-OUTDIR="${1:-${SCRIPTDIR}/../certs}"
+OUTDIR="${OUTPUT_DIR:-${SCRIPTDIR}/../certs}"
 mkdir -p "${OUTDIR}"
 cd "${OUTDIR}"
 
@@ -66,7 +80,6 @@ ls -la "${OUTDIR}"
 
 # import into trustStore.jks
 TRUSTSTORE="truststore.jks"
-STOREPASS="password"
 
 ALIAS="ca"
 CA_PEM="${OUTDIR}/ca.pem"
@@ -83,14 +96,14 @@ fi
 
 if keytool -list \
     -keystore "$TRUSTSTORE" \
-    -storepass "$STOREPASS" \
+    -storepass "$TRUST_STORE_PASS" \
     -alias "$ALIAS" >/dev/null 2>&1; then
 
   echo "Alias '$ALIAS' already exists in truststore – deleting"
   keytool -delete \
     -alias "$ALIAS" \
     -keystore "$TRUSTSTORE" \
-    -storepass "$STOREPASS"
+    -storepass "$TRUST_STORE_PASS"
 else
   echo "Alias '$ALIAS' does not exist – importing"
 fi
@@ -100,7 +113,7 @@ keytool -importcert \
   -alias "$ALIAS" \
   -file "$CA_PEM" \
   -keystore "$TRUSTSTORE" \
-  -storepass "$STOREPASS" \
+  -storepass "$TRUST_STORE_PASS" \
   -noprompt
 
 echo "CA certificate imported successfully into $TRUSTSTORE"
