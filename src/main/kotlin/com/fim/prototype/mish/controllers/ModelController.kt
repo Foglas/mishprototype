@@ -1,12 +1,12 @@
 package com.fim.prototype.mish.controllers
 
+import com.fim.prototype.mish.model.entities.InputFileDesc
 import com.fim.prototype.mish.model.entities.ModelIds
-import com.fim.prototype.mish.model.entities.ModelMetadataEntity
-import com.fim.prototype.mish.model.entities.QuickCommonFileEntity
 import com.fim.prototype.mish.properties.PageProperties
 import com.fim.prototype.mish.services.chapters.ModelService
 import com.fim.prototype.mish.utils.PageRequestData
 import com.fim.prototype.mish.utils.PageResult
+import kotlinx.coroutines.runBlocking
 import org.springframework.data.domain.Sort
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
@@ -20,11 +20,9 @@ class ModelController(
 
     @PostMapping("/upload")
     fun uploadModel(
-        @RequestPart model: MultipartFile,
-        @RequestPart modelName: String?,
-        @RequestPart relatedFiles: List<MultipartFile>,
-        @RequestPart relatedFilesMetadata: List<QuickCommonFileEntity>): ModelIds {
-        return modelService.uploadModel(model, metadata)
+        @RequestPart files: List<MultipartFile>,
+        @RequestPart metadata: InputFileDesc): ModelIds = runBlocking {
+        return@runBlocking modelService.uploadModel(files, metadata)
     }
 
     @DeleteMapping("/{id}/delete")

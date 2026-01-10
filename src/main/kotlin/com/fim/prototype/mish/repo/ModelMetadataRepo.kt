@@ -3,7 +3,6 @@ package com.fim.prototype.mish.repo
 import com.fim.prototype.mish.model.entities.FileIdWithName
 import com.fim.prototype.mish.model.entities.ModelIds
 import com.fim.prototype.mish.model.entities.ModelMetadataEntity
-import com.fim.prototype.mish.model.rest.SimpleTextureData
 import com.fim.prototype.mish.utils.PageRequestData
 import com.fim.prototype.mish.utils.PageResult
 import com.fim.prototype.mish.utils.createPageRequest
@@ -26,9 +25,9 @@ class ModelMetadataRepo(
         val elements = metadata.map {
             ModelIds(
                 metadataId = it.id?:"",
-                model = FileIdWithName(it.targetFileId?:"", it.name),
-                mainTexture = it.mainTexture?.let { SimpleTextureData(it.targetFileId?:"", it.name, it.csvContent) },
-                otherTextures = it.otherTextures.map { SimpleTextureData(it.targetFileId?:"", it.name, it.csvContent) }
+                model = FileIdWithName(it.model.id?:"", it.model.name),
+                mainTexture = it.mainTexture?.let { FileIdWithName(it.id?:"", it.name) },
+                otherTextures = it.otherTextures.map { FileIdWithName(it.id?:"", it.name) }
             )
         }
 
