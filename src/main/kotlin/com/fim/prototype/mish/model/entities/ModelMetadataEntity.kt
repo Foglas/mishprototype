@@ -42,14 +42,14 @@ open class QuickCommonFileEntity(
     override var id: String? = null,
     override var name: String,
     @JsonSetter(nulls = Nulls.SKIP) override var creatorId: String? = null,
-    override var description: String,
+    @JsonSetter(nulls = Nulls.SKIP) override var description: String? = null,
     override val contentType: String?,
     override val size: Long,
     open val fileSenseType: FileSenseType? = null,
     open val backendEndpoint: String? = null,
     open val relatedFiles: MutableList<QuickCommonFileEntity> = mutableListOf(),
-    override var created: Instant = Instant.now(),
-    @JsonSetter(nulls = Nulls.SKIP) override var updated: Instant = Instant.now(),
+    @JsonSetter(nulls = Nulls.SKIP) override var created: Instant? = Instant.now(),
+    @JsonSetter(nulls = Nulls.SKIP) override var updated: Instant? = Instant.now(),
 ): AbstractFileEntity()
 
 abstract class AbstractFileEntity: AbstractEntity(){
