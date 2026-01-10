@@ -22,7 +22,7 @@ open class QuickQuizEntity(
     open var timeLimit: Int = 0,
     override var name: String = "",
     override var creatorId: String? = null,
-    override var description: String = "",
-    override var created: Instant = Instant.now(),
-    override var updated: Instant = Instant.now()
+    override var description: String? = null,
+    override var created: Instant? = Instant.now(),
+    override var updated: Instant? = Instant.now()
 ) : AbstractEntity()

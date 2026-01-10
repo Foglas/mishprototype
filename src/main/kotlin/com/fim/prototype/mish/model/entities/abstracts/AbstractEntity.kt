@@ -12,7 +12,7 @@ abstract class AbstractEntity() {
     abstract var id: String?
     abstract var name: String
     abstract var creatorId: String?
-    abstract var description: String
-    abstract var created: Instant
-    abstract var updated: Instant
+    abstract var description: String?
+    abstract var created: Instant?
+    abstract var updated: Instant?
 }
