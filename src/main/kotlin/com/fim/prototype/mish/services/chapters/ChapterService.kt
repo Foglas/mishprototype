@@ -88,11 +88,11 @@ class ChapterService(
             requireFileExists(model.model.id)
 
             model.mainTexture?.let {
-                requireFileExists(it.textureFileId)
+                requireFileExists(it.id)
             }
 
             model.otherTextures.forEach { texture ->
-                requireFileExists(texture.textureFileId)
+                requireFileExists(texture.id)
             }
         }
         return chapter
