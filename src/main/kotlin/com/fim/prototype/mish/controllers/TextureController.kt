@@ -24,7 +24,7 @@ class TextureController(
 
     @DeleteMapping("/{id}/delete")
     fun deleteTexture(@PathVariable("id") textureId: String){
-        modelService.deleteTexture(textureId)
+        modelService.deleteRelatedFile(textureId)
     }
 
 }
