@@ -27,7 +27,7 @@ class TextureController(
     @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).CREATE_QUIZ)")
     @DeleteMapping("/{id}/delete")
     fun deleteTexture(@PathVariable("id") textureId: String){
-        modelService.deleteTexture(textureId)
+        modelService.deleteRelatedFile(textureId)
     }
 
 }

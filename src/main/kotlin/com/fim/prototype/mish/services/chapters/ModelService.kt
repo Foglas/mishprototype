@@ -24,8 +24,6 @@ class ModelService(
     private val fileRepo: IFileRepo,
 ) {
 
-    private val scope = CoroutineScope(Dispatchers.IO)
-
     suspend fun uploadModel(
         files: List<MultipartFile>,
         metadata: InputFileDesc
@@ -85,6 +83,7 @@ class ModelService(
     }
 
 
+    //TODO needs to be completely refactored - now it should assign file into the related of some other
     @Transactional
     fun uploadTexture(texture: MultipartFile, metadata: TextureUpload): SimpleTextureData {
         val modelMetadata = modelMetadataRepo.getModelMetadataEntityByTargetFileId(metadata.modelId)
@@ -106,16 +105,17 @@ class ModelService(
         basicFileStorageRepo.deleteFile(modelId)
     }
 
-    fun deleteTexture(textureId: String) {
+
+    fun deleteRelatedFile(textureId: String) {
         val modelMetadata = modelMetadataRepo.getModelMetadataEntityByTextureFileId(textureId) ?: return
 
         val updated = modelMetadata.copy(relatedFiles = modelMetadata.relatedFiles.filter { it.id != textureId })
         modelMetadataRepo.save(updated)
     }
 
+    //load all related
     fun listModelMetadata(pageRequestData: PageRequestData): PageResult<ModelIds> {
         return modelMetadataRepo.getAllModelMetadata(pageRequestData)
-
     }
 
     fun isFileExists(itemId: String): Boolean {
