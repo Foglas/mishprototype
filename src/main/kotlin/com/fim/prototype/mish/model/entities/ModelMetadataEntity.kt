@@ -3,7 +3,6 @@ package com.fim.prototype.mish.model.entities
 import com.fasterxml.jackson.annotation.JsonSetter
 import com.fasterxml.jackson.annotation.Nulls
 import com.fim.prototype.mish.exceptions.ValidationException
-import com.fim.prototype.mish.model.entities.abstracts.AbstractEntity
 import com.fim.prototype.mish.repo.MongoCollection
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
@@ -38,24 +37,19 @@ data class ModelMetadataEntity(
 }
 
 
-open class QuickCommonFileEntity(
-    override var id: String? = null,
-    override var name: String,
-    @JsonSetter(nulls = Nulls.SKIP) override var creatorId: String? = null,
-    @JsonSetter(nulls = Nulls.SKIP) override var description: String? = null,
-    override val contentType: String?,
-    override val size: Long,
-    open val fileSenseType: FileSenseType? = null,
-    open val backendEndpoint: String? = null,
-    open val relatedFiles: MutableList<QuickCommonFileEntity> = mutableListOf(),
-    @JsonSetter(nulls = Nulls.SKIP) override var created: Instant? = Instant.now(),
-    @JsonSetter(nulls = Nulls.SKIP) override var updated: Instant? = Instant.now(),
-): AbstractFileEntity()
-
-abstract class AbstractFileEntity: AbstractEntity(){
-    abstract val contentType: String?
-    abstract val size: Long
-}
+class QuickCommonFileEntity(
+    var id: String? = null,
+    var name: String,
+    @JsonSetter(nulls = Nulls.SKIP) var creatorId: String? = null,
+    @JsonSetter(nulls = Nulls.SKIP) var description: String? = null,
+    val contentType: String?,
+    val size: Long,
+    val fileSenseType: FileSenseType? = null,
+    val backendEndpoint: String? = null,
+    val relatedFiles: MutableList<QuickCommonFileEntity> = mutableListOf(),
+    @JsonSetter(nulls = Nulls.SKIP) var created: Instant? = Instant.now(),
+    @JsonSetter(nulls = Nulls.SKIP) var updated: Instant? = Instant.now(),
+)
 
 enum class FileSenseType{
     MODEL, MAIN_TEXTURE, OTHER_TEXTURE, CSV_FILE

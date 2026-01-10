@@ -1,6 +1,5 @@
 package com.fim.prototype.mish.model.entities.quiz
 
-import com.fim.prototype.mish.model.entities.abstracts.AbstractEntity
 import com.fim.prototype.mish.model.entities.quiz.answers.AbstractAnswerData
 import com.fim.prototype.mish.model.entities.quiz.questions.AbstractQuestionData
 import com.fim.prototype.mish.repo.MongoCollection
@@ -9,20 +8,29 @@ import java.time.Instant
 
 @Document(collection = MongoCollection.QUIZ_ENTITY)
 data class QuizEntity(
+    var id: String? = null,
+    var chapterId: String? = null,
+    var timeLimit: Int = 0,
+    var name: String = "",
+    var creatorId: String? = null,
+    var description: String? = null,
     var questions: List<AbstractQuestionData> = listOf(),
-    var answers: List<AbstractAnswerData> = listOf()
-) : QuickQuizEntity() {
+    var answers: List<AbstractAnswerData> = listOf(),
+    var created: Instant? = Instant.now(),
+    var updated: Instant? = Instant.now()
+
+) {
     val maxScore: Int
         get() = questions.sumOf { it.points }
 }
-
-open class QuickQuizEntity(
-    override var id: String? = null,
-    open var chapterId: String? = null,
-    open var timeLimit: Int = 0,
-    override var name: String = "",
-    override var creatorId: String? = null,
-    override var description: String? = null,
-    override var created: Instant? = Instant.now(),
-    override var updated: Instant? = Instant.now()
-) : AbstractEntity()
+ 
+class QuickQuizEntity(
+    var id: String? = null,
+    var chapterId: String? = null,
+    var timeLimit: Int = 0,
+    var name: String = "",
+    var creatorId: String? = null,
+    var description: String? = null,
+    var created: Instant? = Instant.now(),
+    var updated: Instant? = Instant.now()
+)

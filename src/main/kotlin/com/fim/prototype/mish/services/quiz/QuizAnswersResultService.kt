@@ -47,10 +47,11 @@ class QuizAnswersResultService(
             )
         }
 
-        answersResult.toMutableList().addAll(
-            quizQuestions.values.filter { question ->
-                answersResult.none { it.questionId == question.questionId }
-            }.map { question ->
+        val answeredIds = answersResult.mapTo(mutableSetOf()) { it.questionId }
+
+        val completedResults = answersResult + quizQuestions.values
+            .filter { it.questionId !in answeredIds }
+            .map { question ->
                 QuestionPartValidation(
                     questionId = question.questionId,
                     isCorrect = false,
@@ -58,13 +59,15 @@ class QuizAnswersResultService(
                     text = question.questionText,
                 )
             }
-        )
 
-        val totalScore = answersResult.filter { it.isCorrect }.sumOf { it.points }
+        val totalScore = completedResults
+            .asSequence()
+            .filter { it.isCorrect }
+            .sumOf { it.points }
 
         return QuizValidationResult(
             quizId = quizId,
-            name = quiz.name?:"",
+            name = quiz.name,
             totalScore = totalScore,
             maxScore = quiz.maxScore,
             percentage = statsService.calculatePercentage(totalScore, quiz.maxScore),
