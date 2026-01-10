@@ -1,6 +1,7 @@
 package com.fim.prototype.mish.repo
 
 import com.fim.prototype.mish.model.entities.FileIdWithName
+import com.fim.prototype.mish.model.entities.FileSenseType
 import com.fim.prototype.mish.model.entities.ModelIds
 import com.fim.prototype.mish.model.entities.ModelMetadataEntity
 import com.fim.prototype.mish.utils.PageRequestData
@@ -25,9 +26,9 @@ class ModelMetadataRepo(
         val elements = metadata.map {
             ModelIds(
                 metadataId = it.id?:"",
-                model = FileIdWithName(it.model.id?:"", it.model.name),
-                mainTexture = it.mainTexture?.let { FileIdWithName(it.id?:"", it.name) },
-                otherTextures = it.otherTextures.map { FileIdWithName(it.id?:"", it.name) }
+                model = FileIdWithName(it.modelId?:"", it.name, FileSenseType.MODEL),
+                //mainTexture = groupedFiles[FileSenseType.MAIN_TEXTURE.name],
+             //   otherTextures = it.otherTexture.map { FileIdWithName(it.id, it.name) }
             )
         }
 

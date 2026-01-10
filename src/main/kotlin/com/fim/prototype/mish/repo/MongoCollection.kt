@@ -8,5 +8,6 @@ class MongoCollection {
         const val QUIZ_RESULT_ENTITY = "quizValidationResult"
         const val FULL_TEXT_ENTITY = "fulltext"
         const val MODEL_ENTITY = "models"
+        const val FILE_ENTITY = "files"
     }
 }
