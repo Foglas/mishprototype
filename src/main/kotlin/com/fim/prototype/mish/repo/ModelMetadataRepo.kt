@@ -1,9 +1,6 @@
 package com.fim.prototype.mish.repo
 
-import com.fim.prototype.mish.model.entities.FileIdWithName
-import com.fim.prototype.mish.model.entities.FileSenseType
-import com.fim.prototype.mish.model.entities.ModelIds
-import com.fim.prototype.mish.model.entities.ModelMetadataEntity
+import com.fim.prototype.mish.model.entities.*
 import com.fim.prototype.mish.utils.PageRequestData
 import com.fim.prototype.mish.utils.PageResult
 import com.fim.prototype.mish.utils.createPageRequest
@@ -19,16 +16,14 @@ class ModelMetadataRepo(
 
     fun getAllModelMetadata(pageRequestData: PageRequestData): PageResult<ModelIds> {
         val query = Query().with(pageRequestData.createPageRequest())
-        query.fields().include("name").include("targetFileId").include("otherTextures").include("mainTexture")
+        query.fields().include("name").include("modelId").include("relatedFiles").include("isAdvanced")
         val metadata = mongoTemplate.find(query, ModelMetadataEntity::class.java)
         val total = mongoTemplate.count(Query(), ModelMetadataEntity::class.java)
 
         val elements = metadata.map {
             ModelIds(
                 metadataId = it.id?:"",
-                model = FileIdWithName(it.modelId?:"", it.name, FileSenseType.MODEL),
-                //mainTexture = groupedFiles[FileSenseType.MAIN_TEXTURE.name],
-             //   otherTextures = it.otherTexture.map { FileIdWithName(it.id, it.name) }
+                model = FileIdWithName(it.modelId?:"", it.name, FileSenseType.MODEL, related = it.relatedFiles.map { FileIdWithName(it.id, it.name, it.senseType) }),
             )
         }
 
