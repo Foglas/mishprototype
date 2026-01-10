@@ -7,6 +7,7 @@ import com.fim.prototype.mish.model.rest.SimpleTextureData
 import com.fim.prototype.mish.model.rest.TextureUpload
 import com.fim.prototype.mish.repo.BasicFileStorageRepo
 import com.fim.prototype.mish.repo.ModelMetadataRepo
+import com.fim.prototype.mish.repo.interfaces.IFileRepo
 import com.fim.prototype.mish.utils.PageRequestData
 import com.fim.prototype.mish.utils.PageResult
 import kotlinx.coroutines.CoroutineScope
@@ -20,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile
 class ModelService(
     private val basicFileStorageRepo: BasicFileStorageRepo,
     private val modelMetadataRepo: ModelMetadataRepo,
+    private val fileRepo: IFileRepo,
 ) {
 
     private val scope = CoroutineScope(Dispatchers.IO)
@@ -28,7 +30,7 @@ class ModelService(
         files: List<MultipartFile>,
         metadata: InputFileDesc
     ): ModelIds {
-        val groupedRelatedFiles = files.associateBy { it.originalFilename?:"" }
+        val groupedRelatedFiles = files.associateBy { it.originalFilename ?: "" }
 
         //Match metadataWithCorrectFile.. group files by name and then find in that map by originalFileName
         //for each over metadata and every inner metadata
@@ -37,19 +39,26 @@ class ModelService(
         if (metadata.fileSenseType != FileSenseType.MODEL) throw ValidationException("Files are not related to parent model!")
 
         val relatedFilesMetadata = uploadFiles(groupedRelatedFiles, metadata)
-        val info = ModelMetadataEntity.from(relatedFilesMetadata)
+
+        val info = ModelMetadataEntity.from(relatedFilesMetadata.toFileEntity())
 
         val metadataModel = modelMetadataRepo.save(info)
-        return ModelIds(metadataModel.id ?: "", FileIdWithName(metadataModel.model.id?:"", metadataModel.model.name), FileIdWithName(metadataModel.mainTexture?.id?:"", metadataModel.mainTexture?.name?: "", metadataModel.mainTexture?.relatedFiles?.map { FileIdWithName(it.id?:"", it.name) }?: emptyList()), metadataModel.otherTextures.map { FileIdWithName(it.id?:"", it.name, it.relatedFiles.map { FileIdWithName(it.id?:"", it.name) })})
+
+        return ModelIds(metadataModel.id ?: "", FileIdWithName(metadataModel.id ?: "", metadataModel.name, FileSenseType.MODEL, mapRelatedFiles(relatedFilesMetadata.relatedFiles)))
     }
 
+
+    private fun mapRelatedFiles(relatedFiles: List<OutputFileEntity>): List<FileIdWithName>{
+        if (relatedFiles.isEmpty()) return emptyList()
+        return relatedFiles.map { FileIdWithName(it.id?:"", it.name, it.senseType, mapRelatedFiles(it.relatedFiles)) }
+    }
 
     //TODO move upload outside of method - run in coroutines and than input should be Map<String, String> eg: Map<originalFileName, ObjectId>
     private fun uploadFiles(
         files: Map<String, MultipartFile>,
         metadata: InputFileDesc,
         visited: MutableMap<String, String> = mutableMapOf()
-    ): QuickCommonFileEntity {
+    ): OutputFileEntity {
 
         val file = files[metadata.originalFileName]
             ?: throw ValidationException("File ${metadata.originalFileName} not found")
@@ -57,19 +66,22 @@ class ModelService(
         val alreadySaved = visited[metadata.originalFileName]
 
         val objectId = if (alreadySaved != null) {
-           alreadySaved
+            alreadySaved
         } else {
             val objectId = basicFileStorageRepo.uploadFile(file).toHexString()
             visited[metadata.originalFileName] = objectId
             objectId
         }
 
-        return file.getQuickCommonFileEntity(
+        val fileEntity = file.getOutputFileEntity(
             metadata.copy(id = objectId),
             metadata.relatedFiles.map {
                 uploadFiles(files, it, visited)
             }
         )
+
+        if (alreadySaved == null) fileRepo.save(fileEntity.toFileEntity())
+        return fileEntity
     }
 
 
@@ -82,15 +94,10 @@ class ModelService(
 
         metadata.texture.id = objectId.toHexString()
 
-        val updated = if (metadata.isPrimary) {
-            modelMetadata.copy(mainTexture = metadata.texture)
-        } else {
-            modelMetadata.copy(
-                otherTextures = modelMetadata.otherTextures.toMutableList().apply { add(metadata.texture) })
-        }
+        val updated =
+            modelMetadata.copy(relatedFiles = modelMetadata.relatedFiles.toMutableList() + FileIdentifier(metadata.texture.id?:"", metadata.texture.name, metadata.texture.senseType))
 
-
-        modelMetadataRepo.save(modelMetadata)
+        modelMetadataRepo.save(updated)
         return SimpleTextureData(objectId.toHexString(), metadata.texture.name)
     }
 
@@ -102,11 +109,7 @@ class ModelService(
     fun deleteTexture(textureId: String) {
         val modelMetadata = modelMetadataRepo.getModelMetadataEntityByTextureFileId(textureId) ?: return
 
-        val updated = modelMetadata.copy(
-            mainTexture = if (modelMetadata.mainTexture?.id == textureId) null else modelMetadata.mainTexture,
-            otherTextures = modelMetadata.otherTextures.filter { it.id != textureId }.toMutableList()
-        )
-
+        val updated = modelMetadata.copy(relatedFiles = modelMetadata.relatedFiles.filter { it.id != textureId })
         modelMetadataRepo.save(updated)
     }
 

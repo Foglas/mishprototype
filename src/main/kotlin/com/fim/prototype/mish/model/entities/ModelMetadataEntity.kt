@@ -2,7 +2,6 @@ package com.fim.prototype.mish.model.entities
 
 import com.fasterxml.jackson.annotation.JsonSetter
 import com.fasterxml.jackson.annotation.Nulls
-import com.fim.prototype.mish.exceptions.ValidationException
 import com.fim.prototype.mish.repo.MongoCollection
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
@@ -11,58 +10,94 @@ import java.time.Instant
 
 @Document(collection = MongoCollection.MODEL_ENTITY)
 data class ModelMetadataEntity(
-    @Id
-    val id: String?= null,
-    val model: QuickCommonFileEntity,
-    val mainTexture: QuickCommonFileEntity?,
-    val otherTextures: List<QuickCommonFileEntity>,
-    val isAdvanced: Boolean,
+    @Id val id: String? = null,
+    val modelId: String,
+    val name: String,
+    val relatedFiles: List<FileIdentifier> = emptyList(),
+    val isAdvanced: Boolean
 ) {
-    companion object {
-        fun from(file: QuickCommonFileEntity): ModelMetadataEntity {
-            val filesMap = file.relatedFiles.groupBy { it.fileSenseType }
-
-            val mainTexture = filesMap[FileSenseType.MAIN_TEXTURE] ?: throw ValidationException("Main texture is not present! It must be provided!")
-            if (mainTexture.size != 1) throw ValidationException("There is more than one main texture! It should be only single main texture there!")
-            file.relatedFiles.clear()
-
-            return ModelMetadataEntity(
-                model = file,
-                mainTexture = mainTexture.first(),
-                otherTextures = filesMap[FileSenseType.OTHER_TEXTURE].orEmpty(),
-                isAdvanced = false,
-            )
-        }
-    }
+   companion object{
+       fun from(fileEntity: FileEntity): ModelMetadataEntity{
+           return ModelMetadataEntity(
+               modelId = fileEntity.id!!,
+               name = fileEntity.name,
+               relatedFiles = fileEntity.relatedFiles,
+               isAdvanced = false
+           )
+       }
+   }
 }
 
+data class FileIdentifier(
+    val id: String,
+    val name: String,
+    val senseType: FileSenseType,
+)
 
-class QuickCommonFileEntity(
-    var id: String? = null,
+
+@Document(collection = MongoCollection.FILE_ENTITY)
+data class FileEntity(
+    @Id var id: String? = null,
     var name: String,
     @JsonSetter(nulls = Nulls.SKIP) var creatorId: String? = null,
     @JsonSetter(nulls = Nulls.SKIP) var description: String? = null,
     val contentType: String?,
     val size: Long,
-    val fileSenseType: FileSenseType? = null,
+    val senseType: FileSenseType,
     val backendEndpoint: String? = null,
-    val relatedFiles: MutableList<QuickCommonFileEntity> = mutableListOf(),
-    @JsonSetter(nulls = Nulls.SKIP) var created: Instant? = Instant.now(),
-    @JsonSetter(nulls = Nulls.SKIP) var updated: Instant? = Instant.now(),
+    val relatedFiles: List<FileIdentifier> = mutableListOf(),
+    @JsonSetter(nulls = Nulls.SKIP) var created: Instant = Instant.now(),
+    @JsonSetter(nulls = Nulls.SKIP) var updated: Instant = Instant.now(),
+)
+
+data class OutputFileEntity(
+    var id: String? = null,
+    var name: String,
+    var creatorId: String? = null,
+    var description: String? = null,
+    val contentType: String?,
+    val size: Long,
+    val senseType: FileSenseType,
+    val backendEndpoint: String? = null,
+    val relatedFiles: List<OutputFileEntity> = mutableListOf(),
+    var created: Instant = Instant.now(),
+    var updated: Instant = Instant.now(),
+)
+
+fun OutputFileEntity.toFileEntity(): FileEntity{
+    return FileEntity(
+        id = id,
+        name = name,
+        creatorId = creatorId,
+        description = description,
+        contentType = contentType,
+        size = size,
+        senseType = senseType,
+        backendEndpoint = backendEndpoint,
+        relatedFiles = relatedFiles.map { FileIdentifier(it.id?:"", it.name, it.senseType )}
+    )
+}
+
+data class OutputModelMetadata(
+    val id: String? = null,
+    val modelId: String,
+    val name: String,
+    val relatedFiles: List<OutputFileEntity> = emptyList(),
+    val isAdvanced: Boolean
 )
 
 enum class FileSenseType{
     MODEL, MAIN_TEXTURE, OTHER_TEXTURE, CSV_FILE
 }
 
-fun MultipartFile.getQuickCommonFileEntity(metadata: InputFileDesc, relatedFiles: List<QuickCommonFileEntity> = emptyList()): QuickCommonFileEntity {
-    return QuickCommonFileEntity(
+fun MultipartFile.getOutputFileEntity(metadata: InputFileDesc, relatedFiles: List<OutputFileEntity> = emptyList()): OutputFileEntity {
+    return OutputFileEntity(
         id = metadata.id,
         name = metadata.name,
         description = metadata.description,
-        contentType = this.contentType,
-        size = this.size,
-        fileSenseType = metadata.fileSenseType,
+        contentType = contentType,
+        size = size,
+        senseType = metadata.fileSenseType,
         relatedFiles = relatedFiles.toMutableList()
     )
 }

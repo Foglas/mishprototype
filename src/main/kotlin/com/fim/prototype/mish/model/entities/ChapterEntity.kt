@@ -21,13 +21,12 @@ data class ChapterEntity(
 data class ModelIds(
     val metadataId: String,
     val model: FileIdWithName,
-    val mainTexture: FileIdWithName? = null,
-    val otherTextures: List<FileIdWithName> = listOf(),
 )
 
 data class FileIdWithName(
     val id: String,
     val name: String,
+    val senseType: FileSenseType,
     val related: List<FileIdWithName> = emptyList()
 )
 
