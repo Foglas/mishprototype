@@ -40,7 +40,7 @@ class ModelService(
         val info = ModelMetadataEntity.from(relatedFilesMetadata)
 
         val metadataModel = modelMetadataRepo.save(info)
-        return ModelIds(metadataModel.id ?: "", FileIdWithName(metadataModel.model.id?:"", metadataModel.model.name), FileIdWithName(metadataModel.mainTexture?.id?:"", metadataModel.mainTexture?.name?: ""), metadataModel.otherTextures.map { FileIdWithName(it.id?:"", it.name) } )
+        return ModelIds(metadataModel.id ?: "", FileIdWithName(metadataModel.model.id?:"", metadataModel.model.name), FileIdWithName(metadataModel.mainTexture?.id?:"", metadataModel.mainTexture?.name?: "", metadataModel.mainTexture?.relatedFiles?.map { FileIdWithName(it.id?:"", it.name) }?: emptyList()), metadataModel.otherTextures.map { FileIdWithName(it.id?:"", it.name, it.relatedFiles.map { FileIdWithName(it.id?:"", it.name) })})
     }
 
 
