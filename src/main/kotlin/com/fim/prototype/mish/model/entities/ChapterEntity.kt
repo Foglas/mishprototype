@@ -27,5 +27,6 @@ data class ModelIds(
 data class FileIdWithName(
     val id: String,
     val name: String,
+    val related: List<FileIdWithName> = emptyList()
 )
 
