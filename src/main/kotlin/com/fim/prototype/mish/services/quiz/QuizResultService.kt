@@ -7,7 +7,7 @@ import com.fim.prototype.mish.model.common.UserTimeAction
 import com.fim.prototype.mish.model.common.filters.QuizResultFilter
 import com.fim.prototype.mish.model.entities.quiz.*
 import com.fim.prototype.mish.repo.QuizResultRepo
-import com.fim.prototype.mish.security.service.CurrentUserService
+import com.fim.prototype.mish.security.service.AuthenticationService
 import com.fim.prototype.mish.utils.PageRequestData
 import com.fim.prototype.mish.utils.PageResult
 import org.springframework.stereotype.Service
@@ -15,14 +15,14 @@ import java.time.Instant
 
 @Service
 class QuizResultService(
-    private val currentUserService: CurrentUserService,
+    private val authenticationService: AuthenticationService,
     private val quizResultRepo: QuizResultRepo,
     private val inMemoryCache: InMemoryCache<String, UserTimeAction<Instant>>,
     private val quizAnswersResultService: QuizAnswersResultService,
 ) {
 
     fun create(quizResult: QuizValidationResult): QuizValidationResultWithUser {
-        return quizResultRepo.save(quizResult.toQuizValidationResultWithUser(currentUserService.getCurrentUser().userId))
+        return quizResultRepo.save(quizResult.toQuizValidationResultWithUser(authenticationService.getCurrentUser().userId))
     }
 
     fun getQuizResult(quizId: String): QuizValidationResult {
@@ -38,7 +38,7 @@ class QuizResultService(
     }
 
     fun getAnswersResult(quizId: String, submission: QuizSubmissionRequest): QuizValidationResult {
-        val quizEnd = inMemoryCache.delete(currentUserService.getCurrentUser().userId)?.data ?: throw ValidationException("Quiz was not started properly!")
+        val quizEnd = inMemoryCache.delete(authenticationService.getCurrentUser().userId)?.data ?: throw ValidationException("Quiz was not started properly!")
 
         //TODO maybe time per question? To accept question filled before quizEnd but received after quizEnd
         if (quizEnd.isBefore(Instant.now())) throw ValidationException("Quiz time limit has expired!")

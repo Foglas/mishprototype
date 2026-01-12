@@ -7,6 +7,7 @@ import com.fim.prototype.mish.services.chapters.ChapterService
 import com.fim.prototype.mish.utils.PageRequestData
 import com.fim.prototype.mish.utils.PageResult
 import org.springframework.data.domain.Sort
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 
 
@@ -17,16 +18,19 @@ class ChapterController(
     private val pageProperties: PageProperties,
 ) {
 
+    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).TEACHER)")
     @PostMapping("/create")
     fun createChapter(@RequestBody chapter: ChapterEntity): ChapterEntity {
         return chapterService.createChapter(chapter)
     }
 
+    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).STUDENT)")
     @GetMapping("/{id}")
     fun getChapter(@PathVariable("id") chapterId: String): ChapterEntity {
         return chapterService.getChapterById(chapterId)
     }
 
+    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).STUDENT)")
     @GetMapping("/list")
     fun listChapters(
         @RequestParam page: Int,
@@ -37,11 +41,13 @@ class ChapterController(
         return chapterService.getAllChapters(PageRequestData(page, limit, orderBy, sortDirection))
     }
 
+    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).STUDENT)")
     @GetMapping("/search-fulltext")
     fun searchByFulltext(@RequestParam("keyword") keyword: String): FullTextResult {
         return chapterService.searchFullText(keyword)
     }
 
+    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).TEACHER)")
     @PutMapping("/update")
     fun updateChapter(@RequestBody chapter: ChapterEntity): ChapterEntity {
         return chapterService.updateChapter(chapter)

@@ -9,6 +9,7 @@ import com.fim.prototype.mish.services.quiz.QuizResultService
 import com.fim.prototype.mish.utils.PageRequestData
 import com.fim.prototype.mish.utils.PageResult
 import org.springframework.data.domain.Sort
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import java.time.Instant
 
@@ -19,16 +20,19 @@ class QuizResultController(
     private val quizResultService: QuizResultService,
 ) {
 
+    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).STUDENT)")
     @GetMapping("/{id}")
     fun getQuizResult(@PathVariable("id") quizId: String): QuizValidationResult {
         return quizResultService.getQuizResult(quizId)
     }
 
+    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).STUDENT)")
     @GetMapping("{id}/quick")
     fun getQuickQuizResult(@PathVariable("id") quizId: String): QuickQuizResult {
         return quizResultService.getQuickQuizResult(quizId)
     }
 
+    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).STUDENT)")
     @GetMapping("/list")
     fun listQuizResults(
         @RequestParam page: Int,
@@ -45,6 +49,7 @@ class QuizResultController(
         return quizResultService.listQuizResults(PageRequestData(page, limit, orderBy, sortDirection), QuizResultFilter(chapterId, quizId, name, creatorId, createdFrom, createdTo))
     }
 
+    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).STUDENT)")
     @GetMapping("/{id}/validate-result")
     fun getAnswersResult(@PathVariable("id") quizId: String, @RequestBody answers: QuizSubmissionRequest): QuizValidationResult {
         return quizResultService.getAnswersResult(quizId, answers)

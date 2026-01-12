@@ -10,3 +10,7 @@ data class PageProperties(
     var sortDirection: Sort.Direction,
 )
 
+@ConfigurationProperties(prefix = "app.security")
+data class SecurityProperties(
+    var roleClaimName: String
+)

@@ -7,7 +7,7 @@ import com.fim.prototype.mish.exceptions.ForbiddenActionException
 import com.fim.prototype.mish.exceptions.NotFoundException
 import com.fim.prototype.mish.exceptions.ValidationException
 import com.fim.prototype.mish.repo.interfaces.IChapterRepo
-import com.fim.prototype.mish.security.service.CurrentUserService
+import com.fim.prototype.mish.security.service.AuthenticationService
 import com.fim.prototype.mish.services.fulltext.FullTextSearchingService
 import com.fim.prototype.mish.utils.PageRequestData
 import com.fim.prototype.mish.utils.PageResult
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service
 class ChapterService(
     private val chapterRepo: IChapterRepo,
     private val fullTextSearchingService: FullTextSearchingService,
-    private val currentUserService: CurrentUserService
+    private val authenticationService: AuthenticationService
 ) {
     fun createChapter(chapter: ChapterEntity): ChapterEntity {
         validateChapter(chapter)
@@ -53,7 +53,7 @@ class ChapterService(
     }
 
     private fun validateChapter(chapter: ChapterEntity): ChapterEntity {
-        chapter.creatorId = currentUserService.getCurrentUser().userId
+        chapter.creatorId = authenticationService.getCurrentUser().userId
 
         if (chapter.name.isBlank()) throw ValidationException("Chapter name should be set!", chapter)
         if (chapter.content.isBlank()) throw ValidationException("Chapter content should be set!", chapter)

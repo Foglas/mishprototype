@@ -7,6 +7,7 @@ import com.fim.prototype.mish.services.chapters.ModelService
 import com.fim.prototype.mish.utils.PageRequestData
 import com.fim.prototype.mish.utils.PageResult
 import org.springframework.data.domain.Sort
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 
@@ -17,11 +18,13 @@ class ModelController(
     private val pageProperties: PageProperties,
 ) : DownloadController(modelService) {
 
+    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).TEACHER)")
     @PostMapping("/upload")
     fun uploadModel(@RequestPart model: MultipartFile, @RequestPart metadata: ModelMetadataEntity): ModelIds {
         return modelService.uploadModel(model, metadata)
     }
 
+    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).TEACHER)")
     @GetMapping("/list-by")
     fun listModelsMetadata(
         @RequestParam page: Int,

@@ -47,7 +47,8 @@ app:
   page:
     limit: 20
     sort-direction: ASC
-
+  security:
+    role-claim-name: "realm_access.roles"
 
 logging:
   level:

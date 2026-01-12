@@ -3,6 +3,7 @@ package com.fim.prototype.mish.controllers
 import com.fim.prototype.mish.model.rest.SimpleTextureData
 import com.fim.prototype.mish.model.rest.TextureUpload
 import com.fim.prototype.mish.services.chapters.ModelService
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestPart
@@ -15,6 +16,7 @@ class TextureController(
     override val modelService: ModelService,
 ) : DownloadController(modelService) {
 
+    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).TEACHER)")
     @PostMapping("/upload")
     fun uploadTexture(@RequestPart texture: MultipartFile, @RequestPart metadata: TextureUpload): SimpleTextureData {
        return modelService.uploadTexture(texture, metadata)

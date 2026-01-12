@@ -10,7 +10,7 @@ import com.fim.prototype.mish.model.entities.quiz.QuizEntity
 import com.fim.prototype.mish.model.entities.quiz.answers.AbstractAnswerData
 import com.fim.prototype.mish.model.entities.quiz.questions.AbstractQuestionData
 import com.fim.prototype.mish.repo.QuizRepo
-import com.fim.prototype.mish.security.service.CurrentUserService
+import com.fim.prototype.mish.security.service.AuthenticationService
 import com.fim.prototype.mish.services.chapters.ChapterService
 import com.fim.prototype.mish.services.quiz.validators.CreateQuizValidator
 import com.fim.prototype.mish.utils.PageRequestData
@@ -23,7 +23,7 @@ import java.time.temporal.ChronoUnit
 class QuizService(
     private val quizRepo: QuizRepo,
     private val chapterService: ChapterService,
-    private val currentUserService: CurrentUserService,
+    private val authenticationService: AuthenticationService,
     private val inMemoryCache: InMemoryCache<String, UserTimeAction<Instant>>,
     questionValidator: List<CreateQuizValidator>,
 ) {
@@ -51,7 +51,7 @@ class QuizService(
     fun getQuizById(quizId: String, showAnswers: Boolean = false, startQuiz: Boolean = false): QuizEntity {
         //TODO if showAnswers is true, check if the user has permissions to see the answers (if user is teacher)
 
-        val userId = currentUserService.getCurrentUser().userId
+        val userId = authenticationService.getCurrentUser().userId
         val startTime = Instant.now()
 
         val quiz = quizRepo.getQuizById(quizId, showAnswers) ?: throw NotFoundException("Quiz with id $quizId not found!")
@@ -75,7 +75,7 @@ class QuizService(
 
         //TODO get user and validate if exists and if has permissions to create quiz
         //TODO create UnauthorizedException and throw it here
-        quiz.creatorId = currentUserService.getCurrentUser().userId
+        quiz.creatorId = authenticationService.getCurrentUser().userId
         return quiz
     }
 

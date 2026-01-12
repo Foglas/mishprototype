@@ -11,13 +11,9 @@ class OidcUserMapper: UserMapper<Jwt> {
         val userId = user.claims["sub"] as? String ?: throw IllegalStateException("User id is missing in token")
         val email = user.claims["email"] as? String ?: throw IllegalStateException("User email is missing in token")
 
-        //TODO make extraction of roles when will be known which idp will be used
-        val roles = emptyList<String>()
-
         return CurrentUser(
             userId = userId,
             email = email,
-            roles = roles
         )
     }
 
