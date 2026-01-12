@@ -13,11 +13,16 @@ class RolesConverter(
 )  {
 
     fun convert(jwt: Jwt): Collection<GrantedAuthority> {
-        val roleClaim: Any? = securityProperties.roleClaimName
-            .split(".")
-            .fold(jwt.claims as Any?) { acc, key ->
-                (acc as? Map<*, *>)?.get(key)
-            }
+        val securityRoleDelimiter = securityProperties.roleClaimDelimiter
+        val roleClaim = if (securityRoleDelimiter != null){
+             securityProperties.roleClaimName
+                .split(securityRoleDelimiter)
+                .fold(jwt.claims as Any?) { acc, key ->
+                    (acc as? Map<*, *>)?.get(key)
+                }
+        } else {
+            jwt.claims[securityProperties.roleClaimName]
+        }
 
         return when (roleClaim) {
             is Collection<*> -> roleClaim

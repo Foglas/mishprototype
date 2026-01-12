@@ -49,6 +49,9 @@ app:
     sort-direction: ASC
   security:
     role-claim-name: "realm_access.roles"
+    role-claim-delimiter: "."
+    email-claim: "email"
+    user-id-claim: "sub"
 
 logging:
   level:

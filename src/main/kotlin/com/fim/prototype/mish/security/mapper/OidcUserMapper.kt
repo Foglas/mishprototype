@@ -1,15 +1,18 @@
 package com.fim.prototype.mish.security.mapper
 
+import com.fim.prototype.mish.properties.SecurityProperties
 import com.fim.prototype.mish.security.model.CurrentUser
 import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.stereotype.Component
 
 @Component
-class OidcUserMapper: UserMapper<Jwt> {
+class OidcUserMapper(
+    private val securityProperties: SecurityProperties
+): UserMapper<Jwt> {
 
     override fun map(user: Jwt): CurrentUser {
-        val userId = user.claims["sub"] as? String ?: throw IllegalStateException("User id is missing in token")
-        val email = user.claims["email"] as? String ?: throw IllegalStateException("User email is missing in token")
+        val userId = user.claims[securityProperties.userIdClaim] as? String ?: throw IllegalStateException("User id is missing in token")
+        val email = user.claims[securityProperties.emailClaim] as? String ?: throw IllegalStateException("User email is missing in token")
 
         return CurrentUser(
             userId = userId,

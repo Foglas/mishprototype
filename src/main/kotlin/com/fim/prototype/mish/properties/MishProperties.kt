@@ -12,5 +12,8 @@ data class PageProperties(
 
 @ConfigurationProperties(prefix = "app.security")
 data class SecurityProperties(
-    var roleClaimName: String
+    var roleClaimName: String,
+    var roleClaimDelimiter: String? = null,
+    var userIdClaim: String,
+    var emailClaim: String
 )
