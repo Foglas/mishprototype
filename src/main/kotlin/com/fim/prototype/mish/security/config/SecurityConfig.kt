@@ -31,6 +31,7 @@ class SecurityConfig(
     @Order(1)
     fun apiSecurityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http
+            .cors { }
             .csrf { it.disable() }
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .authorizeHttpRequests { auth -> auth.anyRequest().authenticated() }

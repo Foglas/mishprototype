@@ -1,11 +1,11 @@
 package com.fim.prototype.mish.services.chapters
 
+import com.fim.prototype.mish.exceptions.NotFoundException
 import com.fim.prototype.mish.model.entities.FileIdWithName
 import com.fim.prototype.mish.model.entities.ModelIds
 import com.fim.prototype.mish.model.entities.ModelMetadataEntity
 import com.fim.prototype.mish.model.rest.SimpleTextureData
 import com.fim.prototype.mish.model.rest.TextureUpload
-import com.fim.prototype.mish.exceptions.NotFoundException
 import com.fim.prototype.mish.repo.BasicFileStorageRepo
 import com.fim.prototype.mish.repo.ModelMetadataRepo
 import com.fim.prototype.mish.utils.PageRequestData
@@ -45,6 +45,22 @@ class ModelService(
 
         modelMetadataRepo.save(modelMetadata)
         return SimpleTextureData(objectId.toHexString(), metadata.texture.name, metadata.texture.csvContent)
+    }
+
+    fun deleteModel(modelId: String){
+        modelMetadataRepo.deleteMetadataByTargetFileId(modelId)
+        basicFileStorageRepo.deleteFile(modelId)
+    }
+
+    fun deleteTexture(textureId: String){
+        val modelMetadata = modelMetadataRepo.getModelMetadataEntityByTextureFileId(textureId)?: return
+
+        val updated = modelMetadata.copy(
+            mainTexture = if (modelMetadata.mainTexture?.targetFileId == textureId) null else modelMetadata.mainTexture,
+            otherTextures = modelMetadata.otherTextures.filter { it.targetFileId != textureId }.toMutableList()
+        )
+
+        modelMetadataRepo.save(updated)
     }
 
     fun listModelMetadata(pageRequestData: PageRequestData): PageResult<ModelIds> {

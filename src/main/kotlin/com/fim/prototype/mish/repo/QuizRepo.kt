@@ -15,7 +15,8 @@ import org.springframework.stereotype.Service
 @Service
 class QuizRepo(
     private val quizRepo: IQuizRepo,
-    private val mongoTemplate: MongoTemplate
+    private val mongoTemplate: MongoTemplate,
+    private val mongoBaseRepoUtils: MongoBaseRepoUtils
 ) {
 
     fun save(quiz: QuizEntity): QuizEntity {
@@ -52,20 +53,13 @@ class QuizRepo(
         return mongoTemplate.findOne(query, QuickQuizEntity::class.java, "quiz")
     }
 
-    fun listQuizzes(pageRequest: PageRequestData, filter: FilterBase): PageResult<QuizEntity> {
-        val query = Query().with(pageRequest.createPageRequest())
+    fun listQuizzes(pageRequest: PageRequestData, filter: FilterBase): PageResult<QuickQuizEntity> {
+        val query = mongoBaseRepoUtils.createBaseFilterCriteriaAndReturnQuery(filter)
+        query.fields()
+            .exclude("questions")
+            .exclude("answers")
 
-        if (filter.creatorId != null) query.addCriteria(Criteria.where("creatorId").`is`(filter.creatorId))
-        if (filter.name != null) query.addCriteria(Criteria.where("name").`is`(filter.name))
-        if (filter.createdFrom != null) query.addCriteria(Criteria.where("created").gte(filter.createdFrom!!))
-        if (filter.createdTo != null) query.addCriteria(Criteria.where("created").lte(filter.createdTo!!))
+        return mongoBaseRepoUtils.listPagedData(query, pageRequest, QuickQuizEntity::class, MongoCollection.QUIZ_ENTITY)
 
-        val total = mongoTemplate.count(query, QuizEntity::class.java)
-
-        return PageResult(
-            elements = mongoTemplate.find(query, QuizEntity::class.java),
-            total = total,
-            page = pageRequest.page
-        )
     }
 }

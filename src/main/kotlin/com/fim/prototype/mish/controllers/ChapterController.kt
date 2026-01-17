@@ -1,5 +1,6 @@
 package com.fim.prototype.mish.controllers
 
+import com.fim.prototype.mish.model.common.filters.FilterBase
 import com.fim.prototype.mish.model.entities.ChapterEntity
 import com.fim.prototype.mish.model.rest.FullTextResult
 import com.fim.prototype.mish.properties.PageProperties
@@ -9,6 +10,7 @@ import com.fim.prototype.mish.utils.PageResult
 import org.springframework.data.domain.Sort
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
+import java.time.Instant
 
 
 @RestController
@@ -30,6 +32,12 @@ class ChapterController(
         return chapterService.getChapterById(chapterId)
     }
 
+    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).TEACHER)")
+    @DeleteMapping("/{id}/delete")
+    fun deleteChapter(@PathVariable("id") chapterId: String) {
+        chapterService.delete(chapterId)
+    }
+
     @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).STUDENT)")
     @GetMapping("/list")
     fun listChapters(
@@ -37,8 +45,12 @@ class ChapterController(
         @RequestParam limit: Int = pageProperties.limit,
         @RequestParam orderBy: String? = null,
         @RequestParam sortDirection: Sort.Direction = pageProperties.sortDirection,
+        @RequestParam name: String? = null,
+        @RequestParam creatorId: String? = null,
+        @RequestParam createdFrom: Instant? = null,
+        @RequestParam createdTo: Instant? = null,
     ): PageResult<ChapterEntity> {
-        return chapterService.getAllChapters(PageRequestData(page, limit, orderBy, sortDirection))
+        return chapterService.getAllChapters(PageRequestData(page, limit, orderBy, sortDirection), FilterBase(name, creatorId, createdFrom, createdTo))
     }
 
     @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).STUDENT)")

@@ -25,6 +25,12 @@ class ModelController(
     }
 
     @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).TEACHER)")
+    @DeleteMapping("/{id}/delete")
+    fun deleteModel(@PathVariable("id") modelId: String){
+        modelService.deleteModel(modelId)
+    }
+
+    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).TEACHER)")
     @GetMapping("/list-by")
     fun listModelsMetadata(
         @RequestParam page: Int,

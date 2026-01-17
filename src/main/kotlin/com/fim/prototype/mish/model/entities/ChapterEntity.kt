@@ -1,22 +1,16 @@
 package com.fim.prototype.mish.model.entities
 
+import com.fim.prototype.mish.model.entities.abstracts.AbstractEntity
 import com.fim.prototype.mish.model.rest.SimpleTextureData
-import com.fim.prototype.mish.services.fulltext.FullTextSearchingService
-import org.springframework.data.annotation.Id
+import com.fim.prototype.mish.repo.MongoCollection
 import org.springframework.data.mongodb.core.index.TextIndexed
 import org.springframework.data.mongodb.core.mapping.Document
-import java.time.Instant
 
-@Document(collection = FullTextSearchingService.chapter)
+@Document(collection = MongoCollection.CHAPTER_ENTITY)
 data class ChapterEntity(
-    @Id val id: String? = null,
-    @TextIndexed val name: String,
-    var creatorId: String? = null,
     @TextIndexed val content: String,  //editor.js
     val models: List<ModelIds>,
-    val created: Instant = Instant.now(),
-    val updated: Instant? = null,
-)
+): AbstractEntity()
 
 data class ModelIds(
     val metadataId: String,

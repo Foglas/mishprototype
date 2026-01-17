@@ -1,12 +1,13 @@
 package com.fim.prototype.mish.model.entities
 
+import com.fim.prototype.mish.repo.MongoCollection
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.data.mongodb.core.index.TextIndexed
 import org.springframework.data.mongodb.core.mapping.Document
 import java.time.Instant
 
-@Document(collection = "models")
+@Document(collection = MongoCollection.MODEL_ENTITY)
 data class ModelMetadataEntity(
     @Id val id: String? = null,
     @Indexed(unique = true) override var targetFileId: String? = null, //modelId gridFs
@@ -17,8 +18,7 @@ data class ModelMetadataEntity(
     @Indexed val creatorId: String? = null,
     var mainTexture: TextureMetadata?= null,
     var otherTextures: MutableList<TextureMetadata> = mutableListOf(),
-): BasicFileMetadata(){
-}
+): BasicFileMetadata()
 
 data class TextureMetadata(
     override var targetFileId: String?= null, //textureId gridFs
