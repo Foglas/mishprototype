@@ -59,14 +59,14 @@ class QuizController(
     @GetMapping("/list")
     fun listQuizzes(
         @RequestParam page: Int,
-        @RequestParam limit: Int = pageProperties.limit,
+        @RequestParam limit: Int? = null,
         @RequestParam orderBy: String? = null,
-        @RequestParam sortDirection: Sort.Direction = pageProperties.sortDirection,
+        @RequestParam sortDirection: Sort.Direction?,
         @RequestParam name: String? = null,
         @RequestParam creatorId: String? = null,
         @RequestParam createdFrom: Instant? = null,
         @RequestParam createdTo: Instant? = null,
         ): PageResult<QuickQuizEntity> {
-        return quizService.listQuizzes(PageRequestData(page, limit, orderBy, sortDirection), FilterBase(name, creatorId, createdFrom, createdTo))
+        return quizService.listQuizzes(PageRequestData(page, limit ?: pageProperties.limit, orderBy, sortDirection?: pageProperties.sortDirection), FilterBase(name, creatorId, createdFrom, createdTo))
     }
 }

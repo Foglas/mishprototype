@@ -34,11 +34,11 @@ class ModelController(
     @GetMapping("/list-by")
     fun listModelsMetadata(
         @RequestParam page: Int,
-        @RequestParam limit: Int = pageProperties.limit,
+        @RequestParam limit: Int? = null,
         @RequestParam orderBy: String?=null,
-        @RequestParam sortDirection: Sort.Direction = pageProperties.sortDirection,
+        @RequestParam sortDirection: Sort.Direction? = null,
     ): PageResult<ModelIds>{
-        return modelService.listModelMetadata(PageRequestData(page, limit, orderBy, sortDirection))
+        return modelService.listModelMetadata(PageRequestData(page, limit ?: pageProperties.limit, orderBy, sortDirection?: pageProperties.sortDirection))
     }
 
     //TODO assign model to target

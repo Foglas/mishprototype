@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service
 @Service
 class ChapterService(
     private val fullTextSearchingService: FullTextSearchingService,
-    private val authenticationService: AuthenticationService
+    private val authenticationService: AuthenticationService,
     private val basicFileStorageRepo: BasicFileStorageRepo,
     private val chapterRepo: ChapterRepo
 ) {

@@ -37,16 +37,16 @@ class QuizResultController(
     @GetMapping("/list")
     fun listQuizResults(
         @RequestParam page: Int,
-        @RequestParam limit: Int = pageProperties.limit,
+        @RequestParam limit: Int? = null,
         @RequestParam orderBy: String? = null,
-        @RequestParam sortDirection: Sort.Direction = pageProperties.sortDirection,
+        @RequestParam sortDirection: Sort.Direction? = null,
         @RequestParam name: String? = null,
         @RequestParam creatorId: String? = null,
         @RequestParam createdFrom: Instant? = null,
         @RequestParam createdTo: Instant? = null,
         @RequestParam quizId: String? = null
     ): PageResult<QuickQuizResult> {
-        return quizResultService.listQuizResults(PageRequestData(page, limit, orderBy, sortDirection), QuizResultFilter(quizId, name, creatorId, createdFrom, createdTo))
+        return quizResultService.listQuizResults(PageRequestData(page, limit?: pageProperties.limit, orderBy, sortDirection ?: pageProperties.sortDirection), QuizResultFilter(quizId, name, creatorId, createdFrom, createdTo))
     }
 
     @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).STUDENT)")

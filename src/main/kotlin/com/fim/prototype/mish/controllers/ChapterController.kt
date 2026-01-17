@@ -42,15 +42,15 @@ class ChapterController(
     @GetMapping("/list")
     fun listChapters(
         @RequestParam page: Int,
-        @RequestParam limit: Int = pageProperties.limit,
+        @RequestParam limit: Int? = null,
         @RequestParam orderBy: String? = null,
-        @RequestParam sortDirection: Sort.Direction = pageProperties.sortDirection,
+        @RequestParam sortDirection: Sort.Direction?,
         @RequestParam name: String? = null,
         @RequestParam creatorId: String? = null,
         @RequestParam createdFrom: Instant? = null,
         @RequestParam createdTo: Instant? = null,
     ): PageResult<ChapterEntity> {
-        return chapterService.getAllChapters(PageRequestData(page, limit, orderBy, sortDirection), FilterBase(name, creatorId, createdFrom, createdTo))
+        return chapterService.getAllChapters(PageRequestData(page, limit?: pageProperties.limit, orderBy, sortDirection?: pageProperties.sortDirection), FilterBase(name, creatorId, createdFrom, createdTo))
     }
 
     @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).STUDENT)")
