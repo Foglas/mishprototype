@@ -117,6 +117,14 @@ dynamic-hz yes
 aof-rewrite-incremental-fsync yes
 rdb-save-incremental-fsync yes
 jemalloc-bg-thread yes
+
+tls-port $port
+port 0
+tls-cert-file /etc/redis/certs/server.crt
+tls-key-file /etc/redis/certs/server.key
+tls-ca-cert-file /etc/redis/certs/ca.pem
+tls-cluster yes
+tls-auth-clients no
 EOF
 
 cat <<EOF > users.acl
