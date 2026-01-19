@@ -4,6 +4,8 @@ services:
     container_name: mongo-tls
     hostname: mongo-tls
     restart: unless-stopped
+    networks:
+      - mish_net
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: adminpassword
@@ -24,3 +26,7 @@ services:
        interval: 10s
        timeout: 5s
        retries: 10
+
+networks:
+  mish_net:
+    external: true
