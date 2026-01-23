@@ -11,18 +11,17 @@ data class QuizValidationResultWithUser(
     var totalScore: Int = 0,
     var maxScore: Int = 0,
     var percentage: Double = 0.0,
-    var questionResults: Map<String, Boolean> = mapOf(),
-    var questionScores: Map<String, Int> = mapOf(),
-)
+    val questionResults: List<QuizValidationQuestion> = listOf(),
+    )
 
 fun QuizValidationResultWithUser.toQuizValidationResult(): QuizValidationResult{
+
     return QuizValidationResult(
-        quizResultId = id,
+        id = id,
         quizId = quizId,
         name = name,
         totalScore = totalScore,
         percentage = percentage,
-        questionResults = questionResults,
-        questionScores = questionScores,
+        questionResults = questionResults
     )
 }

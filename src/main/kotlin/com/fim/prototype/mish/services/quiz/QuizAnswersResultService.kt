@@ -4,6 +4,7 @@ import com.fim.prototype.mish.exceptions.InternalServerError
 import com.fim.prototype.mish.exceptions.NotFoundException
 import com.fim.prototype.mish.model.common.QuestionPartValidation
 import com.fim.prototype.mish.model.entities.quiz.QuizSubmissionRequest
+import com.fim.prototype.mish.model.entities.quiz.QuizValidationQuestion
 import com.fim.prototype.mish.model.entities.quiz.QuizValidationResult
 import com.fim.prototype.mish.repo.QuizRepo
 import com.fim.prototype.mish.services.StatsService
@@ -41,7 +42,8 @@ class QuizAnswersResultService(
                 quizQuestion.questionId,
                 validationResult,
                 if (validationResult) quizQuestion.points else 0,
-                quizQuestion.questionText
+                quizQuestion.questionText,
+                submitted
             )
         }
 
@@ -53,7 +55,7 @@ class QuizAnswersResultService(
                     questionId = question.questionId,
                     isCorrect = false,
                     points = 0,
-                    text = question.questionText
+                    text = question.questionText,
                 )
             }
         )
@@ -66,8 +68,12 @@ class QuizAnswersResultService(
             totalScore = totalScore,
             maxScore = quiz.maxScore,
             percentage = statsService.calculatePercentage(totalScore, quiz.maxScore),
-            questionResults = answersResult.associate { it.text to it.isCorrect },
-            questionScores = answersResult.associate { it.text to it.points }
+            questionResults = answersResult.map { QuizValidationQuestion(
+                questionText = it.text,
+                isCorrect = it.isCorrect,
+                points = it.points,
+                it.submission
+            ) },
         )
     }
 }

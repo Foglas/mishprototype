@@ -1,6 +1,7 @@
 package com.fim.prototype.mish.model.entities.quiz
 
 data class QuickQuizResult(
+    val id: String,
     val quizId: String,
     val userId: String,
     val name: String,
