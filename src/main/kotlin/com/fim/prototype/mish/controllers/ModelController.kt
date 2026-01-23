@@ -1,5 +1,6 @@
 package com.fim.prototype.mish.controllers
 
+import com.fim.prototype.mish.model.common.FileEntityWithTree
 import com.fim.prototype.mish.model.entities.InputFileDesc
 import com.fim.prototype.mish.model.entities.ModelIds
 import com.fim.prototype.mish.properties.PageProperties
@@ -23,6 +24,11 @@ class ModelController(
         @RequestPart files: List<MultipartFile>,
         @RequestPart metadata: InputFileDesc): ModelIds = runBlocking {
         return@runBlocking modelService.uploadModel(files, metadata)
+    }
+
+    @GetMapping("/{id}")
+    fun getModelRelatedTree(@PathVariable id: String): FileEntityWithTree{
+        return modelService.getModelRelatedTree(id)
     }
 
     @DeleteMapping("/{id}/delete")
