@@ -18,13 +18,13 @@ class TextureController(
     override val modelService: ModelService,
 ) : DownloadController(modelService) {
 
-    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).TEACHER)")
+    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).CREATE_QUIZ)")
     @PostMapping("/upload")
     fun uploadTexture(@RequestPart texture: MultipartFile, @RequestPart metadata: TextureUpload): SimpleTextureData {
        return modelService.uploadTexture(texture, metadata)
     }
 
-    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).TEACHER)")
+    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).CREATE_QUIZ)")
     @DeleteMapping("/{id}/delete")
     fun deleteTexture(@PathVariable("id") textureId: String){
         modelService.deleteTexture(textureId)

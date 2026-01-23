@@ -55,15 +55,6 @@
         "attributes": {}
       },
       {
-        "id": "6c8b5587-3086-45b8-850e-4d5448b0f40c",
-        "name": "student",
-        "description": "",
-        "composite": false,
-        "clientRole": false,
-        "containerId": "997cfddd-c130-4898-8ac1-45fa0347969b",
-        "attributes": {}
-      },
-      {
         "id": "4a136967-687a-4c63-91e1-e3a2a327c38a",
         "name": "default-roles-mock-realm",
         "description": "${role_default-roles}",
@@ -96,6 +87,54 @@
       {
         "id": "bf2862d9-7716-42f0-b715-f73477609892",
         "name": "teacher",
+        "description": "",
+        "composite": true,
+        "composites": {
+          "realm": [
+            "createQuiz",
+            "createChapter",
+            "studentAction"
+          ]
+        },
+        "clientRole": false,
+        "containerId": "997cfddd-c130-4898-8ac1-45fa0347969b",
+        "attributes": {}
+      },
+      {
+        "id": "bf2862d9-7716-42f0-b715-f73477609892",
+        "name": "student",
+        "description": "",
+        "composite": true,
+        "composites": {
+          "realm": [
+            "studentAction"
+          ]
+        },
+        "clientRole": false,
+        "containerId": "997cfddd-c130-4898-8ac1-45fa0347969b",
+        "attributes": {}
+      },
+      {
+        "id": "6c8b5587-3086-45b8-850e-4d5448b0f40c",
+        "name": "studentAction",
+        "description": "",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "997cfddd-c130-4898-8ac1-45fa0347969b",
+        "attributes": {}
+      },
+      {
+        "id": "6c8b5587-3086-45b8-850e-4d5448b0f40O",
+        "name": "createQuiz",
+        "description": "",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "997cfddd-c130-4898-8ac1-45fa0347969b",
+        "attributes": {}
+      },
+      {
+        "id": "6c8b5587-3086-45b8-850e-4d5448b0f88a",
+        "name": "createChapter",
         "description": "",
         "composite": false,
         "clientRole": false,

@@ -20,25 +20,25 @@ class ChapterController(
     private val pageProperties: PageProperties,
 ) {
 
-    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).TEACHER)")
+    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).CREATE_CHAPTER)")
     @PostMapping("/create")
     fun createChapter(@RequestBody chapter: ChapterEntity): ChapterEntity {
         return chapterService.createChapter(chapter)
     }
 
-    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).STUDENT)")
+    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).CREATE_CHAPTER)")
     @GetMapping("/{id}")
     fun getChapter(@PathVariable("id") chapterId: String): ChapterEntity {
         return chapterService.getChapterById(chapterId)
     }
 
-    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).TEACHER)")
+    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).CREATE_CHAPTER)")
     @DeleteMapping("/{id}/delete")
     fun deleteChapter(@PathVariable("id") chapterId: String) {
         chapterService.delete(chapterId)
     }
 
-    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).STUDENT)")
+    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).STUDENT_ACTION)")
     @GetMapping("/list")
     fun listChapters(
         @RequestParam page: Int,
@@ -53,13 +53,13 @@ class ChapterController(
         return chapterService.getAllChapters(PageRequestData(page, limit?: pageProperties.limit, orderBy, sortDirection?: pageProperties.sortDirection), FilterBase(name, creatorId, createdFrom, createdTo))
     }
 
-    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).STUDENT)")
+    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).STUDENT_ACTION)")
     @GetMapping("/search-fulltext")
     fun searchByFulltext(@RequestParam("keyword") keyword: String): FullTextResult {
         return chapterService.searchFullText(keyword)
     }
 
-    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).TEACHER)")
+    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).CREATE_CHAPTER)")
     @PutMapping("/update")
     fun updateChapter(@RequestBody chapter: ChapterEntity): ChapterEntity {
         return chapterService.updateChapter(chapter)

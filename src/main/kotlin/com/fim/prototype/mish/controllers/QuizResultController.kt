@@ -21,19 +21,19 @@ class QuizResultController(
     private val quizResultService: QuizResultService,
 ) {
 
-    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).STUDENT)")
+    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).STUDENT_ACTION)")
     @GetMapping("/{id}")
     fun getQuizResult(@PathVariable("id") quizId: String): QuizValidationResult {
         return quizResultService.getQuizResult(quizId)
     }
 
-    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).STUDENT)")
+    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).STUDENT_ACTION)")
     @GetMapping("{id}/quick")
     fun getQuickQuizResult(@PathVariable("id") quizId: String): QuickQuizResult {
         return quizResultService.getQuickQuizResult(quizId)
     }
 
-    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).STUDENT)")
+    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).STUDENT_ACTION)")
     @GetMapping("/list")
     fun listQuizResults(
         @RequestParam page: Int,
@@ -49,7 +49,7 @@ class QuizResultController(
         return quizResultService.listQuizResults(PageRequestData(page, limit?: pageProperties.limit, orderBy, sortDirection ?: pageProperties.sortDirection), QuizResultFilter(quizId, name, creatorId, createdFrom, createdTo))
     }
 
-    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).STUDENT)")
+    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).STUDENT_ACTION)")
     @PostMapping("/validate-result")
     fun getAnswersResult(@RequestBody answers: QuizSubmissionRequest): QuizValidationResult {
         return quizResultService.getAnswersResult(answers.quizId?: throw ValidationException("QuizId is not set!"), answers)

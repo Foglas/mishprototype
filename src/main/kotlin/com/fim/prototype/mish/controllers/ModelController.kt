@@ -18,19 +18,19 @@ class ModelController(
     private val pageProperties: PageProperties,
 ) : DownloadController(modelService) {
 
-    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).TEACHER)")
+    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).CREATE_CHAPTER)")
     @PostMapping("/upload")
     fun uploadModel(@RequestPart model: MultipartFile, @RequestPart metadata: ModelMetadataEntity): ModelIds {
         return modelService.uploadModel(model, metadata)
     }
 
-    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).TEACHER)")
+    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).CREATE_CHAPTER)")
     @DeleteMapping("/{id}/delete")
     fun deleteModel(@PathVariable("id") modelId: String){
         modelService.deleteModel(modelId)
     }
 
-    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).TEACHER)")
+    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).CREATE_CHAPTER)")
     @GetMapping("/list-by")
     fun listModelsMetadata(
         @RequestParam page: Int,
