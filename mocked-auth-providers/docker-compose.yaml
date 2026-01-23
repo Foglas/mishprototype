@@ -26,7 +26,7 @@ services:
       KC_DB_PASSWORD: keycloak
       KC_DB_URL_HOST: keycloak-db
       KC_DB: postgres
-    command: start-dev --import-realm
+    command: start-dev --hostname=mock-oidc --import-realm
     volumes:
       - ./oidc/realms:/opt/keycloak/data/import
     ports:
@@ -35,7 +35,6 @@ services:
       - mish_net
 
 volumes:
-  ldap-custom:
   keycloak-db-data:
 
 networks:

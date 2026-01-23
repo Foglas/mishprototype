@@ -15,7 +15,7 @@ spring:
     mongodb:
       auto-index-creation: true
       # Use the admin credentials from mongo/tls/docker-compose.yml and enable TLS.
-      uri: mongodb://admin:adminpassword@localhost:27017/admin?authSource=admin&tls=true
+      uri: ${MONGO_HOST:mongodb://admin:adminpassword@localhost:27017/admin?authSource=admin&tls=true}
 
   security:
     oauth2:
@@ -29,10 +29,10 @@ spring:
             authorization-grant-type: authorization_code
         provider:
           dev-client:
-            issuer-uri: http://localhost:8080/realms/${KEYCLOAK_REALM:mock-realm}
+            issuer-uri: ${KEYCLOAK_URL:http://mock-oidc:8080}/realms/${KEYCLOAK_REALM:mock-realm}
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8080/realms/${KEYCLOAK_REALM:mock-realm}
+          issuer-uri: ${KEYCLOAK_URL:http://mock-oidc:8080}/realms/${KEYCLOAK_REALM:mock-realm}
 
 
 ldap:

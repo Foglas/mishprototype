@@ -91,9 +91,9 @@
         "composite": true,
         "composites": {
           "realm": [
-            "createQuiz",
-            "createChapter",
-            "studentAction"
+            "create_quiz",
+            "create_chapter",
+            "student_action"
           ]
         },
         "clientRole": false,
@@ -101,13 +101,13 @@
         "attributes": {}
       },
       {
-        "id": "bf2862d9-7716-42f0-b715-f73477609892",
+        "id": "8a2b3c4d-1234-5678-9abc-def012345678",
         "name": "student",
         "description": "",
         "composite": true,
         "composites": {
           "realm": [
-            "studentAction"
+            "student_action"
           ]
         },
         "clientRole": false,
@@ -116,7 +116,7 @@
       },
       {
         "id": "6c8b5587-3086-45b8-850e-4d5448b0f40c",
-        "name": "studentAction",
+        "name": "student_action",
         "description": "",
         "composite": false,
         "clientRole": false,
@@ -125,7 +125,7 @@
       },
       {
         "id": "6c8b5587-3086-45b8-850e-4d5448b0f40O",
-        "name": "createQuiz",
+        "name": "create_quiz",
         "description": "",
         "composite": false,
         "clientRole": false,
@@ -134,7 +134,7 @@
       },
       {
         "id": "6c8b5587-3086-45b8-850e-4d5448b0f88a",
-        "name": "createChapter",
+        "name": "create_chapter",
         "description": "",
         "composite": false,
         "clientRole": false,
@@ -749,7 +749,14 @@
       "redirectUris": [
         "http://localhost:8081/login/oauth2/code/keycloak",
         "http://localhost:8050/login/oauth2/code/dev-client",
-        "https://oauth.pstmn.io/v1/callback"
+        "https://oauth.pstmn.io/v1/callback",
+        "http://localhost/login/oauth2/code/keycloak",
+        "http://localhost",
+        "http://localhost/",
+        "http://mish/login/oauth2/code/keycloak",
+        "http://mish/login/oauth2/code/dev-client",
+        "http://mish/",
+        "http://mish"
       ],
       "webOrigins": [
         "http://localhost:8050",
