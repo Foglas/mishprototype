@@ -2,6 +2,7 @@ package com.fim.prototype.mish.services.chapters
 
 import com.fim.prototype.mish.exceptions.NotFoundException
 import com.fim.prototype.mish.exceptions.ValidationException
+import com.fim.prototype.mish.model.common.FileEntityWithTree
 import com.fim.prototype.mish.model.entities.*
 import com.fim.prototype.mish.model.rest.SimpleTextureData
 import com.fim.prototype.mish.model.rest.TextureUpload
@@ -40,7 +41,11 @@ class ModelService(
 
         val metadataModel = modelMetadataRepo.save(info)
 
-        return ModelIds(metadataModel.id ?: "", FileIdWithName(metadataModel.id ?: "", metadataModel.name, FileSenseType.MODEL, mapRelatedFiles(relatedFilesMetadata.relatedFiles)))
+        return ModelIds(metadataModel.id ?: "", FileIdWithName(relatedFilesMetadata.id ?: "", metadataModel.name, FileSenseType.MODEL, mapRelatedFiles(relatedFilesMetadata.relatedFiles)))
+    }
+
+    fun getModelRelatedTree(id: String): FileEntityWithTree {
+       return modelMetadataRepo.loadFileTree(id) ?: throw NotFoundException("Model was not found!")
     }
 
 
@@ -76,7 +81,7 @@ class ModelService(
             }
         )
 
-        if (alreadySaved == null) fileRepo.save(fileEntity.toFileEntity())
+        fileRepo.save(fileEntity.toFileEntity())
         return fileEntity
     }
 
