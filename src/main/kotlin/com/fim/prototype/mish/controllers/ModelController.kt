@@ -38,7 +38,7 @@ class ModelController(
     }
 
     @DeleteMapping("/{id}/delete")
-    fun deleteModel(@PathVariable("id") modelId: String){
+    fun deleteModel(@PathVariable("id") modelId: String, @RequestParam force: Boolean = false){
         modelService.deleteModel(modelId)
     }
 
