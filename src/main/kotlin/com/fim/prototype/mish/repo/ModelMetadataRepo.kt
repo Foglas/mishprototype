@@ -42,24 +42,6 @@ class ModelMetadataRepo(
         )
     }
 
-    fun loadFileTree(rootFileId: String): FileEntityWithTree? {
-        val aggregation = Aggregation.newAggregation(
-            Aggregation.match(Criteria.where("_id").`is`(ObjectId(rootFileId))),
-            GraphLookupOperation.builder()
-                .from(MongoCollection.FILE_ENTITY)
-                .startWith("\$relatedFiles._id")
-                .connectFrom("relatedFiles._id")
-                .connectTo("_id")
-                .`as`("allRelatedFiles")
-        )
-
-        return mongoTemplate.aggregate(
-            aggregation,
-            MongoCollection.FILE_ENTITY,
-            FileEntityWithTree::class.java
-        ).uniqueMappedResult
-    }
-
     fun deleteMetadataByTargetFileId(targetFileId: String){
         val query = Query(Criteria.where("targetFileId").`is`(targetFileId))
         mongoTemplate.remove(query, ModelMetadataEntity::class.java, MongoCollection.MODEL_ENTITY)
