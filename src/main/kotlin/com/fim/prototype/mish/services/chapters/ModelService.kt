@@ -4,8 +4,6 @@ import com.fim.prototype.mish.exceptions.NotFoundException
 import com.fim.prototype.mish.exceptions.ValidationException
 import com.fim.prototype.mish.model.common.FileEntityWithTree
 import com.fim.prototype.mish.model.entities.*
-import com.fim.prototype.mish.model.rest.SimpleTextureData
-import com.fim.prototype.mish.model.rest.TextureUpload
 import com.fim.prototype.mish.repo.BasicFileStorageRepo
 import com.fim.prototype.mish.repo.ModelMetadataRepo
 import com.fim.prototype.mish.repo.interfaces.IFileRepo
@@ -22,6 +20,7 @@ class ModelService(
     private val modelMetadataRepo: ModelMetadataRepo,
     private val fileRepo: IFileRepo,
 ) {
+    //TODO logic about deletingFiles etc. should be moved to FileService and than only called
 
     suspend fun uploadModel(
         files: List<MultipartFile>,
@@ -53,34 +52,17 @@ class ModelService(
        return modelMetadataRepo.getModelMetadataById(id)
     }
 
-    //TODO needs to be completely refactored - now it should assign file into the related of some other
+    //TODO needs to be completely refactored - now it should assign file into the related of some other - should be moved to file service
     @Transactional
-    fun uploadTexture(texture: MultipartFile, metadata: TextureUpload): SimpleTextureData {
-        val modelMetadata = modelMetadataRepo.getModelMetadataEntityByTargetFileId(metadata.modelId)
-            ?: throw NotFoundException("Model metadata was not found!")
-
-        val objectId = basicFileStorageRepo.uploadFile(texture)
-
-        metadata.texture.id = objectId.toHexString()
-
-        val updated =
-            modelMetadata.copy(relatedFiles = modelMetadata.relatedFiles.toMutableList() + FileIdentifier(metadata.texture.id?:"", metadata.texture.name, metadata.texture.senseType))
-
-        modelMetadataRepo.save(updated)
-        return SimpleTextureData(objectId.toHexString(), metadata.texture.name)
+    fun assignRelatedFile(parentFileMetadataId: String){
+        //TODO not implemented
     }
 
-    fun deleteModel(modelId: String) {
-        modelMetadataRepo.deleteMetadataByTargetFileId(modelId)
-        basicFileStorageRepo.deleteFile(modelId)
-    }
+    fun deleteModel(modelMetadataId: String, force: Boolean = false) {
+        val modelMetadata = getModelMetadataById(modelMetadataId)
+        basicFileStorageRepo.deleteFile(modelMetadata.modelId)
 
-
-    fun deleteRelatedFile(textureId: String) {
-        val modelMetadata = modelMetadataRepo.getModelMetadataEntityByTextureFileId(textureId) ?: return
-
-        val updated = modelMetadata.copy(relatedFiles = modelMetadata.relatedFiles.filter { it.id != textureId })
-        modelMetadataRepo.save(updated)
+        //TODO implement force delete
     }
 
     //load all related
