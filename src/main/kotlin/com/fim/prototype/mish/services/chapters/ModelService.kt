@@ -44,8 +44,13 @@ class ModelService(
         return ModelIds(metadataModel.id ?: "", FileIdWithName(relatedFilesMetadata.id ?: "", metadataModel.name, FileSenseType.MODEL, mapRelatedFiles(relatedFilesMetadata.relatedFiles)))
     }
 
-    fun getModelRelatedTree(id: String): FileEntityWithTree {
-       return modelMetadataRepo.loadFileTree(id) ?: throw NotFoundException("Model was not found!")
+    fun getModelRelatedTree(modelMetadataId: String): FileEntityWithTree {
+       val modelMetadata = getModelMetadataById(modelMetadataId)
+       return modelMetadataRepo.loadFileTree(modelMetadata.modelId) ?: throw NotFoundException("Model was not found!")
+    }
+
+    fun getModelMetadataById(id: String): ModelMetadataEntity {
+       return modelMetadataRepo.getModelMetadataById(id)
     }
 
     //TODO needs to be completely refactored - now it should assign file into the related of some other
