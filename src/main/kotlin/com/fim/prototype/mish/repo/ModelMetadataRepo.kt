@@ -1,7 +1,11 @@
 package com.fim.prototype.mish.repo
 
+import com.fim.prototype.mish.exceptions.NotFoundException
 import com.fim.prototype.mish.model.common.FileEntityWithTree
-import com.fim.prototype.mish.model.entities.*
+import com.fim.prototype.mish.model.entities.FileIdWithName
+import com.fim.prototype.mish.model.entities.FileSenseType
+import com.fim.prototype.mish.model.entities.ModelIds
+import com.fim.prototype.mish.model.entities.ModelMetadataEntity
 import com.fim.prototype.mish.utils.PageRequestData
 import com.fim.prototype.mish.utils.PageResult
 import com.fim.prototype.mish.utils.createPageRequest
@@ -9,7 +13,6 @@ import org.bson.types.ObjectId
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.aggregation.Aggregation
 import org.springframework.data.mongodb.core.aggregation.GraphLookupOperation
-import org.springframework.data.mongodb.core.query.Collation
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.stereotype.Repository
@@ -74,6 +77,10 @@ class ModelMetadataRepo(
             )
         )
         return mongoTemplate.findOne(query, ModelMetadataEntity::class.java, MongoCollection.MODEL_ENTITY)
+    }
+
+    fun getModelMetadataById(id: String): ModelMetadataEntity{
+       return getModelMetadataBy("_id", id) ?: throw NotFoundException("Model metadata was not found!")
     }
 
     fun getModelMetadataBy(property: String, value: String): ModelMetadataEntity?{

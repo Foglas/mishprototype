@@ -3,6 +3,7 @@ package com.fim.prototype.mish.controllers
 import com.fim.prototype.mish.model.common.FileEntityWithTree
 import com.fim.prototype.mish.model.entities.InputFileDesc
 import com.fim.prototype.mish.model.entities.ModelIds
+import com.fim.prototype.mish.model.entities.ModelMetadataEntity
 import com.fim.prototype.mish.properties.PageProperties
 import com.fim.prototype.mish.services.chapters.ModelService
 import com.fim.prototype.mish.utils.PageRequestData
@@ -26,9 +27,14 @@ class ModelController(
         return@runBlocking modelService.uploadModel(files, metadata)
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id}/file/tree")
     fun getModelRelatedTree(@PathVariable id: String): FileEntityWithTree{
         return modelService.getModelRelatedTree(id)
+    }
+
+    @GetMapping("/{id}")
+    fun getModelMetadataById(@PathVariable id: String): ModelMetadataEntity {
+        return modelService.getModelMetadataById(id)
     }
 
     @DeleteMapping("/{id}/delete")
