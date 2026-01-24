@@ -48,44 +48,6 @@ class ModelService(
        return modelMetadataRepo.loadFileTree(id) ?: throw NotFoundException("Model was not found!")
     }
 
-
-    private fun mapRelatedFiles(relatedFiles: List<OutputFileEntity>): List<FileIdWithName>{
-        if (relatedFiles.isEmpty()) return emptyList()
-        return relatedFiles.map { FileIdWithName(it.id?:"", it.name, it.senseType, mapRelatedFiles(it.relatedFiles)) }
-    }
-
-    //TODO move upload outside of method - run in coroutines and than input should be Map<String, String> eg: Map<originalFileName, ObjectId>
-    private fun uploadFiles(
-        files: Map<String, MultipartFile>,
-        metadata: InputFileDesc,
-        visited: MutableMap<String, String> = mutableMapOf()
-    ): OutputFileEntity {
-
-        val file = files[metadata.originalFileName]
-            ?: throw ValidationException("File ${metadata.originalFileName} not found")
-
-        val alreadySaved = visited[metadata.originalFileName]
-
-        val objectId = if (alreadySaved != null) {
-            alreadySaved
-        } else {
-            val objectId = basicFileStorageRepo.uploadFile(file).toHexString()
-            visited[metadata.originalFileName] = objectId
-            objectId
-        }
-
-        val fileEntity = file.getOutputFileEntity(
-            metadata.copy(id = objectId),
-            metadata.relatedFiles.map {
-                uploadFiles(files, it, visited)
-            }
-        )
-
-        fileRepo.save(fileEntity.toFileEntity())
-        return fileEntity
-    }
-
-
     //TODO needs to be completely refactored - now it should assign file into the related of some other
     @Transactional
     fun uploadTexture(texture: MultipartFile, metadata: TextureUpload): SimpleTextureData {
@@ -127,5 +89,42 @@ class ModelService(
 
     fun getFileById(itemId: String): GridFsResource {
         return basicFileStorageRepo.getFileById(itemId) ?: throw NotFoundException("File with id $itemId not found!")
+    }
+
+
+    //TODO move upload outside of method - run in coroutines and than input should be Map<String, String> eg: Map<originalFileName, ObjectId>
+    private fun uploadFiles(
+        files: Map<String, MultipartFile>,
+        metadata: InputFileDesc,
+        visited: MutableMap<String, String> = mutableMapOf()
+    ): OutputFileEntity {
+
+        val file = files[metadata.originalFileName]
+            ?: throw ValidationException("File ${metadata.originalFileName} not found")
+
+        val alreadySaved = visited[metadata.originalFileName]
+
+        val objectId = if (alreadySaved != null) {
+            alreadySaved
+        } else {
+            val objectId = basicFileStorageRepo.uploadFile(file).toHexString()
+            visited[metadata.originalFileName] = objectId
+            objectId
+        }
+
+        val fileEntity = file.getOutputFileEntity(
+            metadata.copy(id = objectId),
+            metadata.relatedFiles.map {
+                uploadFiles(files, it, visited)
+            }
+        )
+
+        fileRepo.save(fileEntity.toFileEntity())
+        return fileEntity
+    }
+
+    private fun mapRelatedFiles(relatedFiles: List<OutputFileEntity>): List<FileIdWithName>{
+        if (relatedFiles.isEmpty()) return emptyList()
+        return relatedFiles.map { FileIdWithName(it.id?:"", it.name, it.senseType, mapRelatedFiles(it.relatedFiles)) }
     }
 }
