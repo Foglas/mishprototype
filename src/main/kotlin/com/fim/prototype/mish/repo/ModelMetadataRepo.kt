@@ -40,9 +40,6 @@ class ModelMetadataRepo(
     }
 
     fun loadFileTree(rootFileId: String): FileEntityWithTree? {
-
-
-
         val aggregation = Aggregation.newAggregation(
             Aggregation.match(Criteria.where("_id").`is`(ObjectId(rootFileId))),
             GraphLookupOperation.builder()
@@ -52,8 +49,6 @@ class ModelMetadataRepo(
                 .connectTo("_id")
                 .`as`("allRelatedFiles")
         )
-
-
 
         return mongoTemplate.aggregate(
             aggregation,
