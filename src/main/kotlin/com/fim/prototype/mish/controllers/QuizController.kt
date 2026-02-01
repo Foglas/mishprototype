@@ -37,7 +37,7 @@ class QuizController(
         quizService.deleteQuiz(quizId)
     }
 
-    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).CREATE_QUIZ)")
+    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).STUDENT_ACTION)")
     @GetMapping("/{id}/all")
     fun getQuizById(@PathVariable("id") quizId: String): QuizEntity {
         return quizService.getQuizById(quizId, true)

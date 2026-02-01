@@ -26,7 +26,7 @@ class ChapterController(
         return chapterService.createChapter(chapter)
     }
 
-    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).CREATE_CHAPTER)")
+    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).STUDENT_ACTION)")
     @GetMapping("/{id}")
     fun getChapter(@PathVariable("id") chapterId: String): ChapterEntity {
         return chapterService.getChapterById(chapterId)

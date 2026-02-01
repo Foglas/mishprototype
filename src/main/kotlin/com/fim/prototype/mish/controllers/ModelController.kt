@@ -30,8 +30,8 @@ class ModelController(
         modelService.deleteModel(modelId)
     }
 
-    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).CREATE_CHAPTER)")
-    @GetMapping("/list-by")
+    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).STUDENT_ACTION)")
+    @GetMapping("/list")
     fun listModelsMetadata(
         @RequestParam page: Int,
         @RequestParam limit: Int? = null,
