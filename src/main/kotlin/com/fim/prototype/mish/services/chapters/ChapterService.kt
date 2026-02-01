@@ -40,19 +40,23 @@ class ChapterService(
     fun updateChapter(chapter: ChapterEntity): ChapterEntity {
         val existedChapter =
             chapter.id?.let { getChapterById(it) } ?: throw ValidationException("Chapter id is not set!", chapter)
+
+        validateChapter(chapter)
         if (existedChapter.creatorId == chapter.creatorId) throw ForbiddenActionException(
             "Chapter creator id can't be changed!",
             chapter
         )
+
+
         if (chapter.name != null && existedChapter.name != null && ((existedChapter.content != chapter.content && chapter.content.isNotBlank()) || (existedChapter.name != chapter.name && chapter.name!!.isNotBlank()))) {
             fullTextSearchingService.updateFullTextEntity(
                 existedChapter.id!!,
-                existedChapter.name!!,
-                existedChapter.content
+                chapter.name!!,
+                chapter.content
             )
         }
 
-        return chapterRepo.save(existedChapter)
+        return chapterRepo.save(chapter)
     }
 
     fun getChapterById(id: String): ChapterEntity {

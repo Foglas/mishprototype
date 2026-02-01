@@ -32,7 +32,7 @@ class QuizController(
     }
 
     @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).CREATE_QUIZ)")
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}/delete")
     fun deleteQuiz(@PathVariable("id") quizId: String){
         quizService.deleteQuiz(quizId)
     }
