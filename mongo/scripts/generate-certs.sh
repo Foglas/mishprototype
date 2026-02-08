@@ -1,22 +1,36 @@
 #!/usr/bin/env bash
 set -eo pipefail
 
-# Check if first argument exists
+# Check if SERVER_CN argument exists
 if [ $# -lt 1 ] || [ -z "$1" ]; then
-  echo "Usage: $0 <truststore-password>"
+  echo "Usage: $0 <SERVER_CN>"
   exit 1
 fi
 
-# Assign first argument to variable
-TRUST_STORE_PASS="$1"
-MONGO_SERVER_CN=$2
-MONGO_CA_CN=$3
-OUTPUT_DIR=$4
 
-echo "Using truststore password: $TRUST_STORE_PASS"
+# Check if OUTDIR argument exists
+if [ $# -lt 2 ] || [ -z "$2" ]; then
+  echo "Usage: $1 <OUTDIR>"
+  exit 1
+fi
 
-SCRIPTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-OUTDIR="${OUTPUT_DIR:-${SCRIPTDIR}/../certs}"
+# Check if CA_DIR argument exists
+if [ $# -lt 3 ] || [ -z "$3" ]; then
+  echo "Usage: $2 <CA_DIR>"
+  exit 1
+fi
+
+
+
+SERVER_CN="$1"
+OUTDIR="$2"
+
+CA_PEM_SRC="$3/ca.pem"
+CA_KEY_SRC="$3/ca.key"
+
+echo "CA_PEM: $CA_PEM CA_KEY $CA_KEY"
+shift 1
+
 mkdir -p "${OUTDIR}"
 cd "${OUTDIR}"
 
@@ -27,17 +41,15 @@ fi
 
 rm -rf -- "${OUTDIR:?}/"*
 
+cp "$CA_PEM_SRC" "$OUTDIR/ca.pem"
+cp "$CA_KEY_SRC" "$OUTDIR/ca.key"
 
-CA_CN=${MONGO_CA_CN:-mongo-cluster.local CA}    # CA certificate CN
-SERVER_CN=${MONGO_SERVER_CN:-mongo-main}        # Server certificate CN
-SAN="DNS:localhost,DNS:${SERVER_CN},DNS:mongo-replica-1,DNS:mongo-replica-2,IP:127.0.0.1"
+
+
+CA_CN="mongo-cluster.local"
+SAN="DNS:localhost,DNS:${SERVER_CN}"
 
 echo "Generating CA (CN=${CA_CN}) and server cert (CN=${SERVER_CN}) in ${OUTDIR}"
-
-# Generate CA
-openssl genrsa -out ca.key 4096
-openssl req -x509 -new -nodes -key ca.key -sha256 -days 3650 \
-  -subj "/CN=${CA_CN}" -out ca.pem
 
 # Generate server key + CSR
 openssl genrsa -out server.key 4096
@@ -78,42 +90,5 @@ rm -f server.csr server.key server.cnf v3ext.cnf ca.srl || true
 echo "Generated certs in ${OUTDIR}:"
 ls -la "${OUTDIR}"
 
-# import into trustStore.jks
-TRUSTSTORE="truststore.jks"
-
-ALIAS="ca"
-CA_PEM="${OUTDIR}/ca.pem"
-
-if ! command -v keytool >/dev/null 2>&1; then
-  echo "keytool not found (JDK/JRE missing)"
-  exit 1
-fi
-
-if [ ! -f "$CA_PEM" ]; then
-  echo "CA certificate not found: $CA_PEM"
-  exit 1
-fi
-
-if keytool -list \
-    -keystore "$TRUSTSTORE" \
-    -storepass "$TRUST_STORE_PASS" \
-    -alias "$ALIAS" >/dev/null 2>&1; then
-
-  echo "Alias '$ALIAS' already exists in truststore – deleting"
-  keytool -delete \
-    -alias "$ALIAS" \
-    -keystore "$TRUSTSTORE" \
-    -storepass "$TRUST_STORE_PASS"
-else
-  echo "Alias '$ALIAS' does not exist – importing"
-fi
-
-keytool -importcert \
-  -trustcacerts \
-  -alias "$ALIAS" \
-  -file "$CA_PEM" \
-  -keystore "$TRUSTSTORE" \
-  -storepass "$TRUST_STORE_PASS" \
-  -noprompt
-
-echo "CA certificate imported successfully into $TRUSTSTORE"
+echo "Starting mongod..."
+exec mongod --config /etc/mongo/mongod.conf
