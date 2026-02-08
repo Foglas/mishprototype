@@ -18,7 +18,8 @@ services:
       - ./conf/mongod.conf:/etc/mongo/mongod.conf:ro
       - ./data-main:/data/db
     command: >
-      bash -c "/scripts/generate-certs.sh mongo-main /etc/ssl/mongo /shared/certs"
+      bash -c "/scripts/generate-certs.sh mongo-main /etc/ssl/mongo /shared/certs &&
+             exec docker-entrypoint.sh mongod --config /etc/mongo/mongod.conf"
     healthcheck:
        test:
           [
@@ -50,7 +51,8 @@ services:
       - ./conf/mongod.conf:/etc/mongo/mongod.conf:ro
       - ./data-replica1:/data/db
     command: >
-      bash -c "/scripts/generate-certs.sh mongo-replica-1 /etc/ssl/mongo /shared/certs"
+      bash -c "/scripts/generate-certs.sh mongo-main /etc/ssl/mongo /shared/certs &&
+             exec docker-entrypoint.sh mongod --config /etc/mongo/mongod.conf"
     healthcheck:
       test:
         [
@@ -84,7 +86,8 @@ services:
       - ./conf/mongod.conf:/etc/mongo/mongod.conf:ro
       - ./data-replica2:/data/db
     command: >
-      bash -c "/scripts/generate-certs.sh mongo-replica-2 /etc/ssl/mongo /shared/certs"
+      bash -c "/scripts/generate-certs.sh mongo-main /etc/ssl/mongo /shared/certs &&
+             exec docker-entrypoint.sh mongod --config /etc/mongo/mongod.conf"
     healthcheck:
       test:
         [
