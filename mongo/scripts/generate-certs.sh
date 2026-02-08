@@ -29,8 +29,8 @@ rm -rf -- "${OUTDIR:?}/"*
 
 
 CA_CN=${MONGO_CA_CN:-mongo-cluster.local CA}    # CA certificate CN
-SERVER_CN=${MONGO_SERVER_CN:-mongo-tls}        # Server certificate CN
-SAN="DNS:localhost,DNS:${SERVER_CN},IP:127.0.0.1"
+SERVER_CN=${MONGO_SERVER_CN:-mongo-main}        # Server certificate CN
+SAN="DNS:localhost,DNS:${SERVER_CN},DNS:mongo-replica-1,DNS:mongo-replica-2,IP:127.0.0.1"
 
 echo "Generating CA (CN=${CA_CN}) and server cert (CN=${SERVER_CN}) in ${OUTDIR}"
 
