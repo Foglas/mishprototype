@@ -15,7 +15,7 @@ spring:
     mongodb:
       auto-index-creation: true
       # Use the admin credentials from mongo/tls/docker-compose.yml and enable TLS.
-      uri: ${MONGO_HOST:mongodb://admin:adminpassword@localhost:27017,localhost:27017,localhost:27017/mish-db?authSource=admin&tls=true}
+      uri: ${MONGO_HOST:mongodb://admin:adminpassword@localhost:27017,localhost:27018,localhost:27019/mish-db?authSource=admin&replicaSet=replica-set-1&tls=true}
 
   security:
     oauth2:

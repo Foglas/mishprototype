@@ -3,18 +3,22 @@ services:
     image: mongo:6
     container_name: mongo-main
     hostname: mongo-main
-    restart: unless-stopped
+    restart: no
     networks:
       - mish_net
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: adminpassword
     volumes:
-      - ./certs:/etc/ssl/mongo:ro
+      - ./certs:/shared/certs
+      - ./certs-main:/etc/ssl/mongo
+      - ./certs/keyfile:/replication/keyfile
+      - ./scripts/generate-certs.sh:/scripts/generate-certs.sh:ro
       - ./scripts/create-user.sh:/docker-entrypoint-initdb.d/create-user.sh:ro
       - ./conf/mongod.conf:/etc/mongo/mongod.conf:ro
       - ./data-main:/data/db
-    command: ["mongod", "--config", "/etc/mongo/mongod.conf"]
+    command: >
+      bash -c "/scripts/generate-certs.sh mongo-main /etc/ssl/mongo /shared/certs"
     healthcheck:
        test:
           [
@@ -38,11 +42,15 @@ services:
     ports:
       - "27018:27017"
     volumes:
-      - ./certs:/etc/ssl/mongo:ro
+      - ./certs:/shared/certs:ro
+      - ./certs-replica1:/etc/ssl/mongo
+      - ./certs/keyfile:/replication/keyfile
+      - ./scripts/generate-certs.sh:/scripts/generate-certs.sh:ro
       - ./scripts/create-user.sh:/docker-entrypoint-initdb.d/create-user.sh:ro
       - ./conf/mongod.conf:/etc/mongo/mongod.conf:ro
       - ./data-replica1:/data/db
-    command: [ "mongod", "--config", "/etc/mongo/mongod.conf" ]
+    command: >
+      bash -c "/scripts/generate-certs.sh mongo-replica-1 /etc/ssl/mongo /shared/certs"
     healthcheck:
       test:
         [
@@ -53,8 +61,7 @@ services:
       timeout: 5s
       retries: 10
     depends_on:
-      mongo-main:
-        condition: service_healthy
+      - mongo-main
 
   mongo-replica-2:
     image: mongo:6
@@ -69,11 +76,15 @@ services:
     ports:
       - "27019:27017"
     volumes:
-      - ./certs:/etc/ssl/mongo:ro
+      - ./certs:/shared/certs:ro
+      - ./certs-replica2:/etc/ssl/mongo
+      - ./certs/keyfile:/replication/keyfile
+      - ./scripts/generate-certs.sh:/scripts/generate-certs.sh:ro
       - ./scripts/create-user.sh:/docker-entrypoint-initdb.d/create-user.sh:ro
       - ./conf/mongod.conf:/etc/mongo/mongod.conf:ro
       - ./data-replica2:/data/db
-    command: [ "mongod", "--config", "/etc/mongo/mongod.conf" ]
+    command: >
+      bash -c "/scripts/generate-certs.sh mongo-replica-2 /etc/ssl/mongo /shared/certs"
     healthcheck:
       test:
         [
@@ -84,13 +95,12 @@ services:
       timeout: 5s
       retries: 10
     depends_on:
-      mongo-main:
-        condition: service_healthy
+       - mongo-main
 
   mongo-replica-set-creator:
     image: mongo:6
     volumes:
-      - ./certs:/etc/ssl/mongo:ro
+      - ./certs:/etc/ssl/mongo
       - ./scripts/initialize-replica-set.sh:/scripts/initialize-replica-set.sh:ro
     command: ["bash", "/scripts/initialize-replica-set.sh"]
     networks:
