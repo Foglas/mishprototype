@@ -1,8 +1,8 @@
 services:
-  mongo-tls:
+  mongo-main:
     image: mongo:6
-    container_name: mongo-tls
-    hostname: mongo-tls
+    container_name: mongo-main
+    hostname: mongo-main
     restart: unless-stopped
     networks:
       - mish_net
@@ -13,7 +13,7 @@ services:
       - ./certs:/etc/ssl/mongo:ro
       - ./scripts/create-user.sh:/docker-entrypoint-initdb.d/create-user.sh:ro
       - ./conf/mongod.conf:/etc/mongo/mongod.conf:ro
-      - ./data:/data/db
+      - ./data-main:/data/db
     command: ["mongod", "--config", "/etc/mongo/mongod.conf"]
     healthcheck:
        test:
@@ -24,6 +24,80 @@ services:
        interval: 10s
        timeout: 5s
        retries: 10
+
+  mongo-replica-1:
+    image: mongo:6
+    container_name: mongo-replica-1
+    hostname: mongo-replica-1
+    restart: unless-stopped
+    networks:
+      - mish_net
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: adminpassword
+    ports:
+      - "27018:27017"
+    volumes:
+      - ./certs:/etc/ssl/mongo:ro
+      - ./scripts/create-user.sh:/docker-entrypoint-initdb.d/create-user.sh:ro
+      - ./conf/mongod.conf:/etc/mongo/mongod.conf:ro
+      - ./data-replica1:/data/db
+    command: [ "mongod", "--config", "/etc/mongo/mongod.conf" ]
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "mongosh --username admin --password adminpassword --authenticationDatabase admin --tls --tlsCertificateKeyFile /etc/ssl/mongo/mongo.pem --tlsCAFile /etc/ssl/mongo/ca.pem --eval 'db.adminCommand(\"ping\")' || exit 1"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    depends_on:
+      mongo-main:
+        condition: service_healthy
+
+  mongo-replica-2:
+    image: mongo:6
+    container_name: mongo-replica-2
+    hostname: mongo-replica-2
+    restart: unless-stopped
+    networks:
+      - mish_net
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: adminpassword
+    ports:
+      - "27019:27017"
+    volumes:
+      - ./certs:/etc/ssl/mongo:ro
+      - ./scripts/create-user.sh:/docker-entrypoint-initdb.d/create-user.sh:ro
+      - ./conf/mongod.conf:/etc/mongo/mongod.conf:ro
+      - ./data-replica2:/data/db
+    command: [ "mongod", "--config", "/etc/mongo/mongod.conf" ]
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "mongosh --username admin --password adminpassword --authenticationDatabase admin --tls --tlsCertificateKeyFile /etc/ssl/mongo/mongo.pem --tlsCAFile /etc/ssl/mongo/ca.pem --eval 'db.adminCommand(\"ping\")' || exit 1"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    depends_on:
+      mongo-main:
+        condition: service_healthy
+
+  mongo-replica-set-creator:
+    image: mongo:6
+    volumes:
+      - ./certs:/etc/ssl/mongo:ro
+      - ./scripts/initialize-replica-set.sh:/scripts/initialize-replica-set.sh:ro
+    command: ["bash", "/scripts/initialize-replica-set.sh"]
+    networks:
+      - mish_net
+    depends_on:
+      - mongo-main
+
 
 networks:
   mish_net:
