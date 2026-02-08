@@ -1,0 +1,157 @@
+version: "3.8"
+
+networks:
+  redis-cluster-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.42.1.0/24
+
+services:
+  redis-node-1:
+    image: redis/redis-stack:latest
+    container_name: redis-node-1
+    restart: always
+    networks:
+      redis-cluster-net:
+        ipv4_address: 10.42.1.10
+    volumes:
+      - ./node1/data:/data
+      - ./scripts:/tmp/redis
+      - ./certs:/etc/redis/certs
+    command: ["/tmp/redis/genConfig.sh", "nodes-1.conf", "10.42.1.10", "7222"]
+    
+  redis-node-2:
+    image: redis/redis-stack:latest
+    container_name: redis-node-2
+    restart: always
+    networks:
+      redis-cluster-net:
+        ipv4_address: 10.42.1.11
+    volumes:
+      - ./node2/data:/data
+      - ./scripts:/tmp/redis
+      - ./certs:/etc/redis/certs
+    command: ["/tmp/redis/genConfig.sh", "nodes-2.conf", "10.42.1.11", "7222"]
+    
+  redis-node-3:
+    image: redis/redis-stack:latest
+    container_name: redis-node-3
+    restart: always
+    networks:
+      redis-cluster-net:
+        ipv4_address: 10.42.1.12
+    volumes:
+      - ./node3/data:/data
+      - ./scripts:/tmp/redis
+      - ./certs:/etc/redis/certs
+    command: ["/tmp/redis/genConfig.sh", "nodes-3.conf", "10.42.1.12", "7222"]
+    
+  redis-node-4:
+    image: redis/redis-stack:latest
+    container_name: redis-node-4
+    restart: always
+    networks:
+      redis-cluster-net:
+        ipv4_address: 10.42.1.13
+    volumes:
+      - ./node4/data:/data
+      - ./scripts:/tmp/redis
+      - ./certs:/etc/redis/certs
+    command: ["/tmp/redis/genConfig.sh", "nodes-4.conf", "10.42.1.13", "7222"]
+    
+  redis-node-5:
+    image: redis/redis-stack:latest
+    container_name: redis-node-5
+    restart: always
+    networks:
+      redis-cluster-net:
+        ipv4_address: 10.42.1.14
+    volumes:
+      - ./node5/data:/data
+      - ./scripts:/tmp/redis
+      - ./certs:/etc/redis/certs
+    command: ["/tmp/redis/genConfig.sh", "nodes-5.conf", "10.42.1.14", "7222"]
+    
+  redis-node-6:
+    image: redis/redis-stack:latest
+    container_name: redis-node-6
+    restart: always
+    networks:
+      redis-cluster-net:
+        ipv4_address: 10.42.1.15
+    volumes:
+      - ./node6/data:/data
+      - ./scripts:/tmp/redis
+      - ./certs:/etc/redis/certs
+    command: ["/tmp/redis/genConfig.sh", "nodes-6.conf", "10.42.1.15", "7222"]
+    
+  redis-node-7:
+    image: redis/redis-stack:latest
+    container_name: redis-node-7
+    restart: always
+    networks:
+      redis-cluster-net:
+        ipv4_address: 10.42.1.16
+    volumes:
+      - ./node7/data:/data
+      - ./scripts:/tmp/redis
+      - ./certs:/etc/redis/certs
+    command: ["/tmp/redis/genConfig.sh", "nodes-7.conf", "10.42.1.16", "7222"]    
+   
+  redis-node-8:
+    image: redis/redis-stack:latest
+    container_name: redis-node-8
+    restart: always
+    networks:
+      redis-cluster-net:
+        ipv4_address: 10.42.1.17
+    volumes:
+      - ./node8/data:/data
+      - ./scripts:/tmp/redis
+      - ./certs:/etc/redis/certs
+    command: ["/tmp/redis/genConfig.sh", "nodes-8.conf", "10.42.1.17", "7222"]  
+   
+  redis-node-9:
+    image: redis/redis-stack:latest
+    container_name: redis-node-9
+    restart: always
+    networks:
+      redis-cluster-net:
+        ipv4_address: 10.42.1.18
+    volumes:
+      - ./node9/data:/data
+      - ./scripts:/tmp/redis
+      - ./certs:/etc/redis/certs
+    command: ["/tmp/redis/genConfig.sh", "nodes-9.conf", "10.42.1.18", "7222"]      
+    
+
+  redis-cluster-creator:
+      image: redis:latest
+      container_name: redis-cluster-creator
+      networks:
+        redis-cluster-net:
+          ipv4_address: 10.42.1.5
+      volumes:
+        - ./certs:/etc/redis/certs
+      command: /bin/sh -c "redis-cli --tls --cacert /etc/redis/certs/ca.pem --user admin -a pass --cluster create redis-node-1:7222 redis-node-2:7222 redis-node-3:7222 redis-node-4:7222 redis-node-5:7222 redis-node-6:7222 redis-node-7:7222 redis-node-8:7222 redis-node-9:7222 --cluster-replicas 2 --cluster-yes"
+      depends_on:
+        - redis-node-1
+        - redis-node-2
+        - redis-node-3
+        - redis-node-4
+        - redis-node-5
+        - redis-node-6
+        - redis-node-7
+        - redis-node-8
+        - redis-node-9
+
+
+  redis-insight:
+    container_name: redis-insight
+    image: redislabs/redisinsight:1.14.0
+    networks:
+      redis-cluster-net:
+        ipv4_address: 10.42.1.2
+    ports:
+      - 8001:8001
