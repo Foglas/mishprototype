@@ -14,4 +14,5 @@ cd "$CERT_DIR"
 "$SCRIPTDIR/generate-keyfile.sh" "$CERT_DIR"
 "$SCRIPTDIR/import-into-truststore.sh" "$TRUST_STORE_PASS" "$CERT_DIR/ca.pem"
 
+docker compose down -v
 docker compose up -d
