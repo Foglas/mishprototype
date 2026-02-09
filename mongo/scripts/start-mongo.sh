@@ -9,7 +9,7 @@ PROJECT_ROOT="$(cd "$SCRIPTDIR/.." && pwd)"
 
 cd "$SCRIPTDIR"
 
-KEYFILE_DIR="$PROJECT_ROOT/mongo/keyfile"
+KEYFILE_DIR="$PROJECT_ROOT/keyfile"
 
 mkdir -p "$KEYFILE_DIR"
 chmod 700 "$KEYFILE_DIR"

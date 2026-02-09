@@ -3,7 +3,7 @@ set -eo pipefail
 
 TRUST_STORE_PASS=$1
 
-CA_DIR="$2"
+CA_DIR=${2:-"../authoritive"}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
