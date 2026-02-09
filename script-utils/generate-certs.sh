@@ -2,10 +2,10 @@
 set -eo pipefail
 
 SERVER_CN="$1"
-CA_DIR="$2"
-OUTDIR="$3"
+OUTDIR="$2"
+CA_DIR="$3"
 
-FULL_CA_PATH="$(cd "$CA_DIR" && pwd)"
+FULL_CA_PATH="$(cd "${CA_DIR:-../authoritive}" && pwd)"
 CA_PEM_SRC="${FULL_CA_PATH}/ca.pem"
 CA_KEY_SRC="${FULL_CA_PATH}/ca.key"
 
