@@ -10,6 +10,11 @@ fi
 OUTDIR="$1"
 cd "$OUTDIR"
 
+
+if [ ! -f "ca.pem" ] || [ ! -f "ca.key" ]; then
+
 openssl genrsa -out ca.key 4096
 openssl req -x509 -new -nodes -key ca.key -sha256 -days 3650 \
   -subj "/CN=mish-mongo}" -out ca.pem
+
+fi
