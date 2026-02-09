@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 set -eo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 SERVER_CN="$1"
 OUTDIR="$2"
 CA_DIR="$3"
 
-FULL_CA_PATH="$(cd "${CA_DIR:-../authoritive}" && pwd)"
+FULL_CA_PATH="$(cd "${CA_DIR:-$SCRIPT_DIR/../authoritive}" && pwd)"
 CA_PEM_SRC="${FULL_CA_PATH}/ca.pem"
 CA_KEY_SRC="${FULL_CA_PATH}/ca.key"
 

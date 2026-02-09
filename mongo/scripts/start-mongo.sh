@@ -14,7 +14,7 @@ KEYFILE_DIR="$PROJECT_ROOT/keyfile"
 mkdir -p "$KEYFILE_DIR"
 chmod 700 "$KEYFILE_DIR"
 
-./generate-keyfile.sh "$KEYFILE_DIR"
+"$SCRIPTDIR/generate-keyfile.sh" "$KEYFILE_DIR"
 
 docker compose -f "$PROJECT_ROOT/docker-compose.yml" down -v
 docker compose -f "$PROJECT_ROOT/docker-compose.yml" up -d
