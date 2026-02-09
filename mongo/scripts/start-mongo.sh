@@ -5,8 +5,6 @@ TRUST_STORE_PASS=$1
 
 SCRIPTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-cd ..
-
 CERT_DIR="$(pwd)/certs"
 mkdir -p "$CERT_DIR"
 chmod -R 700 "$CERT_DIR"
