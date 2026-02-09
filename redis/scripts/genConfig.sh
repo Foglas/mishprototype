@@ -125,6 +125,7 @@ tls-key-file /etc/redis/certs/server.key
 tls-ca-cert-file /etc/redis/certs/ca.pem
 tls-cluster yes
 tls-auth-clients no
+tls-replication yes
 EOF
 
 cat <<EOF > users.acl

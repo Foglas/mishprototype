@@ -18,8 +18,10 @@ services:
     volumes:
       - ./node1/data:/data
       - ./scripts:/tmp/redis
-      - ./certs:/etc/redis/certs
-    command: ["/tmp/redis/genConfig.sh", "nodes-1.conf", "10.42.1.10", "7222"]
+      - ./certs-node-1/server.crt:/etc/redis/certs/server.crt:ro
+      - ./certs-node-1/server.key:/etc/redis/certs/server.key:ro
+      - ./certs-node-1/ca.pem:/etc/redis/certs/ca.pem:ro
+    command: ["/tmp/redis/genConfig.sh", "nodes-1.conf", "redis-node-1", "7222"]
     
   redis-node-2:
     image: redis/redis-stack:latest
@@ -31,8 +33,10 @@ services:
     volumes:
       - ./node2/data:/data
       - ./scripts:/tmp/redis
-      - ./certs:/etc/redis/certs
-    command: ["/tmp/redis/genConfig.sh", "nodes-2.conf", "10.42.1.11", "7222"]
+      - ./certs-node-2/server.crt:/etc/redis/certs/server.crt:ro
+      - ./certs-node-2/server.key:/etc/redis/certs/server.key:ro
+      - ./certs-node-2/ca.pem:/etc/redis/certs/ca.pem:ro
+    command: ["/tmp/redis/genConfig.sh", "nodes-2.conf", "redis-node-2", "7222"]
     
   redis-node-3:
     image: redis/redis-stack:latest
@@ -44,8 +48,10 @@ services:
     volumes:
       - ./node3/data:/data
       - ./scripts:/tmp/redis
-      - ./certs:/etc/redis/certs
-    command: ["/tmp/redis/genConfig.sh", "nodes-3.conf", "10.42.1.12", "7222"]
+      - ./certs-node-3/server.crt:/etc/redis/certs/server.crt:ro
+      - ./certs-node-3/server.key:/etc/redis/certs/server.key:ro
+      - ./certs-node-3/ca.pem:/etc/redis/certs/ca.pem:ro
+    command: ["/tmp/redis/genConfig.sh", "nodes-3.conf", "redis-node-3", "7222"]
     
   redis-node-4:
     image: redis/redis-stack:latest
@@ -57,8 +63,10 @@ services:
     volumes:
       - ./node4/data:/data
       - ./scripts:/tmp/redis
-      - ./certs:/etc/redis/certs
-    command: ["/tmp/redis/genConfig.sh", "nodes-4.conf", "10.42.1.13", "7222"]
+      - ./certs-node-4/server.crt:/etc/redis/certs/server.crt:ro
+      - ./certs-node-4/server.key:/etc/redis/certs/server.key:ro
+      - ./certs-node-4/ca.pem:/etc/redis/certs/ca.pem:ro
+    command: ["/tmp/redis/genConfig.sh", "nodes-4.conf", "redis-node-4", "7222"]
     
   redis-node-5:
     image: redis/redis-stack:latest
@@ -70,8 +78,10 @@ services:
     volumes:
       - ./node5/data:/data
       - ./scripts:/tmp/redis
-      - ./certs:/etc/redis/certs
-    command: ["/tmp/redis/genConfig.sh", "nodes-5.conf", "10.42.1.14", "7222"]
+      - ./certs-node-5/server.crt:/etc/redis/certs/server.crt:ro
+      - ./certs-node-5/server.key:/etc/redis/certs/server.key:ro
+      - ./certs-node-5/ca.pem:/etc/redis/certs/ca.pem:ro
+    command: ["/tmp/redis/genConfig.sh", "nodes-5.conf", "redis-node-5", "7222"]
     
   redis-node-6:
     image: redis/redis-stack:latest
@@ -83,8 +93,10 @@ services:
     volumes:
       - ./node6/data:/data
       - ./scripts:/tmp/redis
-      - ./certs:/etc/redis/certs
-    command: ["/tmp/redis/genConfig.sh", "nodes-6.conf", "10.42.1.15", "7222"]
+      - ./certs-node-6/server.crt:/etc/redis/certs/server.crt:ro
+      - ./certs-node-6/server.key:/etc/redis/certs/server.key:ro
+      - ./certs-node-6/ca.pem:/etc/redis/certs/ca.pem:ro
+    command: ["/tmp/redis/genConfig.sh", "nodes-6.conf", "redis-node-6", "7222"]
     
   redis-node-7:
     image: redis/redis-stack:latest
@@ -96,8 +108,10 @@ services:
     volumes:
       - ./node7/data:/data
       - ./scripts:/tmp/redis
-      - ./certs:/etc/redis/certs
-    command: ["/tmp/redis/genConfig.sh", "nodes-7.conf", "10.42.1.16", "7222"]    
+      - ./certs-node-7/server.crt:/etc/redis/certs/server.crt:ro
+      - ./certs-node-7/server.key:/etc/redis/certs/server.key:ro
+      - ./certs-node-7/ca.pem:/etc/redis/certs/ca.pem:ro
+    command: ["/tmp/redis/genConfig.sh", "nodes-7.conf", "redis-node-7", "7222"]
    
   redis-node-8:
     image: redis/redis-stack:latest
@@ -109,8 +123,10 @@ services:
     volumes:
       - ./node8/data:/data
       - ./scripts:/tmp/redis
-      - ./certs:/etc/redis/certs
-    command: ["/tmp/redis/genConfig.sh", "nodes-8.conf", "10.42.1.17", "7222"]  
+      - ./certs-node-8/server.crt:/etc/redis/certs/server.crt:ro
+      - ./certs-node-8/server.key:/etc/redis/certs/server.key:ro
+      - ./certs-node-8/ca.pem:/etc/redis/certs/ca.pem:ro
+    command: ["/tmp/redis/genConfig.sh", "nodes-8.conf", "redis-node-8", "7222"]
    
   redis-node-9:
     image: redis/redis-stack:latest
@@ -122,8 +138,10 @@ services:
     volumes:
       - ./node9/data:/data
       - ./scripts:/tmp/redis
-      - ./certs:/etc/redis/certs
-    command: ["/tmp/redis/genConfig.sh", "nodes-9.conf", "10.42.1.18", "7222"]      
+      - ./certs-node-9/server.crt:/etc/redis/certs/server.crt:ro
+      - ./certs-node-9/server.key:/etc/redis/certs/server.key:ro
+      - ./certs-node-9/ca.pem:/etc/redis/certs/ca.pem:ro
+    command: ["/tmp/redis/genConfig.sh", "nodes-9.conf", "redis-node-9", "7222"]
     
 
   redis-cluster-creator:
@@ -133,7 +151,9 @@ services:
         redis-cluster-net:
           ipv4_address: 10.42.1.5
       volumes:
-        - ./certs:/etc/redis/certs
+        - ./certs-node-9/server.crt:/etc/redis/certs/server.crt:ro
+        - ./certs-node-9/server.key:/etc/redis/certs/server.key:ro
+        - ./certs-node-9/ca.pem:/etc/redis/certs/ca.pem:ro
       command: /bin/sh -c "redis-cli --tls --cacert /etc/redis/certs/ca.pem --user admin -a pass --cluster create redis-node-1:7222 redis-node-2:7222 redis-node-3:7222 redis-node-4:7222 redis-node-5:7222 redis-node-6:7222 redis-node-7:7222 redis-node-8:7222 redis-node-9:7222 --cluster-replicas 2 --cluster-yes"
       depends_on:
         - redis-node-1
