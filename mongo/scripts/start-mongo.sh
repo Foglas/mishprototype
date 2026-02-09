@@ -5,14 +5,16 @@ TRUST_STORE_PASS=$1
 
 SCRIPTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-CERT_DIR="$(pwd)/certs"
-mkdir -p "$CERT_DIR"
-chmod -R 700 "$CERT_DIR"
+PROJECT_ROOT="$(cd "$SCRIPTDIR/.." && pwd)"
 
-cd "$CERT_DIR"
-"$SCRIPTDIR/generate-ca.sh" "$CERT_DIR"
-"$SCRIPTDIR/generate-keyfile.sh" "$CERT_DIR"
-"$SCRIPTDIR/import-into-truststore.sh" "$TRUST_STORE_PASS" "$CERT_DIR/ca.pem"
+cd "$SCRIPTDIR"
 
-docker compose down -v
-docker compose up -d
+KEYFILE_DIR="$PROJECT_ROOT/mongo/keyfile"
+
+mkdir -p "$KEYFILE_DIR"
+chmod 700 "$KEYFILE_DIR"
+
+./generate-keyfile.sh "$KEYFILE_DIR"
+
+docker compose -f "$PROJECT_ROOT/docker-compose.yml" down -v
+docker compose -f "$PROJECT_ROOT/docker-compose.yml" up -d

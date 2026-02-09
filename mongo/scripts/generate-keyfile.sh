@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Check if CA_DIR argument exists
-if [ $# -lt 1 ] || [ -z "$1" ]; then
-  echo "Usage: $0 <KEYFILE_DIR>"
-  exit 1
+KEYFILE_DIR="$1"
+KEYFILE_PATH="$KEYFILE_DIR/keyfile"
+
+mkdir -p "$KEYFILE_DIR"
+
+if [ -f "$KEYFILE_PATH" ]; then
+    rm -f "$KEYFILE_PATH"
 fi
 
-OUTDIR="$1"
-cd "$OUTDIR"
+openssl rand -base64 756 > "$KEYFILE_PATH"
 
-openssl rand -base64 756 > keyfile
-chmod 400 keyfile
+chmod 400 "$KEYFILE_PATH"

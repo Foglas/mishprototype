@@ -12,10 +12,9 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - ./certs:/shared/certs
-      - ./certs-main:/etc/ssl/mongo
-      - ./certs/keyfile:/replication/keyfile
-      - ./scripts/generate-certs.sh:/docker-entrypoint-initdb.d/generate-certs.sh:ro
+      - ./certs-main/ca.pem:/etc/ssl/mongo/ca.pem:ro
+      - ./certs-main/mongo.pem:/etc/ssl/mongo/mongo.pem:ro
+      - ./keyfile/keyfile:/replication/keyfile
       - ./conf/mongod.conf:/etc/mongo/mongod.conf:ro
       - ./data-main:/data/db
     command: ["mongod", "--config", "/etc/mongo/mongod.conf"]
@@ -45,9 +44,9 @@ services:
     ports:
       - "27018:27017"
     volumes:
-      - ./certs:/shared/certs:ro
-      - ./certs-replica1:/etc/ssl/mongo
-      - ./certs/keyfile:/replication/keyfile
+      - ./certs-replica-1/ca.pem:/etc/ssl/mongo/ca.pem:ro
+      - ./certs-replica-1/mongo.pem:/etc/ssl/mongo/mongo.pem:ro
+      - ./keyfile/keyfile:/replication/keyfile
       - ./scripts/generate-certs.sh:/docker-entrypoint-initdb.d/generate-certs.sh:ro
       - ./conf/mongod.conf:/etc/mongo/mongod.conf:ro
       - ./data-replica1:/data/db
@@ -80,9 +79,9 @@ services:
     ports:
       - "27019:27017"
     volumes:
-      - ./certs:/shared/certs:ro
-      - ./certs-replica2:/etc/ssl/mongo
-      - ./certs/keyfile:/replication/keyfile
+      - ./certs-replica-2/ca.pem:/etc/ssl/mongo/ca.pem:ro
+      - ./certs-replica-2/mongo.pem:/etc/ssl/mongo/mongo.pem:ro
+      - ./keyfile/keyfile:/replication/keyfile
       - ./scripts/generate-certs.sh:/docker-entrypoint-initdb.d/generate-certs.sh:ro
       - ./conf/mongod.conf:/etc/mongo/mongod.conf:ro
       - ./data-replica2:/data/db
@@ -102,7 +101,8 @@ services:
   mongo-replica-set-creator:
     image: mongo:6
     volumes:
-      - ./certs:/etc/ssl/mongo
+      - ./certs-main/ca.pem:/etc/ssl/mongo/ca.pem
+      - ./certs-main/mongo.pem:/etc/ssl/mongo/mongo.pem
       - ./scripts/initialize-replica-set.sh:/scripts/initialize-replica-set.sh:ro
     command: ["bash", "/scripts/initialize-replica-set.sh"]
     networks:
