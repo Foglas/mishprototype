@@ -1,13 +1,17 @@
 #!/usr/bin/env bash
 set -eo pipefail
 
-SERVER_CN="${SERVER_CN}"
-OUTDIR="${OUTDIR}"
+SERVER_CN="$1"
+CA_DIR="$2"
+OUTDIR="$3"
 
-CA_PEM_SRC="${CA_DIR}/ca.pem"
-CA_KEY_SRC="${CA_DIR}/ca.key"
+FULL_CA_PATH="$(cd "$CA_DIR" && pwd)"
+CA_PEM_SRC="${FULL_CA_PATH}/ca.pem"
+CA_KEY_SRC="${FULL_CA_PATH}/ca.key"
 
 mkdir -p "${OUTDIR}"
+chmod -R 700 "${OUTDIR}"
+
 cd "${OUTDIR}"
 
 if ! command -v openssl >/dev/null 2>&1; then
@@ -17,8 +21,8 @@ fi
 
 rm -rf -- "${OUTDIR:?}/"*
 
-cp "$CA_PEM_SRC" "$OUTDIR/ca.pem"
-cp "$CA_KEY_SRC" "$OUTDIR/ca.key"
+cp "$CA_PEM_SRC" "./ca.pem"
+cp "$CA_KEY_SRC" "./ca.key"
 
 
 
@@ -61,7 +65,7 @@ chmod 400 mongo.pem
 chmod 444 ca.pem
 
 # Cleanup
-rm -f server.csr server.key server.cnf v3ext.cnf ca.srl || true
+rm -f server.csr server.key server.cnf v3ext.cnf ca.srl ca.key server.crt || true
 
 echo "Generated certs in ${OUTDIR}:"
-ls -la "${OUTDIR}"
+ls -la "./"
