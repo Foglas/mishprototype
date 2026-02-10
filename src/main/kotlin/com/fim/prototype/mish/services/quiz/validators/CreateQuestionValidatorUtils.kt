@@ -4,6 +4,7 @@ import com.fim.prototype.mish.exceptions.NotFoundException
 import com.fim.prototype.mish.exceptions.ValidationException
 import com.fim.prototype.mish.model.entities.quiz.answers.*
 import com.fim.prototype.mish.model.entities.quiz.questions.*
+import com.fim.prototype.mish.services.FileService
 import com.fim.prototype.mish.services.chapters.ModelService
 import org.springframework.stereotype.Service
 import java.util.*
@@ -129,7 +130,7 @@ class SingleChoiceQuestionValidator(
 @Service
 class TextureClickQuestionValidator(
     val questionValidatorUtils: QuestionValidatorUtils,
-    val modelService: ModelService,
+    val fileService: FileService,
 ) : CreateQuizValidator {
     override val type: KClass<*>
         get() = TextureClickQuestionData::class
@@ -138,8 +139,8 @@ class TextureClickQuestionValidator(
         return questionValidatorUtils.validate(question, answer) { q, a ->
             val typedQuestion = question.asTextureClickQuestionData()
 
-            val modelExists = typedQuestion.modelId?.let { id -> modelService.isFileExists(id) }?: false
-            val textureExists = typedQuestion.textureId?.let { id -> modelService.isFileExists(id) }?: false
+            val modelExists = typedQuestion.modelId?.let { id -> fileService.isFileExists(id) }?: false
+            val textureExists = typedQuestion.textureId?.let { id -> fileService.isFileExists(id) }?: false
 
             if (!modelExists) throw NotFoundException("Model for question not found!")
             if (!textureExists) throw NotFoundException("Texture for question not found!")

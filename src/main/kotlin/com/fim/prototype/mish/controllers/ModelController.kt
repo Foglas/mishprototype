@@ -5,6 +5,7 @@ import com.fim.prototype.mish.model.entities.InputFileDesc
 import com.fim.prototype.mish.model.entities.ModelIds
 import com.fim.prototype.mish.model.entities.ModelMetadataEntity
 import com.fim.prototype.mish.properties.PageProperties
+import com.fim.prototype.mish.services.FileService
 import com.fim.prototype.mish.services.chapters.ModelService
 import com.fim.prototype.mish.utils.PageRequestData
 import com.fim.prototype.mish.utils.PageResult
@@ -12,13 +13,15 @@ import kotlinx.coroutines.runBlocking
 import org.springframework.data.domain.Sort
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
+import kotlin.io.path.fileVisitor
 
 @RestController
 @RequestMapping(value = ["/api/model"])
 class ModelController(
-    override val modelService: ModelService,
+    override val fileService: FileService,
+    private val modelService: ModelService,
     private val pageProperties: PageProperties,
-) : DownloadController(modelService) {
+) : DownloadController(fileService) {
 
     @PostMapping("/upload")
     fun uploadModel(

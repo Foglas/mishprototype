@@ -1,0 +1,45 @@
+{
+  "originalFileName": "sad.md",
+  "name": "MyTestModel",
+  "description": "This is a test 3D model",
+  "fileSenseType": "MODEL",
+  "relatedFiles": [
+    {
+      "originalFileName": "logo.png",
+      "name": "MainTexture",
+      "description": "Main texture for the model",
+      "fileSenseType": "MAIN_TEXTURE",
+      "relatedFiles": [
+        {
+          "originalFileName": "mish-dev.txt",
+          "name": "SharedTexture",
+          "description": "Shared texture for main and other textures",
+          "fileSenseType": "CSV_FILE"
+        }
+      ]
+    },
+    {
+      "originalFileName": "README.md",
+      "name": "ExtraTexture",
+      "description": "Additional texture file",
+      "fileSenseType": "OTHER_TEXTURE",
+      "relatedFiles": [
+        {
+          "originalFileName": "mish-dev.txt",
+          "name": "SharedTexture",
+          "description": "Shared texture for main and other textures",
+          "fileSenseType": "CSV_FILE",
+          "relatedFiles": [
+            {
+              "originalFileName": "Lei1.jpeg",
+              "name": "ColorPalette",
+              "description": "Color palette used by shared texture",
+              "fileSenseType": "CSV_FILE",
+              "relatedFiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
