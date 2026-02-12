@@ -9,8 +9,6 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: adminpassword
-    ports:
-      - "27017:27017"
     volumes:
       - ./certs:/etc/ssl/mongo:ro
       - ./scripts/create-user.sh:/docker-entrypoint-initdb.d/create-user.sh:ro

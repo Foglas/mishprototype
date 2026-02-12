@@ -42,7 +42,7 @@ ldap:
 
 
 origin:
-  url: http://localhost:8081
+  url: ${FE_URL:http://localhost:8081}
 
 app:
   page:
