@@ -1,7 +1,6 @@
 package com.fim.prototype.mish.repo
 
 import com.fim.prototype.mish.exceptions.NotFoundException
-import com.fim.prototype.mish.model.common.FileEntityWithTree
 import com.fim.prototype.mish.model.entities.FileIdWithName
 import com.fim.prototype.mish.model.entities.FileSenseType
 import com.fim.prototype.mish.model.entities.ModelIds
@@ -9,10 +8,7 @@ import com.fim.prototype.mish.model.entities.ModelMetadataEntity
 import com.fim.prototype.mish.utils.PageRequestData
 import com.fim.prototype.mish.utils.PageResult
 import com.fim.prototype.mish.utils.createPageRequest
-import org.bson.types.ObjectId
 import org.springframework.data.mongodb.core.MongoTemplate
-import org.springframework.data.mongodb.core.aggregation.Aggregation
-import org.springframework.data.mongodb.core.aggregation.GraphLookupOperation
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.stereotype.Repository
