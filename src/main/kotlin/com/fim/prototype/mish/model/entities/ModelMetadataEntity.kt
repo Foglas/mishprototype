@@ -77,14 +77,6 @@ fun OutputFileEntity.toFileEntity(): FileEntity{
     )
 }
 
-data class OutputModelMetadata(
-    val id: String? = null,
-    val modelId: String,
-    val name: String,
-    val relatedFiles: List<OutputFileEntity> = emptyList(),
-    val isAdvanced: Boolean
-)
-
 enum class FileSenseType{
     MODEL, MAIN_TEXTURE, OTHER_TEXTURE, CSV_FILE
 }
