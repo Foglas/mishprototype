@@ -1,5 +1,6 @@
 package com.fim.prototype.mish.repo
 
+import com.fim.prototype.mish.exceptions.DatabaseOperationFailed
 import com.fim.prototype.mish.model.common.filters.FilterBase
 import com.fim.prototype.mish.model.entities.ChapterEntity
 import com.fim.prototype.mish.repo.interfaces.IChapterRepo
@@ -15,19 +16,31 @@ class ChapterRepo(
 ) {
 
     fun save(chapter: ChapterEntity): ChapterEntity {
-        return chapterRepo.save(chapter)
+        try {
+            return chapterRepo.save(chapter)
+        } catch (ex: Exception) {
+            throw DatabaseOperationFailed("Chapter was not created, please try again later!")
+        }
     }
 
     fun getById(chapterId: String): ChapterEntity? {
         return chapterRepo.findByIdOrNull(chapterId)
     }
 
-    fun delete(chapterId: String){
-        return chapterRepo.deleteById(chapterId)
+    fun delete(chapterId: String) {
+        try {
+            return chapterRepo.deleteById(chapterId)
+        } catch (ex: Exception) {
+            throw DatabaseOperationFailed("Chapter was not deleted, please try again later!")
+        }
     }
 
-    fun listChapters(pageRequest: PageRequestData, filter: FilterBase): PageResult<ChapterEntity>{
-       return mongoBaseRepoUtils.listPagedData(mongoBaseRepoUtils.createBaseFilterCriteriaAndReturnQuery(filter), pageRequest, ChapterEntity::class)
+    fun listChapters(pageRequest: PageRequestData, filter: FilterBase): PageResult<ChapterEntity> {
+        return mongoBaseRepoUtils.listPagedData(
+            mongoBaseRepoUtils.createBaseFilterCriteriaAndReturnQuery(filter),
+            pageRequest,
+            ChapterEntity::class
+        )
     }
 
 

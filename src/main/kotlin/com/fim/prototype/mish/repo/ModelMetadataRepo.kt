@@ -9,6 +9,7 @@ import com.fim.prototype.mish.utils.PageRequestData
 import com.fim.prototype.mish.utils.PageResult
 import com.fim.prototype.mish.utils.createPageRequest
 import org.springframework.data.mongodb.core.MongoTemplate
+import org.springframework.data.mongodb.core.ReplaceOptions
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.stereotype.Repository
@@ -68,6 +69,19 @@ class ModelMetadataRepo(
 
     fun save(modelMetadataEntity: ModelMetadataEntity): ModelMetadataEntity {
         return mongoTemplate.save(modelMetadataEntity, MongoCollection.MODEL_ENTITY)
+    }
+
+    fun replace(modelMetadataEntity: ModelMetadataEntity, id: String): ModelMetadataEntity {
+        val options = ReplaceOptions().upsert()
+
+        mongoTemplate.replace(
+            Query.query(Criteria.where("_id").`is`(id)),
+            modelMetadataEntity,
+            options,
+            MongoCollection.MODEL_ENTITY
+        )
+
+        return getModelMetadataById(id)
     }
 
 }

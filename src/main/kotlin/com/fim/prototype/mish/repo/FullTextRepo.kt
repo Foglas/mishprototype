@@ -1,5 +1,6 @@
 package com.fim.prototype.mish.repo
 
+import com.fim.prototype.mish.exceptions.DatabaseOperationFailed
 import com.fim.prototype.mish.model.entities.ChapterEntity
 import com.fim.prototype.mish.model.entities.FullTextCollectionType
 import com.fim.prototype.mish.model.entities.FullTextEntity
@@ -28,14 +29,22 @@ class FullTextRepo(
     }
 
     fun save(fulltext: FullTextEntity): FullTextEntity {
-        return mongoTemplate.save(fulltext)
+        try {
+            return mongoTemplate.save(fulltext)
+        } catch (ex: Exception){
+            throw DatabaseOperationFailed("Full text was not created, please try again later!")
+        }
     }
 
     fun update(externalId: String, text: String): FullTextEntity? {
-        val query = Query(Criteria.where("externalId").`is`(externalId))
-        val updateQuery = Update().set("text", text)
+        try {
+            val query = Query(Criteria.where("externalId").`is`(externalId))
+            val updateQuery = Update().set("text", text)
 
-        return mongoTemplate.findAndModify(query, updateQuery, FullTextEntity::class.java)
+            return mongoTemplate.findAndModify(query, updateQuery, FullTextEntity::class.java)
+        } catch (ex: Exception){
+            throw DatabaseOperationFailed("Full text was not updated, please try again later!")
+        }
     }
 
     fun search(keyword: String, type: FullTextCollectionType): FullTextResult {

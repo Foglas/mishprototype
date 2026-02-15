@@ -31,5 +31,6 @@ data class FileEntityTree(
     val backendEndpoint: String?,
     val created: Instant,
     val updated: Instant,
-    val allRelatedFiles: List<FileEntityRecursive> = emptyList()
+    val allRelatedFiles: List<FileEntityRecursive> = emptyList(),
+    val isAdvanced: Boolean = false
 )

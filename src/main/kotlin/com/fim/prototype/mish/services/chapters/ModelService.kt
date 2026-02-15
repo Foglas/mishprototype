@@ -3,6 +3,7 @@ package com.fim.prototype.mish.services.chapters
 import com.fim.prototype.mish.exceptions.ValidationException
 import com.fim.prototype.mish.model.common.FileEntityTree
 import com.fim.prototype.mish.model.common.ModelMetadata
+import com.fim.prototype.mish.model.common.UpdateModelMetadata
 import com.fim.prototype.mish.model.entities.*
 import com.fim.prototype.mish.repo.ModelMetadataRepo
 import com.fim.prototype.mish.services.FileService
@@ -30,18 +31,31 @@ class ModelService(
 
         val info = ModelMetadataEntity.from(relatedFilesMetadata.toFileEntity())
 
-        val metadataModel = modelMetadataRepo.save(info.copy(isAdvanced = modelMetadata.isAdvanced, description = modelMetadata.description))
+        val metadataModel = modelMetadataRepo.save(
+            info.copy(
+                isAdvanced = modelMetadata.isAdvanced,
+                description = modelMetadata.description
+            )
+        )
 
-        return ModelIds(metadataModel.id ?: "", FileIdWithName(relatedFilesMetadata.id ?: "", metadataModel.name, FileSenseType.MODEL, mapRelatedFiles(relatedFilesMetadata.relatedFiles)))
+        return ModelIds(
+            metadataModel.id ?: "",
+            FileIdWithName(
+                relatedFilesMetadata.id ?: "",
+                metadataModel.name,
+                FileSenseType.MODEL,
+                mapRelatedFiles(relatedFilesMetadata.relatedFiles)
+            )
+        )
     }
 
     fun getModelRelatedTree(modelMetadataId: String): FileEntityTree {
-       val modelMetadata = getModelMetadataById(modelMetadataId)
-       return fileService.loadFileTree(modelMetadata.modelId)
+        val modelMetadata = getModelMetadataById(modelMetadataId)
+        return fileService.loadFileTree(modelMetadata.modelId).copy(isAdvanced = modelMetadata.isAdvanced)
     }
 
     fun getModelMetadataById(id: String): ModelMetadataEntity {
-       return modelMetadataRepo.getModelMetadataById(id)
+        return modelMetadataRepo.getModelMetadataById(id)
     }
 
     fun deleteModel(modelMetadataId: String, force: Boolean = false) {
@@ -56,17 +70,50 @@ class ModelService(
         modelMetadataRepo.deleteMetadataById(modelMetadataId)
     }
 
-    fun updateModel(files: List<MultipartFile>, metadata: InputFileDesc){
-       // val current = fil
+    fun updateModel(
+        files: List<MultipartFile>,
+        metadata: InputFileDesc,
+        modelMetadata: UpdateModelMetadata
+    ): ModelIds {
+        val currentMetadata = getModelMetadataById(modelMetadata.id)
+        val currentFiles = fileService.loafFileTreeFlatted(currentMetadata.modelId)
+
+        val groupedRelatedFiles = files.associateBy { it.originalFilename ?: "" }
+        val relatedFilesMetadata = fileService.uploadFilesRecursively(groupedRelatedFiles, metadata)
+
+        fileService.deleteFile(currentMetadata.modelId)
+        currentFiles.allRelatedFiles.forEach { file ->
+            file.id?.let { fileService.deleteFile(it) }
+        }
+
+        val info = ModelMetadataEntity.from(relatedFilesMetadata.toFileEntity())
+
+        val metadataModel = modelMetadataRepo.replace(
+            info.copy(
+                isAdvanced = modelMetadata.isAdvanced,
+                description = modelMetadata.description
+            ),
+            modelMetadata.id
+        )
+
+        return ModelIds(
+            metadataModel.id ?: "",
+            FileIdWithName(
+                relatedFilesMetadata.id ?: "",
+                metadataModel.name,
+                FileSenseType.MODEL,
+                mapRelatedFiles(relatedFilesMetadata.relatedFiles)
+            )
+        )
     }
 
     fun listModelMetadata(pageRequestData: PageRequestData): PageResult<ModelIds> {
         return modelMetadataRepo.getAllModelMetadata(pageRequestData)
     }
 
-    private fun mapRelatedFiles(relatedFiles: List<OutputFileEntity>): List<FileIdWithName>{
+    private fun mapRelatedFiles(relatedFiles: List<OutputFileEntity>): List<FileIdWithName> {
         if (relatedFiles.isEmpty()) return emptyList()
-        return relatedFiles.map { FileIdWithName(it.id?:"", it.name, it.senseType, mapRelatedFiles(it.relatedFiles)) }
+        return relatedFiles.map { FileIdWithName(it.id ?: "", it.name, it.senseType, mapRelatedFiles(it.relatedFiles)) }
     }
 
 }
