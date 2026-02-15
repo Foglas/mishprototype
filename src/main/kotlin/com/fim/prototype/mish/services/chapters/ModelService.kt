@@ -54,7 +54,6 @@ class ModelService(
         modelMetadataRepo.deleteMetadataById(modelMetadataId)
     }
 
-    //load all related
     fun listModelMetadata(pageRequestData: PageRequestData): PageResult<ModelIds> {
         return modelMetadataRepo.getAllModelMetadata(pageRequestData)
     }
@@ -63,6 +62,5 @@ class ModelService(
         if (relatedFiles.isEmpty()) return emptyList()
         return relatedFiles.map { FileIdWithName(it.id?:"", it.name, it.senseType, mapRelatedFiles(it.relatedFiles)) }
     }
-
 
 }

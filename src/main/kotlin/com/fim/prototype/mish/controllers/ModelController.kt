@@ -51,14 +51,4 @@ class ModelController(
     ): PageResult<ModelIds>{
         return modelService.listModelMetadata(PageRequestData(page, limit ?: pageProperties.limit, orderBy, sortDirection?: pageProperties.sortDirection))
     }
-
-    //TODO assign model to target
-
-    //TODO get objectId, name, .png .jpg  - select models
-
-    //TODO implement endpoint which can assign metadata to model
-    //fun assignMetadata()
-
-    //TODO implement endpoint for getting all related files to some item
-
 }
