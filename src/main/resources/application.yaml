@@ -1,5 +1,7 @@
 server:
   port: 8050
+  tomcat:
+    max-threads: 200
 
 spring:
   application:
@@ -16,6 +18,9 @@ spring:
       auto-index-creation: true
       # Use the admin credentials from mongo/tls/docker-compose.yml and enable TLS.
       uri: ${MONGO_HOST:mongodb://admin:adminpassword@localhost:27017,localhost:27018,localhost:27019/mish-db?authSource=admin&replicaSet=replica-set-1&tls=true}
+      connection-pool:
+        max-size: 200
+        min-size: 60
 
   security:
     oauth2:
@@ -58,7 +63,7 @@ logging:
   level:
     org:
       mongodb:
-        driver: DEBUG
+        driver: INFO
       springframework:
         security: DEBUG
         oauth2: DEBUG
