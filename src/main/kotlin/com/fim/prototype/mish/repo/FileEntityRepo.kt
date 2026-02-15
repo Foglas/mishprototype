@@ -1,6 +1,6 @@
 package com.fim.prototype.mish.repo
 
-import com.fim.prototype.mish.model.common.FileEntityWithTree
+import com.fim.prototype.mish.model.common.FileEntityTreeWithRelated
 import org.bson.types.ObjectId
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.aggregation.Aggregation
@@ -13,7 +13,7 @@ class FileEntityRepo(
     private val mongoTemplate: MongoTemplate
 ) {
 
-    fun loadFileTree(rootFileId: String): FileEntityWithTree? {
+    fun loadFileTree(rootFileId: String): FileEntityTreeWithRelated? {
         val aggregation = Aggregation.newAggregation(
             Aggregation.match(Criteria.where("_id").`is`(ObjectId(rootFileId))),
             GraphLookupOperation.builder()
@@ -27,7 +27,7 @@ class FileEntityRepo(
         return mongoTemplate.aggregate(
             aggregation,
             MongoCollection.FILE_ENTITY,
-            FileEntityWithTree::class.java
+            FileEntityTreeWithRelated::class.java
         ).uniqueMappedResult
     }
 }

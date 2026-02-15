@@ -1,9 +1,8 @@
 package com.fim.prototype.mish.controllers
 
-import com.fim.prototype.mish.model.common.FileEntityWithTree
+import com.fim.prototype.mish.model.common.FileEntityTree
 import com.fim.prototype.mish.model.entities.InputFileDesc
 import com.fim.prototype.mish.model.entities.ModelIds
-import com.fim.prototype.mish.model.entities.ModelMetadataEntity
 import com.fim.prototype.mish.properties.PageProperties
 import com.fim.prototype.mish.services.FileService
 import com.fim.prototype.mish.services.chapters.ModelService
@@ -14,7 +13,6 @@ import org.springframework.data.domain.Sort
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
-import kotlin.io.path.fileVisitor
 
 @RestController
 @RequestMapping(value = ["/api/model"])
@@ -32,14 +30,9 @@ class ModelController(
         return@runBlocking modelService.uploadModel(files, metadata)
     }
 
-    @GetMapping("/{id}/file/tree")
-    fun getModelRelatedTree(@PathVariable id: String): FileEntityWithTree{
-        return modelService.getModelRelatedTree(id)
-    }
-
     @GetMapping("/{id}")
-    fun getModelMetadataById(@PathVariable id: String): ModelMetadataEntity {
-        return modelService.getModelMetadataById(id)
+    fun getModelMetadataById(@PathVariable id: String): FileEntityTree {
+        return modelService.getModelRelatedTree(id)
     }
 
     @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).CREATE_CHAPTER)")

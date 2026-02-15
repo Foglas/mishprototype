@@ -2,7 +2,7 @@ package com.fim.prototype.mish.services
 
 import com.fim.prototype.mish.exceptions.NotFoundException
 import com.fim.prototype.mish.exceptions.ValidationException
-import com.fim.prototype.mish.model.common.FileEntityWithTree
+import com.fim.prototype.mish.model.common.FileEntityTreeWithRelated
 import com.fim.prototype.mish.model.entities.InputFileDesc
 import com.fim.prototype.mish.model.entities.OutputFileEntity
 import com.fim.prototype.mish.model.entities.getOutputFileEntity
@@ -59,7 +59,7 @@ class FileService(
         //TODO not implemented
     }
 
-    fun loadFileTree(rootFileId: String): FileEntityWithTree{
+    fun loadFileTree(rootFileId: String): FileEntityTreeWithRelated{
         return fileEntityRepo.loadFileTree(rootFileId) ?: throw NotFoundException("Root file was not found!")
     }
 
