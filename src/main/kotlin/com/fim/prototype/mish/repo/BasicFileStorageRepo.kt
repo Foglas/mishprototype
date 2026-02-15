@@ -1,7 +1,9 @@
 package com.fim.prototype.mish.repo
 
 import com.fim.prototype.mish.exceptions.NotFoundException
+import com.mongodb.client.gridfs.model.GridFSFile
 import org.bson.types.ObjectId
+import org.springframework.boot.autoconfigure.mongo.MongoConnectionDetails.GridFs
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.data.mongodb.gridfs.GridFsResource
@@ -19,8 +21,8 @@ class BasicFileStorageRepo(
     }
 
     fun getFileById(objectId: String): GridFsResource? {
-        val file = gridFs.findOne(Query(Criteria.where("_id").`is`(ObjectId(objectId))))
-        return gridFs.getResource(file)
+        val file = gridFs.findOne(Query(Criteria.where("_id").`is`(ObjectId(objectId)))) as GridFSFile?
+        return file?.let { gridFs.getResource(it) }
     }
 
     fun deleteFile(objectId: String) {
