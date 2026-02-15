@@ -38,8 +38,8 @@ class ModelMetadataRepo(
         )
     }
 
-    fun deleteMetadataByTargetFileId(targetFileId: String){
-        val query = Query(Criteria.where("targetFileId").`is`(targetFileId))
+    fun deleteMetadataById(id: String){
+        val query = Query(Criteria.where("_id").`is`(id))
         mongoTemplate.remove(query, ModelMetadataEntity::class.java, MongoCollection.MODEL_ENTITY)
     }
 
