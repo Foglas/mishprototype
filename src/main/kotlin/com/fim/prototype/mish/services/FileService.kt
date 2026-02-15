@@ -52,12 +52,6 @@ class FileService(
         return fileEntity
     }
 
-    //TODO needs to be completely refactored - now it should assign file into the related of some other
-    @Transactional
-    fun assignRelatedFile(parentFileMetadataId: String){
-        //TODO not implemented
-    }
-
     fun loadFileTree(rootFileId: String): FileEntityTree{
         val fileTree = loafFileTreeFlatted(rootFileId)
         return FileEntityTree(fileTree.id, fileTree.name, fileTree.creatorId, fileTree.description, fileTree.contentType, fileTree.size, fileTree.senseType, fileTree.backendEndpoint, fileTree.created, fileTree.updated, allRelatedFiles = createFileTree(fileTree.relatedFiles, fileTree.allRelatedFiles))
