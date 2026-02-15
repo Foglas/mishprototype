@@ -2,6 +2,7 @@ package com.fim.prototype.mish.controllers
 
 import com.fim.prototype.mish.model.common.FileEntityTree
 import com.fim.prototype.mish.model.common.ModelMetadata
+import com.fim.prototype.mish.model.common.UpdateModelMetadata
 import com.fim.prototype.mish.model.entities.InputFileDesc
 import com.fim.prototype.mish.model.entities.ModelIds
 import com.fim.prototype.mish.properties.PageProperties
@@ -40,9 +41,9 @@ class ModelController(
         modelService.deleteModel(modelId)
     }
 
-    @PutMapping("/{id}/update")
-    fun updateModel(@RequestPart files: List<MultipartFile>, @RequestPart metadata: InputFileDesc, @RequestPart(required = false) isAdvanced: String? = "false"){
-
+    @PutMapping("/update")
+    fun updateModel(@RequestPart files: List<MultipartFile>, @RequestPart metadata: InputFileDesc, @RequestPart(required = false) modelMetadata: UpdateModelMetadata): ModelIds {
+        return modelService.updateModel(files, metadata, modelMetadata)
     }
 
     @GetMapping("/list-by")

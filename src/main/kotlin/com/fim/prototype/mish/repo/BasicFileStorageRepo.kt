@@ -1,9 +1,9 @@
 package com.fim.prototype.mish.repo
 
+import com.fim.prototype.mish.exceptions.DatabaseOperationFailed
 import com.fim.prototype.mish.exceptions.NotFoundException
 import com.mongodb.client.gridfs.model.GridFSFile
 import org.bson.types.ObjectId
-import org.springframework.boot.autoconfigure.mongo.MongoConnectionDetails.GridFs
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.data.mongodb.gridfs.GridFsResource
@@ -17,7 +17,11 @@ class BasicFileStorageRepo(
 ) {
 
     fun uploadFile(model: MultipartFile): ObjectId {
-        return gridFs.store(model.inputStream, model.originalFilename, model.contentType)
+        try {
+            return gridFs.store(model.inputStream, model.originalFilename, model.contentType)
+        } catch (ex: Exception) {
+            throw DatabaseOperationFailed("File was not uploaded, please try again later!")
+        }
     }
 
     fun getFileById(objectId: String): GridFsResource? {
@@ -26,21 +30,22 @@ class BasicFileStorageRepo(
     }
 
     fun deleteFile(objectId: String) {
-        val id = try {
+        try {
             ObjectId(objectId)
+            val query = Query(Criteria.where("_id").`is`(ObjectId(objectId)))
+            gridFs.delete(query)
         } catch (e: IllegalArgumentException) {
-            throw NotFoundException("File with id $objectId was not found")
+            throw DatabaseOperationFailed("File was not deleted, please try again later!")
         }
 
-        val query = Query(Criteria.where("_id").`is`(id))
-        gridFs.delete(query)
+
     }
 
     fun isFileExists(objectId: String): Boolean {
         try {
             val query = Query(Criteria.where("_id").`is`(ObjectId(objectId))).limit(1)
             return gridFs.find(query).any()
-        } catch (ex: Exception){
+        } catch (ex: Exception) {
             throw NotFoundException("File with id $objectId was not found")
         }
     }

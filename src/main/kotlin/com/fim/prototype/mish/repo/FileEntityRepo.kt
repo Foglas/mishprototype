@@ -1,11 +1,13 @@
 package com.fim.prototype.mish.repo
 
+import com.fim.prototype.mish.exceptions.DatabaseOperationFailed
 import com.fim.prototype.mish.model.common.FileEntityTreeWithRelated
 import org.bson.types.ObjectId
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.aggregation.Aggregation
 import org.springframework.data.mongodb.core.aggregation.GraphLookupOperation
 import org.springframework.data.mongodb.core.query.Criteria
+import org.springframework.data.mongodb.core.query.Query
 import org.springframework.stereotype.Service
 
 @Service
@@ -29,5 +31,16 @@ class FileEntityRepo(
             MongoCollection.FILE_ENTITY,
             FileEntityTreeWithRelated::class.java
         ).uniqueMappedResult
+    }
+
+    fun delete(id: String){
+        try {
+            mongoTemplate.remove(
+                Query(Criteria.where("_id").`is`(id)),
+                MongoCollection.FILE_ENTITY
+            )
+        } catch (ex: Exception){
+            throw DatabaseOperationFailed("File was not deleted, please try again later!")
+        }
     }
 }

@@ -1,12 +1,12 @@
 package com.fim.prototype.mish.repo
 
+import com.fim.prototype.mish.exceptions.DatabaseOperationFailed
 import com.fim.prototype.mish.model.common.filters.FilterBase
 import com.fim.prototype.mish.model.entities.quiz.QuickQuizEntity
 import com.fim.prototype.mish.model.entities.quiz.QuizEntity
 import com.fim.prototype.mish.repo.interfaces.IQuizRepo
 import com.fim.prototype.mish.utils.PageRequestData
 import com.fim.prototype.mish.utils.PageResult
-import com.fim.prototype.mish.utils.createPageRequest
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
@@ -20,11 +20,20 @@ class QuizRepo(
 ) {
 
     fun save(quiz: QuizEntity): QuizEntity {
-        return quizRepo.save(quiz)
+        try {
+            return quizRepo.save(quiz)
+        } catch (ex: Exception){
+            throw DatabaseOperationFailed("Quiz was not saved, please try again later!")
+        }
+
     }
 
     fun deleteById(quizId: String){
-        quizRepo.deleteById(quizId)
+        try {
+            quizRepo.deleteById(quizId)
+        } catch (ex: Exception){
+            throw DatabaseOperationFailed("Quiz was not deleted, please try again later!")
+        }
     }
 
     fun getQuizById(quizId: String, showAnswers: Boolean = false): QuizEntity? {

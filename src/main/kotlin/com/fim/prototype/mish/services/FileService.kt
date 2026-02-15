@@ -18,7 +18,7 @@ class FileService(
     private val basicFileStorageRepo: BasicFileStorageRepo,
     private val fileRepo: IFileRepo,
     private val fileEntityRepo: FileEntityRepo
-    ) {
+) {
 
     //TODO move upload outside of method - run in coroutines and than input should be Map<String, String> eg: Map<originalFileName, ObjectId>
     fun uploadFilesRecursively(
@@ -26,7 +26,6 @@ class FileService(
         metadata: InputFileDesc,
         visited: MutableMap<String, String> = mutableMapOf()
     ): OutputFileEntity {
-
         val file = files[metadata.originalFileName]
             ?: throw ValidationException("File ${metadata.originalFileName} not found")
 
@@ -47,20 +46,35 @@ class FileService(
             }
         )
 
+
         fileRepo.save(fileEntity.toFileEntity())
+
         return fileEntity
     }
 
-    fun loadFileTree(rootFileId: String): FileEntityTree{
+    fun loadFileTree(rootFileId: String): FileEntityTree {
         val fileTree = loafFileTreeFlatted(rootFileId)
-        return FileEntityTree(fileTree.id, fileTree.name, fileTree.creatorId, fileTree.description, fileTree.contentType, fileTree.size, fileTree.senseType, fileTree.backendEndpoint, fileTree.created, fileTree.updated, allRelatedFiles = createFileTree(fileTree.relatedFiles, fileTree.allRelatedFiles))
+        return FileEntityTree(
+            fileTree.id,
+            fileTree.name,
+            fileTree.creatorId,
+            fileTree.description,
+            fileTree.contentType,
+            fileTree.size,
+            fileTree.senseType,
+            fileTree.backendEndpoint,
+            fileTree.created,
+            fileTree.updated,
+            allRelatedFiles = createFileTree(fileTree.relatedFiles, fileTree.allRelatedFiles)
+        )
     }
 
     fun loafFileTreeFlatted(rootFileId: String): FileEntityTreeWithRelated {
         return fileEntityRepo.loadFileTree(rootFileId) ?: throw NotFoundException("Root file was not found!")
     }
 
-    fun deleteFile(id: String){
+    fun deleteFile(id: String) {
+        fileEntityRepo.delete(id)
         basicFileStorageRepo.deleteFile(id)
     }
 
@@ -72,22 +86,50 @@ class FileService(
         return basicFileStorageRepo.getFileById(itemId) ?: throw NotFoundException("File with id $itemId not found!")
     }
 
-    private fun createFileTree(rootFiles: List<FileIdentifier>, allRelatedFiles: List<FileEntity>): List<FileEntityRecursive> {
+    private fun createFileTree(
+        rootFiles: List<FileIdentifier>,
+        allRelatedFiles: List<FileEntity>
+    ): List<FileEntityRecursive> {
         val allFiles = allRelatedFiles.groupBy { it.id }.map { it.key to it.value.first() }.toMap()
 
         return rootFiles.mapNotNull { allFiles[it.id] }.map { file ->
-            FileEntityRecursive(file.id, file.name, file.creatorId, file.contentType, file.size, file.senseType, file.backendEndpoint, file.created, file.updated, relatedFiles = createFileTreeRecursive(file, allFiles))
+            FileEntityRecursive(
+                file.id,
+                file.name,
+                file.creatorId,
+                file.contentType,
+                file.size,
+                file.senseType,
+                file.backendEndpoint,
+                file.created,
+                file.updated,
+                relatedFiles = createFileTreeRecursive(file, allFiles)
+            )
         }
     }
 
-    private fun createFileTreeRecursive(file: FileEntity, allRelatedFiles: Map<String?, FileEntity>): List<FileEntityRecursive> {
+    private fun createFileTreeRecursive(
+        file: FileEntity,
+        allRelatedFiles: Map<String?, FileEntity>
+    ): List<FileEntityRecursive> {
         if (file.relatedFiles.isEmpty()) return emptyList()
 
         val relatedFiles = file.relatedFiles
         val allRelatedFilesEntity = relatedFiles.mapNotNull { allRelatedFiles[it.id] }
 
         return allRelatedFilesEntity.map {
-            FileEntityRecursive(it.id, it.name, file.creatorId, it.contentType, it.size, it.senseType, it.backendEndpoint, it.created, it.updated, relatedFiles = createFileTreeRecursive(it, allRelatedFiles))
+            FileEntityRecursive(
+                it.id,
+                it.name,
+                file.creatorId,
+                it.contentType,
+                it.size,
+                it.senseType,
+                it.backendEndpoint,
+                it.created,
+                it.updated,
+                relatedFiles = createFileTreeRecursive(it, allRelatedFiles)
+            )
         }
     }
 }
