@@ -13,8 +13,10 @@ data class ModelMetadataEntity(
     @Id val id: String? = null,
     val modelId: String,
     val name: String,
+    var creatorId: String? = null,
+    var description: String? = null,
     val relatedFiles: List<FileIdentifier> = emptyList(),
-    val isAdvanced: Boolean
+    val isAdvanced: Boolean = false
 ) {
    companion object{
        fun from(fileEntity: FileEntity): ModelMetadataEntity{
@@ -22,7 +24,7 @@ data class ModelMetadataEntity(
                modelId = fileEntity.id!!,
                name = fileEntity.name,
                relatedFiles = fileEntity.relatedFiles,
-               isAdvanced = false
+               creatorId = fileEntity.creatorId,
            )
        }
    }
@@ -40,7 +42,6 @@ data class FileEntity(
     @Id var id: String? = null,
     var name: String,
     @JsonSetter(nulls = Nulls.SKIP) var creatorId: String? = null,
-    @JsonSetter(nulls = Nulls.SKIP) var description: String? = null,
     val contentType: String?,
     val size: Long,
     val senseType: FileSenseType,
@@ -54,7 +55,6 @@ data class OutputFileEntity(
     var id: String? = null,
     var name: String,
     var creatorId: String? = null,
-    var description: String? = null,
     val contentType: String?,
     val size: Long,
     val senseType: FileSenseType,
@@ -69,7 +69,6 @@ fun OutputFileEntity.toFileEntity(): FileEntity{
         id = id,
         name = name,
         creatorId = creatorId,
-        description = description,
         contentType = contentType,
         size = size,
         senseType = senseType,
@@ -94,7 +93,6 @@ fun MultipartFile.getOutputFileEntity(metadata: InputFileDesc, relatedFiles: Lis
     return OutputFileEntity(
         id = metadata.id,
         name = metadata.name,
-        description = metadata.description,
         contentType = contentType,
         size = size,
         senseType = metadata.fileSenseType,

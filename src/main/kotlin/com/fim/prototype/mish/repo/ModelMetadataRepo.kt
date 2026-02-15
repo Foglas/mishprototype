@@ -20,7 +20,7 @@ class ModelMetadataRepo(
 
     fun getAllModelMetadata(pageRequestData: PageRequestData): PageResult<ModelIds> {
         val query = Query().with(pageRequestData.createPageRequest())
-        query.fields().include("name").include("modelId").include("relatedFiles").include("isAdvanced")
+        query.fields().include("name").include("modelId").include("relatedFiles").include("isAdvanced").include("description").include("creatorId")
         val metadata = mongoTemplate.find(query, ModelMetadataEntity::class.java)
         val total = mongoTemplate.count(Query(), ModelMetadataEntity::class.java)
 

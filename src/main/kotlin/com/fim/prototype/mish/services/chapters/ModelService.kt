@@ -2,6 +2,7 @@ package com.fim.prototype.mish.services.chapters
 
 import com.fim.prototype.mish.exceptions.ValidationException
 import com.fim.prototype.mish.model.common.FileEntityTree
+import com.fim.prototype.mish.model.common.ModelMetadata
 import com.fim.prototype.mish.model.entities.*
 import com.fim.prototype.mish.repo.ModelMetadataRepo
 import com.fim.prototype.mish.services.FileService
@@ -18,7 +19,8 @@ class ModelService(
 
     suspend fun uploadModel(
         files: List<MultipartFile>,
-        metadata: InputFileDesc
+        metadata: InputFileDesc,
+        modelMetadata: ModelMetadata
     ): ModelIds {
         val groupedRelatedFiles = files.associateBy { it.originalFilename ?: "" }
 
@@ -28,7 +30,7 @@ class ModelService(
 
         val info = ModelMetadataEntity.from(relatedFilesMetadata.toFileEntity())
 
-        val metadataModel = modelMetadataRepo.save(info)
+        val metadataModel = modelMetadataRepo.save(info.copy(isAdvanced = modelMetadata.isAdvanced, description = modelMetadata.description))
 
         return ModelIds(metadataModel.id ?: "", FileIdWithName(relatedFilesMetadata.id ?: "", metadataModel.name, FileSenseType.MODEL, mapRelatedFiles(relatedFilesMetadata.relatedFiles)))
     }
@@ -52,6 +54,10 @@ class ModelService(
         }
 
         modelMetadataRepo.deleteMetadataById(modelMetadataId)
+    }
+
+    fun updateModel(files: List<MultipartFile>, metadata: InputFileDesc){
+       // val current = fil
     }
 
     fun listModelMetadata(pageRequestData: PageRequestData): PageResult<ModelIds> {

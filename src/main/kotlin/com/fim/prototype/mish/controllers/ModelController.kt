@@ -1,6 +1,7 @@
 package com.fim.prototype.mish.controllers
 
 import com.fim.prototype.mish.model.common.FileEntityTree
+import com.fim.prototype.mish.model.common.ModelMetadata
 import com.fim.prototype.mish.model.entities.InputFileDesc
 import com.fim.prototype.mish.model.entities.ModelIds
 import com.fim.prototype.mish.properties.PageProperties
@@ -24,8 +25,9 @@ class ModelController(
     @PostMapping("/upload")
     fun uploadModel(
         @RequestPart files: List<MultipartFile>,
-        @RequestPart metadata: InputFileDesc): ModelIds = runBlocking {
-        return@runBlocking modelService.uploadModel(files, metadata)
+        @RequestPart metadata: InputFileDesc,
+        @RequestPart modelMetadata: ModelMetadata): ModelIds = runBlocking {
+        return@runBlocking modelService.uploadModel(files, metadata, modelMetadata)
     }
 
     @GetMapping("/{id}")
@@ -36,6 +38,11 @@ class ModelController(
     @DeleteMapping("/{id}/delete")
     fun deleteModel(@PathVariable("id") modelId: String, @RequestParam force: Boolean = false){
         modelService.deleteModel(modelId)
+    }
+
+    @PutMapping("/{id}/update")
+    fun updateModel(@RequestPart files: List<MultipartFile>, @RequestPart metadata: InputFileDesc, @RequestPart(required = false) isAdvanced: String? = "false"){
+
     }
 
     @GetMapping("/list-by")
