@@ -1,6 +1,7 @@
 package com.fim.prototype.mish.controllers
 
 import com.fim.prototype.mish.model.common.FileEntityTree
+import com.fim.prototype.mish.model.common.ModelMetadata
 import com.fim.prototype.mish.model.entities.InputFileDesc
 import com.fim.prototype.mish.model.entities.ModelIds
 import com.fim.prototype.mish.properties.PageProperties
@@ -26,8 +27,9 @@ class ModelController(
     @PostMapping("/upload")
     fun uploadModel(
         @RequestPart files: List<MultipartFile>,
-        @RequestPart metadata: InputFileDesc): ModelIds = runBlocking {
-        return@runBlocking modelService.uploadModel(files, metadata)
+        @RequestPart metadata: InputFileDesc,
+        @RequestPart modelMetadata: ModelMetadata): ModelIds = runBlocking {
+        return@runBlocking modelService.uploadModel(files, metadata, modelMetadata)
     }
 
     @GetMapping("/{id}")
@@ -43,6 +45,12 @@ class ModelController(
 
     @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).STUDENT_ACTION)")
     @GetMapping("/list")
+    @PutMapping("/{id}/update")
+    fun updateModel(@RequestPart files: List<MultipartFile>, @RequestPart metadata: InputFileDesc, @RequestPart(required = false) isAdvanced: String? = "false"){
+
+    }
+
+    @GetMapping("/list-by")
     fun listModelsMetadata(
         @RequestParam page: Int,
         @RequestParam limit: Int? = null,

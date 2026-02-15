@@ -11,7 +11,6 @@ import com.fim.prototype.mish.repo.FileEntityRepo
 import com.fim.prototype.mish.repo.interfaces.IFileRepo
 import org.springframework.data.mongodb.gridfs.GridFsResource
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
 
 @Service
@@ -77,7 +76,7 @@ class FileService(
         val allFiles = allRelatedFiles.groupBy { it.id }.map { it.key to it.value.first() }.toMap()
 
         return rootFiles.mapNotNull { allFiles[it.id] }.map { file ->
-            FileEntityRecursive(file.id, file.name, file.creatorId, file.description, file.contentType, file.size, file.senseType, file.backendEndpoint, file.created, file.updated, relatedFiles = createFileTreeRecursive(file, allFiles))
+            FileEntityRecursive(file.id, file.name, file.creatorId, file.contentType, file.size, file.senseType, file.backendEndpoint, file.created, file.updated, relatedFiles = createFileTreeRecursive(file, allFiles))
         }
     }
 
@@ -88,7 +87,7 @@ class FileService(
         val allRelatedFilesEntity = relatedFiles.mapNotNull { allRelatedFiles[it.id] }
 
         return allRelatedFilesEntity.map {
-            FileEntityRecursive(it.id, it.name, it.creatorId, it.description, it.contentType, it.size, it.senseType, it.backendEndpoint, it.created, it.updated, relatedFiles = createFileTreeRecursive(it, allRelatedFiles))
+            FileEntityRecursive(it.id, it.name, file.creatorId, it.contentType, it.size, it.senseType, it.backendEndpoint, it.created, it.updated, relatedFiles = createFileTreeRecursive(it, allRelatedFiles))
         }
     }
 }
