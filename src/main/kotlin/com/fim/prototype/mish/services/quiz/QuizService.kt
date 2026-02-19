@@ -1,6 +1,6 @@
 package com.fim.prototype.mish.services.quiz
 
-import com.fim.prototype.mish.cache.InMemoryCache
+import com.fim.prototype.mish.cache.RedisCache
 import com.fim.prototype.mish.exceptions.NotFoundException
 import com.fim.prototype.mish.exceptions.ValidationException
 import com.fim.prototype.mish.model.common.StartQuizAction
@@ -25,7 +25,7 @@ class QuizService(
     private val quizRepo: QuizRepo,
     private val chapterService: ChapterService,
     private val authenticationService: AuthenticationService,
-    private val inMemoryCache: InMemoryCache<String, UserTimeAction<StartQuizAction>>,
+    private val inMemoryCache: RedisCache,
     questionValidator: List<CreateQuizValidator>,
 ) {
 

@@ -1,7 +1,9 @@
 package com.fim.prototype.mish.cache
 
-interface ICache<K,V> {
-    fun put(key: K, value: V, ttlSeconds: Long? = null)
-    fun delete(key: K): V?
-    fun get(key: K): V?
+import kotlin.reflect.KClass
+
+interface ICache {
+    fun put(key: String, value: Any, ttlSeconds: Long? = null)
+    fun <T : Any> get(key: String, type: KClass<T>): T?
+    fun <T : Any> delete(key: String, type: KClass<T>): T?
 }
