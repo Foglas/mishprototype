@@ -20,30 +20,34 @@ class RedisConfig {
 
     @Bean
     fun redisConnectionFactory(properties: RedisProperties): RedisConnectionFactory {
-        val clusterNodes = properties.cluster?.nodes ?: emptyList()
-        val clusterConfig = RedisClusterConfiguration(clusterNodes)
-
-        if (!properties.password.isNullOrEmpty()) {
-            clusterConfig.setPassword(RedisPassword.of(properties.password))
+        return if (!properties.cluster?.nodes.isNullOrEmpty()) {
+            val clusterConfig = RedisClusterConfiguration(properties.cluster!!.nodes)
+            if (!properties.username.isNullOrEmpty() || !properties.password.isNullOrEmpty()) {
+                clusterConfig.setUsername(properties.username)       // <-- add this
+                clusterConfig.setPassword(RedisPassword.of(properties.password))
+            }
+            LettuceConnectionFactory(clusterConfig)
+        } else {
+            val factory = LettuceConnectionFactory(
+                properties.host,
+                properties.port
+            )
+            if (!properties.username.isNullOrEmpty() || !properties.password.isNullOrEmpty()) {
+                factory.setPassword(properties.password)
+            }
+            factory.afterPropertiesSet()
+            factory
         }
-
-        return LettuceConnectionFactory(clusterConfig)
     }
 
     @Bean
-    fun redisTemplate(properties: RedisProperties): RedisTemplate<String, Any> {
-        val mapper = ObjectMapper()
-            .registerModule(JavaTimeModule()) // handle Instant, LocalDate, etc.
-            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS) // optional: use ISO-8601 format
-
-        val serializer = GenericJackson2JsonRedisSerializer(mapper)
-
-        return RedisTemplate<String, Any>().apply {
+    fun redisTemplate(properties: RedisProperties): RedisTemplate<String, String> {
+        return RedisTemplate<String, String>().apply {
             connectionFactory = redisConnectionFactory(properties)
             keySerializer = StringRedisSerializer()
-            valueSerializer = serializer
+            valueSerializer = StringRedisSerializer()
             hashKeySerializer = StringRedisSerializer()
-            hashValueSerializer = serializer
+            hashValueSerializer = StringRedisSerializer()
             afterPropertiesSet()
         }
     }

@@ -22,21 +22,9 @@ spring:
         max-size: 200
         min-size: 60
     redis:
-      cluster:
-        nodes:
-          - localhost:7221
-          - localhost:7222
-          - localhost:7223
-          - localhost:7224
-          - localhost:7225
-          - localhost:7226
-          - localhost:7227
-          - localhost:7228
-          - localhost:7229
-        max-redirects: 3
-      password: pass
-      ssl:
-        enabled: true
+      host: localhost
+      port: 7222
+      password: mypassword
 
   security:
     oauth2:
@@ -63,7 +51,7 @@ ldap:
 
 
 origin:
-  url: ${FE_URL:http://localhost:8081}
+  url: http://localhost:8081
 
 app:
   page:

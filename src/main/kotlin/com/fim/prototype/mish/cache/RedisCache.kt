@@ -1,5 +1,7 @@
 package com.fim.prototype.mish.cache
 
+import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Service
 import java.time.Duration
@@ -8,14 +10,15 @@ import kotlin.reflect.safeCast
 
 @Service
 class RedisCache(
-    private val redisTemplate: RedisTemplate<String, Any>,
+    private val redisTemplate: RedisTemplate<String, String>,
+    private val objectMapper: ObjectMapper
 ): ICache {
 
     override fun put(key: String, value: Any, ttlSeconds: Long?) {
         if (ttlSeconds != null) {
-            redisTemplate.opsForValue().set(key, value, Duration.ofSeconds(ttlSeconds))
+            redisTemplate.opsForValue().set(key, objectMapper.writeValueAsString(value), Duration.ofSeconds(ttlSeconds))
         } else {
-            redisTemplate.opsForValue().set(key, value)
+            redisTemplate.opsForValue().set(key, objectMapper.writeValueAsString(value))
         }
     }
 
@@ -24,9 +27,10 @@ class RedisCache(
         return type.safeCast(value)
     }
 
-    override fun <T : Any> delete(key: String, type: KClass<T>): T? {
-        val value = redisTemplate.opsForValue().get(key)
+    override fun <T : Any> delete(key: String, type: Class<T>): T? {
+        val json = redisTemplate.opsForValue().get(key) ?: return null
         redisTemplate.delete(key)
-        return type.safeCast(value)
+        val javaType = objectMapper.typeFactory.constructType(type)
+        return objectMapper.readValue(json, javaType)
     }
 }

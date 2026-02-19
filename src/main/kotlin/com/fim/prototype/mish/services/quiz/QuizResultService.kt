@@ -39,7 +39,7 @@ class QuizResultService(
     }
 
     fun getAnswersResult(quizId: String, submission: QuizSubmissionRequest): QuizValidationResult {
-        val quizEnd = inMemoryCache.delete(authenticationService.getCurrentUser().userId, StartQuizAction::class) ?: throw ValidationException("Quiz was not started properly!")
+        val quizEnd = inMemoryCache.delete(authenticationService.getCurrentUser().userId, StartQuizAction::class.java) ?: throw ValidationException("Quiz was not started properly!")
 
         //TODO maybe time per question? To accept question filled before quizEnd but received after quizEnd
         if (quizEnd.time.isBefore(Instant.now()) && quizEnd.hasTimeLimit) throw ValidationException("Quiz time limit has expired!")

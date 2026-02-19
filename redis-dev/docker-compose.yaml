@@ -1,0 +1,28 @@
+version: "3.8"
+
+networks:
+  mish_net:
+    external: true
+
+services:
+  redis-node-dev:
+    image: redis/redis-stack:latest
+    container_name: redis-node-dev
+    restart: always
+    ports:
+      - "7222:7222"
+    networks:
+      - mish_net
+    volumes:
+      - ./node1/data:/data
+      - ./scripts:/tmp/redis
+    command: ["/tmp/redis/genConfig.sh", "7222"]
+
+
+  redis-insight-dev:
+    container_name: redis-insight-dev
+    image: redislabs/redisinsight:1.14.0
+    networks:
+      - mish_net
+    ports:
+      - 8001:8001
