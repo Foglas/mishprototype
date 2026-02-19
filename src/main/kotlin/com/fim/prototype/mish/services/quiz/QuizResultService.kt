@@ -1,6 +1,6 @@
 package com.fim.prototype.mish.services.quiz
 
-import com.fim.prototype.mish.cache.InMemoryCache
+import com.fim.prototype.mish.cache.RedisCache
 import com.fim.prototype.mish.exceptions.NotFoundException
 import com.fim.prototype.mish.exceptions.ValidationException
 import com.fim.prototype.mish.model.common.StartQuizAction
@@ -18,7 +18,7 @@ import java.time.Instant
 class QuizResultService(
     private val authenticationService: AuthenticationService,
     private val quizResultRepo: QuizResultRepo,
-    private val inMemoryCache: InMemoryCache<String, UserTimeAction<StartQuizAction>>,
+    private val inMemoryCache: RedisCache,
     private val quizAnswersResultService: QuizAnswersResultService,
 ) {
 
@@ -39,7 +39,7 @@ class QuizResultService(
     }
 
     fun getAnswersResult(quizId: String, submission: QuizSubmissionRequest): QuizValidationResult {
-        val quizEnd = inMemoryCache.delete(authenticationService.getCurrentUser().userId)?.data ?: throw ValidationException("Quiz was not started properly!")
+        val quizEnd = inMemoryCache.delete(authenticationService.getCurrentUser().userId, StartQuizAction::class) ?: throw ValidationException("Quiz was not started properly!")
 
         //TODO maybe time per question? To accept question filled before quizEnd but received after quizEnd
         if (quizEnd.time.isBefore(Instant.now()) && quizEnd.hasTimeLimit) throw ValidationException("Quiz time limit has expired!")
