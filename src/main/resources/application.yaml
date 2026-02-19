@@ -24,15 +24,15 @@ spring:
     redis:
       cluster:
         nodes:
-          - localhost:7221
-          - localhost:7222
-          - localhost:7223
-          - localhost:7224
-          - localhost:7225
-          - localhost:7226
-          - localhost:7227
-          - localhost:7228
-          - localhost:7229
+          - redis-node-1:7221
+          - redis-node-2:7222
+          - redis-node-3:7223
+          - redis-node-4:7224
+          - redis-node-5:7225
+          - redis-node-6:7226
+          - redis-node-7:7227
+          - redis-node-8:7228
+          - redis-node-9:7229
         max-redirects: 3
       password: pass
       ssl:
