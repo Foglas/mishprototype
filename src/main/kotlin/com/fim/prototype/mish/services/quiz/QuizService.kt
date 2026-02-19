@@ -56,7 +56,7 @@ class QuizService(
         val startTime = Instant.now()
 
         val quiz = quizRepo.getQuizById(quizId, showAnswers) ?: throw NotFoundException("Quiz with id $quizId not found!")
-        if (startQuiz) inMemoryCache.put(userId, UserTimeAction(userId,startTime, StartQuizAction(quiz.timeLimit > 0, startTime.plus(quiz.timeLimit.toLong(), ChronoUnit.MINUTES))))
+        if (startQuiz) inMemoryCache.put(userId, StartQuizAction(quiz.timeLimit > 0, startTime.plus(quiz.timeLimit.toLong(), ChronoUnit.MINUTES)))
 
         return quiz
     }
