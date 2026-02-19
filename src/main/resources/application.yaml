@@ -22,6 +22,10 @@ spring:
         max-size: 200
         min-size: 60
     redis:
+      ssl:
+        enabled: true
+      username: admin
+      password: pass
       cluster:
         nodes:
           - redis-node-1:7221
@@ -34,9 +38,6 @@ spring:
           - redis-node-8:7228
           - redis-node-9:7229
         max-redirects: 3
-      password: pass
-      ssl:
-        enabled: true
 
   security:
     oauth2:
