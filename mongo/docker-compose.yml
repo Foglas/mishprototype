@@ -3,7 +3,7 @@ services:
     image: mongo:6
     container_name: mongo-main
     hostname: mongo-main
-    restart: no
+    restart: unless-stopped
     networks:
       - mish_net
     environment:
@@ -38,18 +38,14 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: adminpassword
-      SERVER_CN: mongo-replica-1
-      OUTDIR: /etc/ssl/mongo
-      CA_DIR: /shared/certs
     ports:
       - "27018:27017"
     volumes:
       - ./certs-replica-1/ca.pem:/etc/ssl/mongo/ca.pem:ro
       - ./certs-replica-1/mongo.pem:/etc/ssl/mongo/mongo.pem:ro
       - ./keyfile/keyfile:/replication/keyfile:ro
-      - ./scripts/generate-certs.sh:/docker-entrypoint-initdb.d/generate-certs.sh:ro
       - ./conf/mongod.conf:/etc/mongo/mongod.conf:ro
-      - ./data-replica1:/data/db
+      - ./data-replica-1:/data/db
     command: ["mongod", "--config", "/etc/mongo/mongod.conf"]
     healthcheck:
       test:
@@ -73,18 +69,14 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: adminpassword
-      SERVER_CN: mongo-replica-2
-      OUTDIR: /etc/ssl/mongo
-      CA_DIR: /shared/certs
     ports:
       - "27019:27017"
     volumes:
       - ./certs-replica-2/ca.pem:/etc/ssl/mongo/ca.pem:ro
       - ./certs-replica-2/mongo.pem:/etc/ssl/mongo/mongo.pem:ro
       - ./keyfile/keyfile:/replication/keyfile:ro
-      - ./scripts/generate-certs.sh:/docker-entrypoint-initdb.d/generate-certs.sh:ro
       - ./conf/mongod.conf:/etc/mongo/mongod.conf:ro
-      - ./data-replica2:/data/db
+      - ./data-replica-2:/data/db
     command: ["mongod", "--config", "/etc/mongo/mongod.conf"]
     healthcheck:
       test:
