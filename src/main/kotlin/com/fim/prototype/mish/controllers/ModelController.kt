@@ -33,6 +33,7 @@ class ModelController(
         return@runBlocking modelService.uploadModel(files, metadata, modelMetadata)
     }
 
+    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).STUDENT_ACTION)")
     @GetMapping("/{id}")
     fun getModelMetadataById(@PathVariable id: String): FileEntityTree {
         return modelService.getModelRelatedTree(id)
@@ -45,13 +46,13 @@ class ModelController(
     }
 
     @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).STUDENT_ACTION)")
-    @GetMapping("/list")
     @PutMapping("/update")
     fun updateModel(@RequestPart files: List<MultipartFile>, @RequestPart metadata: InputFileDesc, @RequestPart(required = false) modelMetadata: UpdateModelMetadata): ModelIds {
         return modelService.updateModel(files, metadata, modelMetadata)
     }
 
-    @GetMapping("/list-by")
+    @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).STUDENT_ACTION)")
+    @GetMapping("/list")
     fun listModelsMetadata(
         @RequestParam page: Int,
         @RequestParam limit: Int? = null,
