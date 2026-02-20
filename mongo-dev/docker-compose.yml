@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  mongo-dev:
+    image: mongo:latest
+    container_name: mongo-dev
+    restart: always
+    ports:
+      - "27100:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: mish-db
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - mish_net
+
+volumes:
+  mongodb_data:
+
+networks:
+  mish_net:
+    external: true
+
