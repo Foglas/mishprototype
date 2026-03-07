@@ -21,6 +21,7 @@ data class ChapterEntity(
 data class ModelIds(
     val metadataId: String,
     val model: FileIdWithName,
+    @JsonSetter(nulls = Nulls.SKIP) val description: String? = null
 )
 
 data class FileIdWithName(

@@ -29,6 +29,7 @@ class ModelMetadataRepo(
             ModelIds(
                 metadataId = it.id?:"",
                 model = FileIdWithName(it.modelId?:"", it.name, FileSenseType.MODEL, related = it.relatedFiles.map { FileIdWithName(it.id, it.name, it.senseType) }),
+                description = it.description ?:"",
             )
         }
 

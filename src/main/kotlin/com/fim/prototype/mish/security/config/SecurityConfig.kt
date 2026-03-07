@@ -60,6 +60,7 @@ class SecurityConfig(
         )
         config.allowedMethods = listOf("GET", "POST", "PUT", "DELETE")
         config.allowedHeaders = listOf("Authorization", "Content-Type")
+        config.allowedHeaders = listOf("Content-Length", "Content-Range")
         config.allowCredentials = false
 
         val source = UrlBasedCorsConfigurationSource()

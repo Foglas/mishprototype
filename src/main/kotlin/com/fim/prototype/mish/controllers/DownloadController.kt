@@ -18,6 +18,7 @@ open class DownloadController(
 
         response.contentType = resource.contentType
         response.setHeader("Content-Disposition", "attachment; filename=\"${resource.filename}\"")
+        response.setHeader("Content-Length", resource.contentLength().toString())
 
         return resource.inputStream.use { input ->
             response.outputStream.use {
