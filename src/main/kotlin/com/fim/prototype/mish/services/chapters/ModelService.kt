@@ -10,6 +10,7 @@ import com.fim.prototype.mish.services.FileService
 import com.fim.prototype.mish.utils.PageRequestData
 import com.fim.prototype.mish.utils.PageResult
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
 
 @Service
@@ -18,7 +19,8 @@ class ModelService(
     private val fileService: FileService,
 ) {
 
-    suspend fun uploadModel(
+    @Transactional
+    fun uploadModel(
         files: List<MultipartFile>,
         metadata: InputFileDesc,
         modelMetadata: ModelMetadata

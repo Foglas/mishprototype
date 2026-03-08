@@ -17,3 +17,8 @@ data class SecurityProperties(
     var userIdClaim: String,
     var emailClaim: String
 )
+
+@ConfigurationProperties(prefix = "app.mongo.transaction")
+data class MongoTransactionProperties(
+    var enabled: Boolean,
+)

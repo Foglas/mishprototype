@@ -12,7 +12,8 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: password
       MONGO_INITDB_DATABASE: mish-db
     volumes:
-      - mongodb_data:/data/db
+      - ./data-dev:/data/db
+      - ./conf/mongod.conf:/etc/mongo/mongod.conf:ro
     networks:
       - mish_net
 

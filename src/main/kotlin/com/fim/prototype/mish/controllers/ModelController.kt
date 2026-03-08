@@ -30,7 +30,7 @@ class ModelController(
         @RequestPart files: List<MultipartFile>,
         @RequestPart metadata: InputFileDesc,
         @RequestPart modelMetadata: ModelMetadata): ModelIds = runBlocking {
-        return@runBlocking modelService.uploadModel(files, metadata, modelMetadata)
+        modelService.uploadModel(files, metadata, modelMetadata)
     }
 
     @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).STUDENT_ACTION)")

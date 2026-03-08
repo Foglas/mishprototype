@@ -53,6 +53,9 @@ origin:
   url: http://localhost:8081
 
 app:
+  mongo:
+    transaction:
+      enabled: false
   page:
     limit: 20
     sort-direction: ASC
