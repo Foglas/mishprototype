@@ -24,9 +24,17 @@ services:
       KC_DB_PASSWORD: keycloak
       KC_DB_URL_HOST: keycloak-db
       KC_DB: postgres
-    command: start-dev --hostname=mish --import-realm --http-relative-path=/auth
+
+      KC_PROXY: edge
+      KC_HOSTNAME_URL: ${KEYCLOAK_PUBLIC_URL:-http://mish/auth}
+      KC_HOSTNAME_ADMIN_URL: ${KEYCLOAK_ADMIN_URL:-http://mish/auth}
+      KC_HOSTNAME_STRICT: false
+      KC_HOSTNAME_STRICT_BACKCHANNEL: false
+    command: start-dev --import-realm --http-relative-path=/auth
     volumes:
       - ./oidc/realms:/opt/keycloak/data/import
+    ports:
+      - "8080:8080"
     networks:
       - mish_net
 
