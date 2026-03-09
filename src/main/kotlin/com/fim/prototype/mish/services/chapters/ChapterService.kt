@@ -42,7 +42,7 @@ class ChapterService(
             chapter.id?.let { getChapterById(it) } ?: throw ValidationException("Chapter id is not set!", chapter)
 
         validateChapter(chapter)
-        if (existedChapter.creatorId == chapter.creatorId) throw ForbiddenActionException(
+        if (existedChapter.creatorId != chapter.creatorId) throw ForbiddenActionException(
             "Chapter creator id can't be changed!",
             chapter
         )

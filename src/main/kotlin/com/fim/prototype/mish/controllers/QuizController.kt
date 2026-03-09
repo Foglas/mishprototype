@@ -26,7 +26,7 @@ class QuizController(
     }
 
     @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).CREATE_QUIZ)")
-    @PostMapping("/update")
+    @PutMapping("/update")
     fun updateQuiz(@RequestBody quiz: QuizEntity): QuizEntity {
         return quizService.updateQuiz(quiz)
     }
