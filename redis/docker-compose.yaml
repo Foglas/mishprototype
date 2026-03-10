@@ -159,7 +159,7 @@ services:
         - ./certs-node-9/server.crt:/etc/redis/certs/server.crt:ro
         - ./certs-node-9/server.key:/etc/redis/certs/server.key:ro
         - ./certs-node-9/ca.pem:/etc/redis/certs/ca.pem:ro
-      command: /bin/sh -c "redis-cli --tls --cacert /etc/redis/certs/ca.pem --user admin -a pass --cluster create redis-node-1:7221 redis-node-2:7222 redis-node-3:7223 redis-node-4:7224 redis-node-5:7225 redis-node-6:7226 redis-node-7:7227 redis-node-8:7228 redis-node-9:7229 --cluster-replicas 2 --cluster-yes"
+      command: /bin/sh -c "redis-cli --tls --cacert /etc/redis/certs/ca.pem --user $REDIS_ADMIN_USER -a $REDIS_ADMIN_PASS --cluster create redis-node-1:7221 redis-node-2:7222 redis-node-3:7223 redis-node-4:7224 redis-node-5:7225 redis-node-6:7226 redis-node-7:7227 redis-node-8:7228 redis-node-9:7229 --cluster-replicas 2 --cluster-yes"
       depends_on:
         - redis-node-1
         - redis-node-2

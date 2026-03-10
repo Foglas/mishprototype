@@ -92,6 +92,9 @@ services:
 
   mongo-replica-set-creator:
     image: mongo:6
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${ADMIN_USER:-admin}
+      MONGO_INITDB_ROOT_PASSWORD: ${ADMIN_PASSWORD:-adminPassword}
     volumes:
       - ./certs-main/ca.pem:/etc/ssl/mongo/ca.pem
       - ./certs-main/mongo.pem:/etc/ssl/mongo/mongo.pem
