@@ -12,6 +12,15 @@ clusterAnnounceIp="$2"
 port="$3"
 busPort=1"$3"
 
+USE_ADMIN_USER="${REDIS_ADMIN_USER:-admin}"
+USE_ADMIN_PASSWORD="${REDIS_ADMIN_PASSWORD:-adminpassword}"
+
+USE_APP_USER="${REDIS_APP_USER:-appUser}"
+USE_APP_PASSWORD="${REDIS_USE_APP_PASSWORD:-appPassword}"
+
+USE_REPLICATION_USER="${REDIS_REPLICATION_USER:-replicationUser}"
+USE_REPLICATION_PASSWORD="${REDIS_USE_REPLICATION_PASSWORD:-replicationPassword}"
+
 filePath="//usr/local/etc/redis"
 
 mkdir -p "$filePath"
@@ -130,8 +139,9 @@ EOF
 
 cat <<EOF > users.acl
 user default off
-user admin on >pass +@all ~*
-user replicationuser on >pass ~* +AUTH +REPLCONF +PSYNC +INFO +PING +ECHO +SELECT +CLIENT +SCRIPT +CONFIG +COMMAND
+user $USE_ADMIN_USER on >$USE_ADMIN_PASSWORD +@all ~*
+user $USE_REPLICATION_USER on >$USE_REPLICATION_PASSWORD ~* +AUTH +REPLCONF +PSYNC +INFO +PING +ECHO +SELECT +CLIENT +SCRIPT +CONFIG +COMMAND
+user $USE_APP_USER on >$USE_APP_PASSWORD ~* +@write +@read +@script +PING +ECHO +SELECT
 EOF
 
 

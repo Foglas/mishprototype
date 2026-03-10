@@ -7,8 +7,8 @@ services:
     networks:
       - mish_net
     environment:
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: adminpassword
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ADMIN_USER:-admin}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ADMIN_PASSWORD:-adminPassword}
     ports:
       - "27017:27017"
     volumes:
@@ -22,7 +22,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "mongosh --username admin --password adminpassword --authenticationDatabase admin --tls --tlsCertificateKeyFile /etc/ssl/mongo/mongo.pem --tlsCAFile /etc/ssl/mongo/ca.pem --eval 'db.adminCommand(\"ping\")' || exit 1"
+          "mongosh --username $MONGO_INITDB_ROOT_USERNAME --password $MONGO_INITDB_ROOT_PASSWORD --tls --tlsCertificateKeyFile /etc/ssl/mongo/mongo.pem --tlsCAFile /etc/ssl/mongo/ca.pem --eval 'db.adminCommand(\"ping\")' || exit 1"
         ]
       interval: 10s
       timeout: 5s
@@ -36,8 +36,8 @@ services:
     networks:
       - mish_net
     environment:
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: adminpassword
+      MONGO_INITDB_ROOT_USERNAME: ${ADMIN_USER:-admin}
+      MONGO_INITDB_ROOT_PASSWORD: ${ADMIN_PASSWORD:-adminPassword}
     ports:
       - "27018:27017"
     volumes:
@@ -51,7 +51,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "mongosh --username admin --password adminpassword --authenticationDatabase admin --tls --tlsCertificateKeyFile /etc/ssl/mongo/mongo.pem --tlsCAFile /etc/ssl/mongo/ca.pem --eval 'db.adminCommand(\"ping\")' || exit 1"
+          "mongosh --username $MONGO_INITDB_ROOT_USERNAME --password $MONGO_INITDB_ROOT_PASSWORD --tls --tlsCertificateKeyFile /etc/ssl/mongo/mongo.pem --tlsCAFile /etc/ssl/mongo/ca.pem --eval 'db.adminCommand(\"ping\")' || exit 1"
         ]
       interval: 10s
       timeout: 5s
@@ -67,8 +67,8 @@ services:
     networks:
       - mish_net
     environment:
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: adminpassword
+      MONGO_INITDB_ROOT_USERNAME: ${ADMIN_USER:-admin}
+      MONGO_INITDB_ROOT_PASSWORD: ${ADMIN_PASSWORD:-adminPassword}
     ports:
       - "27019:27017"
     volumes:
@@ -82,7 +82,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "mongosh --username admin --password adminpassword --authenticationDatabase admin --tls --tlsCertificateKeyFile /etc/ssl/mongo/mongo.pem --tlsCAFile /etc/ssl/mongo/ca.pem --eval 'db.adminCommand(\"ping\")' || exit 1"
+          "mongosh --username $MONGO_INITDB_ROOT_USERNAME --password $MONGO_INITDB_ROOT_PASSWORD --authenticationDatabase admin --tls --tlsCertificateKeyFile /etc/ssl/mongo/mongo.pem --tlsCAFile /etc/ssl/mongo/ca.pem --eval 'db.adminCommand(\"ping\")' || exit 1"
         ]
       interval: 10s
       timeout: 5s

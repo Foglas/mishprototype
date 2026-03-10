@@ -6,6 +6,9 @@ PORT=27017
 REPLICA_SET_NAME="replica-set-1"
 CA_FILE="/etc/ssl/mongo/ca.pem"
 
+USE_ADMIN_USER="${MONGO_INITDB_ROOT_USERNAME:-admin}"
+USE_ADMIN_PASSWORD="${MONGO_INITDB_ROOT_PASSWORD:-adminpassword}"
+
 NODES=(
   "mongo-main"
   "mongo-replica-1"
@@ -21,7 +24,7 @@ for HOST in "${NODES[@]}"; do
   echo "Checking $HOST..."
 
   while true; do
-    if mongosh "mongodb://admin:adminpassword@$HOST:$PORT/admin?tls=true&tlsCAFile=$CA_FILE" \
+    if mongosh "mongodb://$USE_ADMIN_USER:$USE_ADMIN_PASSWORD@$HOST:$PORT/admin?tls=true&tlsCAFile=$CA_FILE" \
       --eval "db.runCommand({ ping: 1 })"; then
 
       echo "  $HOST is ready!"
@@ -35,7 +38,7 @@ done
 
 echo "All mongo nodes are up. Initializing replica set..."
 
-mongosh "mongodb://admin:adminpassword@$PRIMARY_HOST:$PORT/?tls=true&tlsCAFile=$CA_FILE" <<EOF
+mongosh "mongodb://$USE_ADMIN_USER:$USE_ADMIN_PASSWORD@$PRIMARY_HOST:$PORT/?tls=true&tlsCAFile=$CA_FILE" <<EOF
 rs.initiate({
   _id: "$REPLICA_SET_NAME",
   members: [
