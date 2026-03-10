@@ -46,8 +46,8 @@ rdbcompression yes
 rdbchecksum yes
 dbfilename dump.rdb
 dir ./
-masterauth pass
-masteruser replicationuser
+masterauth $USE_REPLICATION_PASSWORD
+masteruser $USE_REPLICATION_USER
 replica-serve-stale-data no
 replica-read-only yes
 repl-diskless-sync yes
