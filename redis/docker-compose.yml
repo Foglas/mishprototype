@@ -8,7 +8,12 @@ services:
   redis-node-1:
     image: redis/redis-stack:latest
     container_name: redis-node-1
-    restart: always
+    restart: unless-stopped
+    environment:
+      REDIS_ADMIN_USER: ${REDIS_ADMIN_USER}
+      REDIS_ADMIN_PASSWORD: ${REDIS_ADMIN_PASSWORD}
+      REDIS_REPLICATION_USER: ${REDIS_REPLICATION_USER}
+      REDIS_REPLICATION_PASSWORD: ${REDIS_REPLICATION_PASSWORD}
     ports:
       - "7221:7221"
     networks:
@@ -20,11 +25,16 @@ services:
       - ./certs-node-1/server.key:/etc/redis/certs/server.key:ro
       - ./certs-node-1/ca.pem:/etc/redis/certs/ca.pem:ro
     command: ["/tmp/redis/genConfig.sh", "nodes-1.conf", "redis-node-1", "7221"]
-    
+
   redis-node-2:
     image: redis/redis-stack:latest
     container_name: redis-node-2
-    restart: always
+    restart: unless-stopped
+    environment:
+      REDIS_ADMIN_USER: ${REDIS_ADMIN_USER}
+      REDIS_ADMIN_PASSWORD: ${REDIS_ADMIN_PASSWORD}
+      REDIS_REPLICATION_USER: ${REDIS_REPLICATION_USER}
+      REDIS_REPLICATION_PASSWORD: ${REDIS_REPLICATION_PASSWORD}
     ports:
       - "7222:7222"
     networks:
@@ -36,11 +46,16 @@ services:
       - ./certs-node-2/server.key:/etc/redis/certs/server.key:ro
       - ./certs-node-2/ca.pem:/etc/redis/certs/ca.pem:ro
     command: ["/tmp/redis/genConfig.sh", "nodes-2.conf", "redis-node-2", "7222"]
-    
+
   redis-node-3:
     image: redis/redis-stack:latest
     container_name: redis-node-3
-    restart: always
+    restart: unless-stopped
+    environment:
+      REDIS_ADMIN_USER: ${REDIS_ADMIN_USER}
+      REDIS_ADMIN_PASSWORD: ${REDIS_ADMIN_PASSWORD}
+      REDIS_REPLICATION_USER: ${REDIS_REPLICATION_USER}
+      REDIS_REPLICATION_PASSWORD: ${REDIS_REPLICATION_PASSWORD}
     ports:
       - "7223:7223"
     networks:
@@ -52,11 +67,16 @@ services:
       - ./certs-node-3/server.key:/etc/redis/certs/server.key:ro
       - ./certs-node-3/ca.pem:/etc/redis/certs/ca.pem:ro
     command: ["/tmp/redis/genConfig.sh", "nodes-3.conf", "redis-node-3", "7223"]
-    
+
   redis-node-4:
     image: redis/redis-stack:latest
     container_name: redis-node-4
-    restart: always
+    restart: unless-stopped
+    environment:
+      REDIS_ADMIN_USER: ${REDIS_ADMIN_USER}
+      REDIS_ADMIN_PASSWORD: ${REDIS_ADMIN_PASSWORD}
+      REDIS_REPLICATION_USER: ${REDIS_REPLICATION_USER}
+      REDIS_REPLICATION_PASSWORD: ${REDIS_REPLICATION_PASSWORD}
     ports:
       - "7224:7224"
     networks:
@@ -68,11 +88,16 @@ services:
       - ./certs-node-4/server.key:/etc/redis/certs/server.key:ro
       - ./certs-node-4/ca.pem:/etc/redis/certs/ca.pem:ro
     command: ["/tmp/redis/genConfig.sh", "nodes-4.conf", "redis-node-4", "7224"]
-    
+
   redis-node-5:
     image: redis/redis-stack:latest
     container_name: redis-node-5
-    restart: always
+    restart: unless-stopped
+    environment:
+      REDIS_ADMIN_USER: ${REDIS_ADMIN_USER}
+      REDIS_ADMIN_PASSWORD: ${REDIS_ADMIN_PASSWORD}
+      REDIS_REPLICATION_USER: ${REDIS_REPLICATION_USER}
+      REDIS_REPLICATION_PASSWORD: ${REDIS_REPLICATION_PASSWORD}
     ports:
       - "7225:7225"
     networks:
@@ -84,11 +109,16 @@ services:
       - ./certs-node-5/server.key:/etc/redis/certs/server.key:ro
       - ./certs-node-5/ca.pem:/etc/redis/certs/ca.pem:ro
     command: ["/tmp/redis/genConfig.sh", "nodes-5.conf", "redis-node-5", "7225"]
-    
+
   redis-node-6:
     image: redis/redis-stack:latest
     container_name: redis-node-6
-    restart: always
+    restart: unless-stopped
+    environment:
+      REDIS_ADMIN_USER: ${REDIS_ADMIN_USER}
+      REDIS_ADMIN_PASSWORD: ${REDIS_ADMIN_PASSWORD}
+      REDIS_REPLICATION_USER: ${REDIS_REPLICATION_USER}
+      REDIS_REPLICATION_PASSWORD: ${REDIS_REPLICATION_PASSWORD}
     ports:
       - "7226:7226"
     networks:
@@ -100,11 +130,16 @@ services:
       - ./certs-node-6/server.key:/etc/redis/certs/server.key:ro
       - ./certs-node-6/ca.pem:/etc/redis/certs/ca.pem:ro
     command: ["/tmp/redis/genConfig.sh", "nodes-6.conf", "redis-node-6", "7226"]
-    
+
   redis-node-7:
     image: redis/redis-stack:latest
     container_name: redis-node-7
-    restart: always
+    restart: unless-stopped
+    environment:
+      REDIS_ADMIN_USER: ${REDIS_ADMIN_USER}
+      REDIS_ADMIN_PASSWORD: ${REDIS_ADMIN_PASSWORD}
+      REDIS_REPLICATION_USER: ${REDIS_REPLICATION_USER}
+      REDIS_REPLICATION_PASSWORD: ${REDIS_REPLICATION_PASSWORD}
     ports:
       - "7227:7227"
     networks:
@@ -116,11 +151,16 @@ services:
       - ./certs-node-7/server.key:/etc/redis/certs/server.key:ro
       - ./certs-node-7/ca.pem:/etc/redis/certs/ca.pem:ro
     command: ["/tmp/redis/genConfig.sh", "nodes-7.conf", "redis-node-7", "7227"]
-   
+
   redis-node-8:
     image: redis/redis-stack:latest
     container_name: redis-node-8
-    restart: always
+    restart: unless-stopped
+    environment:
+      REDIS_ADMIN_USER: ${REDIS_ADMIN_USER}
+      REDIS_ADMIN_PASSWORD: ${REDIS_ADMIN_PASSWORD}
+      REDIS_REPLICATION_USER: ${REDIS_REPLICATION_USER}
+      REDIS_REPLICATION_PASSWORD: ${REDIS_REPLICATION_PASSWORD}
     ports:
       - "7228:7228"
     networks:
@@ -132,11 +172,16 @@ services:
       - ./certs-node-8/server.key:/etc/redis/certs/server.key:ro
       - ./certs-node-8/ca.pem:/etc/redis/certs/ca.pem:ro
     command: ["/tmp/redis/genConfig.sh", "nodes-8.conf", "redis-node-8", "7228"]
-   
+
   redis-node-9:
     image: redis/redis-stack:latest
     container_name: redis-node-9
-    restart: always
+    restart: unless-stopped
+    environment:
+      REDIS_ADMIN_USER: ${REDIS_ADMIN_USER}
+      REDIS_ADMIN_PASSWORD: ${REDIS_ADMIN_PASSWORD}
+      REDIS_REPLICATION_USER: ${REDIS_REPLICATION_USER}
+      REDIS_REPLICATION_PASSWORD: ${REDIS_REPLICATION_PASSWORD}
     networks:
       - mish_net
     ports:
@@ -148,28 +193,28 @@ services:
       - ./certs-node-9/server.key:/etc/redis/certs/server.key:ro
       - ./certs-node-9/ca.pem:/etc/redis/certs/ca.pem:ro
     command: ["/tmp/redis/genConfig.sh", "nodes-9.conf", "redis-node-9", "7229"]
-    
+
 
   redis-cluster-creator:
-      image: redis:latest
-      container_name: redis-cluster-creator
-      networks:
-        - mish_net
-      volumes:
-        - ./certs-node-9/server.crt:/etc/redis/certs/server.crt:ro
-        - ./certs-node-9/server.key:/etc/redis/certs/server.key:ro
-        - ./certs-node-9/ca.pem:/etc/redis/certs/ca.pem:ro
-      command: /bin/sh -c "redis-cli --tls --cacert /etc/redis/certs/ca.pem --user $REDIS_ADMIN_USER -a $REDIS_ADMIN_PASS --cluster create redis-node-1:7221 redis-node-2:7222 redis-node-3:7223 redis-node-4:7224 redis-node-5:7225 redis-node-6:7226 redis-node-7:7227 redis-node-8:7228 redis-node-9:7229 --cluster-replicas 2 --cluster-yes"
-      depends_on:
-        - redis-node-1
-        - redis-node-2
-        - redis-node-3
-        - redis-node-4
-        - redis-node-5
-        - redis-node-6
-        - redis-node-7
-        - redis-node-8
-        - redis-node-9
+    image: redis:latest
+    container_name: redis-cluster-creator
+    networks:
+      - mish_net
+    volumes:
+      - ./certs-node-9/server.crt:/etc/redis/certs/server.crt:ro
+      - ./certs-node-9/server.key:/etc/redis/certs/server.key:ro
+      - ./certs-node-9/ca.pem:/etc/redis/certs/ca.pem:ro
+    command: /bin/sh -c "redis-cli --tls --cacert /etc/redis/certs/ca.pem --user $REDIS_ADMIN_USER -a $REDIS_ADMIN_PASSWORD --cluster create redis-node-1:7221 redis-node-2:7222 redis-node-3:7223 redis-node-4:7224 redis-node-5:7225 redis-node-6:7226 redis-node-7:7227 redis-node-8:7228 redis-node-9:7229 --cluster-replicas 2 --cluster-yes"
+    depends_on:
+      - redis-node-1
+      - redis-node-2
+      - redis-node-3
+      - redis-node-4
+      - redis-node-5
+      - redis-node-6
+      - redis-node-7
+      - redis-node-8
+      - redis-node-9
 
 
   redis-insight:
