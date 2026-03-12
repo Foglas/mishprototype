@@ -23,8 +23,8 @@ spring:
     redis:
       ssl:
         enabled: true
-      username: admin
-      password: pass
+      username: ${REDIS_APP_USER}
+      password: ${REDIS_APP_PASSWORD}
       cluster:
         nodes:
           - redis-node-1:7221

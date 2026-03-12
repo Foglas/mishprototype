@@ -141,7 +141,7 @@ cat <<EOF > users.acl
 user default off
 user $USE_ADMIN_USER on >$USE_ADMIN_PASSWORD +@all ~*
 user $USE_REPLICATION_USER on >$USE_REPLICATION_PASSWORD ~* +AUTH +REPLCONF +PSYNC +INFO +PING +ECHO +SELECT +CLIENT +SCRIPT +CONFIG +COMMAND
-user $USE_APP_USER on >$USE_APP_PASSWORD ~* +@write +@read +@scripting +PING +ECHO +SELECT
+user $USE_APP_USER on >$USE_APP_PASSWORD ~* +@write +@read +@scripting +PING +ECHO +SELECT +CLUSTER
 EOF
 
 
