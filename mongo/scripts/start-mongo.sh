@@ -2,6 +2,7 @@
 set -eo pipefail
 
 TRUST_STORE_PASS=$1
+MODE=${2:-prod}
 
 SCRIPTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
@@ -16,5 +17,11 @@ chmod 700 "$KEYFILE_DIR"
 
 "$SCRIPTDIR/generate-keyfile.sh" "$KEYFILE_DIR"
 
+if [ "$MODE" = "--dev" ]; then
+    ENV_FILE="${PROJECT_ROOT}/dev.env"
+else
+    ENV_FILE="${PROJECT_ROOT}/.env"
+fi
+
 docker compose -f "$PROJECT_ROOT/docker-compose.yml" down -v
-docker compose -f "$PROJECT_ROOT/docker-compose.yml" up -d
+ENV_FILE=$ENV_FILE docker compose -f "$PROJECT_ROOT/docker-compose.yml" up -d

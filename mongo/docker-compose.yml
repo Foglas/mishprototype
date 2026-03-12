@@ -4,6 +4,8 @@ services:
     container_name: mongo-main
     hostname: mongo-main
     restart: unless-stopped
+    env_file:
+      - ${ENV_FILE}
     networks:
       - mish_net
     environment:
@@ -33,6 +35,8 @@ services:
     container_name: mongo-replica-1
     hostname: mongo-replica-1
     restart: unless-stopped
+    env_file:
+      - ${ENV_FILE}
     networks:
       - mish_net
     environment:
@@ -64,6 +68,8 @@ services:
     container_name: mongo-replica-2
     hostname: mongo-replica-2
     restart: unless-stopped
+    env_file:
+      - ${ENV_FILE}
     networks:
       - mish_net
     environment:
