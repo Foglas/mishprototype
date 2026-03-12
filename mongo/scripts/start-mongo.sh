@@ -24,4 +24,7 @@ else
 fi
 
 docker compose -f "$PROJECT_ROOT/docker-compose.yml" down -v
-ENV_FILE=$ENV_FILE docker compose -f "$PROJECT_ROOT/docker-compose.yml" up -d
+docker compose \
+  --env-file "$ENV_FILE" \
+  -f "$PROJECT_ROOT/docker-compose.yml" \
+  up -d
