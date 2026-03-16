@@ -1,6 +1,6 @@
 package com.fim.prototype.mish.repo
 
-import com.fim.prototype.mish.exceptions.DatabaseOperationFailed
+import com.fim.prototype.mish.exceptions.DatabaseOperationFailedException
 import com.fim.prototype.mish.model.common.FileEntityTreeWithRelated
 import org.bson.types.ObjectId
 import org.springframework.data.mongodb.core.MongoTemplate
@@ -40,7 +40,7 @@ class FileEntityRepo(
                 MongoCollection.FILE_ENTITY
             )
         } catch (ex: Exception){
-            throw DatabaseOperationFailed("File was not deleted, please try again later!")
+            throw DatabaseOperationFailedException("File was not deleted, please try again later!")
         }
     }
 }

@@ -1,6 +1,6 @@
 package com.fim.prototype.mish.repo
 
-import com.fim.prototype.mish.exceptions.DatabaseOperationFailed
+import com.fim.prototype.mish.exceptions.DatabaseOperationFailedException
 import com.fim.prototype.mish.model.common.filters.FilterBase
 import com.fim.prototype.mish.model.entities.ChapterEntity
 import com.fim.prototype.mish.repo.interfaces.IChapterRepo
@@ -19,7 +19,7 @@ class ChapterRepo(
         try {
             return chapterRepo.save(chapter)
         } catch (ex: Exception) {
-            throw DatabaseOperationFailed("Chapter was not created, please try again later!")
+            throw DatabaseOperationFailedException("Chapter was not created, please try again later!")
         }
     }
 
@@ -31,7 +31,7 @@ class ChapterRepo(
         try {
             return chapterRepo.deleteById(chapterId)
         } catch (ex: Exception) {
-            throw DatabaseOperationFailed("Chapter was not deleted, please try again later!")
+            throw DatabaseOperationFailedException("Chapter was not deleted, please try again later!")
         }
     }
 

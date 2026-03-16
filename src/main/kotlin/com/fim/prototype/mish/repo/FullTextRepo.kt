@@ -1,6 +1,6 @@
 package com.fim.prototype.mish.repo
 
-import com.fim.prototype.mish.exceptions.DatabaseOperationFailed
+import com.fim.prototype.mish.exceptions.DatabaseOperationFailedException
 import com.fim.prototype.mish.model.entities.ChapterEntity
 import com.fim.prototype.mish.model.entities.FullTextCollectionType
 import com.fim.prototype.mish.model.entities.FullTextEntity
@@ -32,7 +32,7 @@ class FullTextRepo(
         try {
             return mongoTemplate.save(fulltext)
         } catch (ex: Exception){
-            throw DatabaseOperationFailed("Full text was not created, please try again later!")
+            throw DatabaseOperationFailedException("Full text was not created, please try again later!")
         }
     }
 
@@ -43,7 +43,7 @@ class FullTextRepo(
 
             return mongoTemplate.findAndModify(query, updateQuery, FullTextEntity::class.java)
         } catch (ex: Exception){
-            throw DatabaseOperationFailed("Full text was not updated, please try again later!")
+            throw DatabaseOperationFailedException("Full text was not updated, please try again later!")
         }
     }
 

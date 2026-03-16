@@ -1,6 +1,6 @@
 package com.fim.prototype.mish.repo
 
-import com.fim.prototype.mish.exceptions.DatabaseOperationFailed
+import com.fim.prototype.mish.exceptions.DatabaseOperationFailedException
 import com.fim.prototype.mish.model.common.filters.QuizResultFilter
 import com.fim.prototype.mish.model.entities.quiz.QuickQuizResult
 import com.fim.prototype.mish.model.entities.quiz.QuizValidationResult
@@ -24,7 +24,7 @@ class QuizResultRepo(
         try {
             return iQuizResultRepo.save(quizValidationResultWithUser)
         } catch (ex: Exception){
-            throw DatabaseOperationFailed("Quiz result was not created, please try again later!")
+            throw DatabaseOperationFailedException("Quiz result was not created, please try again later!")
         }
     }
 

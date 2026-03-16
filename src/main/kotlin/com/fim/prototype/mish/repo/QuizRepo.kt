@@ -1,6 +1,6 @@
 package com.fim.prototype.mish.repo
 
-import com.fim.prototype.mish.exceptions.DatabaseOperationFailed
+import com.fim.prototype.mish.exceptions.DatabaseOperationFailedException
 import com.fim.prototype.mish.model.common.filters.FilterBase
 import com.fim.prototype.mish.model.entities.quiz.QuickQuizEntity
 import com.fim.prototype.mish.model.entities.quiz.QuizEntity
@@ -23,7 +23,7 @@ class QuizRepo(
         try {
             return quizRepo.save(quiz)
         } catch (ex: Exception){
-            throw DatabaseOperationFailed("Quiz was not saved, please try again later!")
+            throw DatabaseOperationFailedException("Quiz was not saved, please try again later!")
         }
 
     }
@@ -32,7 +32,7 @@ class QuizRepo(
         try {
             quizRepo.deleteById(quizId)
         } catch (ex: Exception){
-            throw DatabaseOperationFailed("Quiz was not deleted, please try again later!")
+            throw DatabaseOperationFailedException("Quiz was not deleted, please try again later!")
         }
     }
 

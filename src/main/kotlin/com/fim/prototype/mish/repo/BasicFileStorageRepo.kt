@@ -1,6 +1,6 @@
 package com.fim.prototype.mish.repo
 
-import com.fim.prototype.mish.exceptions.DatabaseOperationFailed
+import com.fim.prototype.mish.exceptions.DatabaseOperationFailedException
 import com.fim.prototype.mish.exceptions.NotFoundException
 import com.mongodb.client.gridfs.model.GridFSFile
 import org.bson.types.ObjectId
@@ -20,7 +20,7 @@ class BasicFileStorageRepo(
         try {
             return gridFs.store(model.inputStream, model.originalFilename, model.contentType)
         } catch (ex: Exception) {
-            throw DatabaseOperationFailed("File was not uploaded, please try again later!")
+            throw DatabaseOperationFailedException("File was not uploaded, please try again later!")
         }
     }
 
@@ -35,7 +35,7 @@ class BasicFileStorageRepo(
             val query = Query(Criteria.where("_id").`is`(ObjectId(objectId)))
             gridFs.delete(query)
         } catch (e: IllegalArgumentException) {
-            throw DatabaseOperationFailed("File was not deleted, please try again later!")
+            throw DatabaseOperationFailedException("File was not deleted, please try again later!")
         }
 
 

@@ -1,6 +1,6 @@
 package com.fim.prototype.mish.services.quiz
 
-import com.fim.prototype.mish.exceptions.InternalServerError
+import com.fim.prototype.mish.exceptions.InternalServerException
 import com.fim.prototype.mish.exceptions.NotFoundException
 import com.fim.prototype.mish.model.common.QuestionPartValidation
 import com.fim.prototype.mish.model.entities.quiz.QuizSubmissionRequest
@@ -36,7 +36,7 @@ class QuizAnswersResultService(
                 ?: throw NotFoundException("Submitted answer was not found in quiz answers!")
 
             val validationResult = validatorsMap[correctAnswer::class]?.validate(correctAnswer, submitted)
-                ?: throw InternalServerError("Validator for answer type ${correctAnswer::class} was not found!")
+                ?: throw InternalServerException("Validator for answer type ${correctAnswer::class} was not found!")
 
             QuestionPartValidation(
                 quizQuestion.questionId,
