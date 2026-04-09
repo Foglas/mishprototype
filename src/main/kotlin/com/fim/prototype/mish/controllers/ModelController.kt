@@ -10,6 +10,7 @@ import com.fim.prototype.mish.services.FileService
 import com.fim.prototype.mish.services.chapters.ModelService
 import com.fim.prototype.mish.utils.PageRequestData
 import com.fim.prototype.mish.utils.PageResult
+import com.fim.prototype.mish.utils.logger
 import kotlinx.coroutines.runBlocking
 import org.springframework.data.domain.Sort
 import org.springframework.security.access.prepost.PreAuthorize
@@ -24,30 +25,36 @@ class ModelController(
     private val pageProperties: PageProperties,
 ) : DownloadController(fileService) {
 
+    override val log = logger()
+
     @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).CREATE_CHAPTER)")
     @PostMapping("/upload")
     fun uploadModel(
         @RequestPart files: List<MultipartFile>,
         @RequestPart metadata: InputFileDesc,
         @RequestPart modelMetadata: ModelMetadata): ModelIds = runBlocking {
+        log.debug("ModelController:uploadModel()")
         modelService.uploadModel(files, metadata, modelMetadata)
     }
 
     @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).STUDENT_ACTION)")
     @GetMapping("/{id}")
     fun getModelMetadataById(@PathVariable id: String): FileEntityTree {
+        log.debug("ModelController:getModelMetadataById() - id: $id")
         return modelService.getModelRelatedTree(id)
     }
 
     @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).CREATE_CHAPTER)")
     @DeleteMapping("/{id}/delete")
-    fun deleteModel(@PathVariable("id") modelId: String, @RequestParam force: Boolean = false){
+    fun deleteModel(@PathVariable("id") modelId: String){
+        log.debug("ModelController:deleteModel() - id: $modelId")
         modelService.deleteModel(modelId)
     }
 
     @PreAuthorize("hasRole(T(com.fim.prototype.mish.security.data.Roles).STUDENT_ACTION)")
     @PutMapping("/update")
     fun updateModel(@RequestPart files: List<MultipartFile>, @RequestPart metadata: InputFileDesc, @RequestPart(required = false) modelMetadata: UpdateModelMetadata): ModelIds {
+        log.debug("ModelController:updateModel() - id: ${modelMetadata.id}")
         return modelService.updateModel(files, metadata, modelMetadata)
     }
 
@@ -59,6 +66,7 @@ class ModelController(
         @RequestParam orderBy: String?=null,
         @RequestParam sortDirection: Sort.Direction? = null,
     ): PageResult<ModelIds>{
+        log.debug("ModelController:listModelsMetadata()")
         return modelService.listModelMetadata(PageRequestData(page, limit ?: pageProperties.limit, orderBy, sortDirection?: pageProperties.sortDirection))
     }
 }
