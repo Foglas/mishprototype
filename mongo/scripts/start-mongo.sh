@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 set -eo pipefail
 
-TRUST_STORE_PASS=$1
-MODE=${2:-prod}
+MODE=${1:-prod}
 
 SCRIPTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 

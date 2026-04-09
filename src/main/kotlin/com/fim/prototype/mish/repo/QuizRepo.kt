@@ -25,7 +25,6 @@ class QuizRepo(
         } catch (ex: Exception){
             throw DatabaseOperationFailedException("Quiz was not saved, please try again later!")
         }
-
     }
 
     fun deleteById(quizId: String){

@@ -1,0 +1,26 @@
+{
+  "realm": "foreign-realm",
+  "enabled": true,
+  "users": [
+    {
+      "username": "someone",
+      "enabled": true,
+      "email": "someone@example.com",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "password123"
+        }
+      ]
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "dev-client",
+      "secret": "secret",
+      "redirectUris": ["https://oauth.pstmn.io/v1/callback", "http://localhost:8050/login/oauth2/code/dev-client"],
+      "publicClient": false,
+      "protocol": "openid-connect"
+    }
+  ]
+}

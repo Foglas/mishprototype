@@ -37,10 +37,10 @@ spring:
             authorization-grant-type: authorization_code
         provider:
           dev-client:
-            issuer-uri: ${KEYCLOAK_URL:http://mock-oidc:8080}/realms/${KEYCLOAK_REALM:mock-realm}
+            issuer-uri: ${KEYCLOAK_URL:http://mish:8080}/auth/realms/${KEYCLOAK_REALM:mock-realm}
       resourceserver:
         jwt:
-          issuer-uri: ${KEYCLOAK_URL:http://mock-oidc:8080}/realms/${KEYCLOAK_REALM:mock-realm}
+          issuer-uri: ${KEYCLOAK_URL:http://mish:8080}/auth/realms/${KEYCLOAK_REALM:mock-realm}
 
 
 ldap:

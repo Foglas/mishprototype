@@ -1,0 +1,42 @@
+version: "3.9"
+
+services:
+  keycloak-db:
+    image: postgres:15
+    container_name: keycloak-db
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: keycloak
+    volumes:
+      - keycloak-db-data:/var/lib/postgresql/data
+    networks:
+      - mish_net
+
+
+  mock-oidc:
+    image: quay.io/keycloak/keycloak:21.1.1
+    container_name: mock-oidc
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: keycloak
+      KC_DB_URL_HOST: keycloak-db
+      KC_DB: postgres
+
+
+    command: start-dev --import-realm --http-relative-path=/auth
+    volumes:
+      - ./oidc/realms:/opt/keycloak/data/import
+    ports:
+      - "8080:8080"
+    networks:
+      - mish_net
+
+volumes:
+  keycloak-db-data:
+
+networks:
+  mish_net:
+    external: true
